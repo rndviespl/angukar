@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {TuiAppearance, TuiButton, TuiTitle} from '@taiga-ui/core';
-import {TuiAvatar} from '@taiga-ui/kit';
+import { TuiAvatar} from '@taiga-ui/kit';
 import {TuiCardLarge, TuiHeader} from '@taiga-ui/layout';
 import { Subscription } from 'rxjs';
 import { CardApiService } from '../service/card-api.service';
+import { SwitchComponent } from "../switch/switch.component";
 
 @Component({
   selector: 'app-card-api',
@@ -14,7 +15,8 @@ import { CardApiService } from '../service/card-api.service';
     TuiButton,
     TuiCardLarge,
     TuiHeader,
-    TuiTitle,],
+    TuiTitle,
+     SwitchComponent],
   templateUrl: './card-api.component.html',
   styleUrl: './card-api.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +31,6 @@ export class CardApiComponent implements OnInit, OnDestroy{
    this.sub?.unsubscribe();
   }
   ngOnInit(): void {
-  
     this.sub = this.getapi.getApiList().subscribe(it => {
       this.cards = it;
       console.log(it);

@@ -1,0 +1,68 @@
+:host {
+    display: flex;
+    --tui-background-accent-2: var(--tui-status-info);
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+    gap: 1rem;
+    padding: 1rem;
+
+    &_web {
+        border: 1px solid var(--tui-border-normal);
+        border-left-width: 0;
+
+        &:first-child {
+            border-right-width: 0;
+            border-left-width: 1px;
+        }
+    }
+}
+
+/* Стили для переключателя */
+.tuisw {
+    --tui-switch-background: var(--tui-background-accent-2);
+    --tui-switch-checked-background: rgb(97, 212, 216); /* Цвет при включенном состоянии */
+    --tui-switch-unchecked-background: rgb(188, 35, 35); /* Цвет при выключенном состоянии */
+}
+
+/* Изменение цвета в зависимости от состояния */
+.tuisw:checked {
+    background-color: var(--tui-switch-checked-background);
+}
+
+.tuisw:not(:checked) {
+    background-color: var(--tui-switch-unchecked-background);
+}
+
+/* Дополнительные стили для улучшения внешнего вида */
+.tuisw {
+    appearance: none; /* Убираем стандартный стиль */
+    width: 50px; /* Ширина переключателя */
+    height: 25px; /* Высота переключателя */
+    border-radius: 15px; /* Закругление углов */
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Плавный переход */
+}
+
+.tuisw::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 5px; /* Положение "маркера" переключателя */
+    width: 20px; /* Ширина "маркера" */
+    height: 20px; /* Высота "маркера" */
+    background-color: white; /* Цвет "маркера" */
+    border-radius: 50%; /* Закругление углов "маркера" */
+    transform: translateY(-50%);
+    transition: left 0.3s ease; /* Плавный переход для "маркера" */
+}
+
+.tuisw:checked::before {
+    left: calc(100% - 25px); /* Положение "маркера" при включенном состоянии */
+}

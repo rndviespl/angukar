@@ -1,31 +1,22 @@
-
 <h1>List Api</h1>
-<div *ngFor="let item of cards"
-    tuiAppearance="floating"
-    tuiCardLarge
->
-    <header tuiHeader>
+<div class="card-container">
+    <div *ngFor="let item of cards" tuiAppearance="floating" tuiCardLarge>
         <h1 tuiTitle>
-            {{item}}
-            <span tuiSubtitle>Subtitle</span>
+            {{ item }}
         </h1>
-
-        <aside tuiAccessories>
-            <tui-avatar
-                appearance="primary"
-                src="@tui.star"
-            />
-        </aside>
-    </header>
-
-    <footer>
-        <button
-            appearance="secondary"
-            size="m"
-            tuiButton
-            type="button"
-        >
-            Label
-        </button>
-    </footer>
+        <header tuiHeader>
+                    <aside tuiAccessories>
+                        <tui-avatar appearance="primary" src="@tui.star" />
+                    </aside>
+                </header>
+                
+                <header tuiHeader>
+                    <span tuiSubtitle>Subtitle</span>
+                </header>
+                <footer>
+                    <button appearance="secondary" size="m" tuiButton type="button">
+                        <details>Details</details>
+                    </button>
+                </footer>
+    </div>
 </div>
