@@ -1,0 +1,6 @@
+{
+    "/api": {
+      "target": "http://sh4r1k.ru:52240",
+      "secure": false
+    }
+  }

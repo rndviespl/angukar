@@ -1,0 +1,31 @@
+
+<h1>List Api</h1>
+<div *ngFor="let item of cards"
+    tuiAppearance="floating"
+    tuiCardLarge
+>
+    <header tuiHeader>
+        <h1 tuiTitle>
+            {{item}}
+            <span tuiSubtitle>Subtitle</span>
+        </h1>
+
+        <aside tuiAccessories>
+            <tui-avatar
+                appearance="primary"
+                src="@tui.star"
+            />
+        </aside>
+    </header>
+
+    <footer>
+        <button
+            appearance="secondary"
+            size="m"
+            tuiButton
+            type="button"
+        >
+            Label
+        </button>
+    </footer>
+</div>
