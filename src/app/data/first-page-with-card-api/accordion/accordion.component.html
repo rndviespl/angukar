@@ -1,0 +1,12 @@
+<tui-accordion>
+    <button  [tuiAccordion]="isOpen" (click)="toggleAccordion()">
+        {{ isOpen ? 'Close' : 'Open' }}
+    </button>      
+    <tui-expand *ngIf="isOpen">
+      <div>
+        <app-switch [value]="isEnabledControl.value ?? false" (toggle)="toggleSwitch()"></app-switch>
+    <button>ghf</button>  
+    </div>
+    </tui-expand>
+  </tui-accordion>
+  
