@@ -13,11 +13,11 @@
         </div>
       <div class="accordion-column">
       <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
-      <button tuiButton size="s" type="button" (click)="navigateToApiDetails(item.name)">
+      <button tuiButton size="s" type="button" (click)="navigateToApiDetails(apiInfo.name)">
       View Details
        </button>
       </div>
-  </div>
+    </div>
     
   }
   @else

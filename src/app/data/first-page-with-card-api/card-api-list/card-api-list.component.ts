@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CardApiComponent } from "../card-api/card-api.component";
 import { Subscription } from 'rxjs';
-import { apiServiceShortStructure } from '../../../service/apiServiceStructure';
 import { CardApiService } from '../../../service/card-api.service';
 import { CommonModule } from '@angular/common';
+import { apiServiceShortStructure } from '../../../service/service-structure-api';
 
 @Component({
   selector: 'app-card-api-list',

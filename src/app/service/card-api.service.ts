@@ -95,4 +95,9 @@ export class CardApiService {
   deleteApiEmu(apiName: string, entityName: string, endpoint: string, id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/ApiEmu/${apiName}/${entityName}/${endpoint}/${id}`);
   }
+  
+  updateServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}/api/ApiService/${serviceName}/${isActive}`, null); // Передаем null, если нет тела запроса
+  }
+  
 }
