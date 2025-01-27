@@ -6,7 +6,8 @@ import {TuiCardLarge, TuiHeader} from '@taiga-ui/layout';
 import { Subscription } from 'rxjs';
 import { CardApiService } from '../../../service/card-api.service';
 import { SwitchComponent } from "../switch/switch.component";
-import { AccordionComponent } from "../accordion/accordion.component";
+import { Router, RouterModule } from '@angular/router';
+import { apiServiceShortStructure } from '../../../service/service-structure-api';
 
 @Component({
   selector: 'app-card-api',
@@ -17,16 +18,20 @@ import { AccordionComponent } from "../accordion/accordion.component";
     TuiCardLarge,
     TuiHeader,
     TuiTitle,
-    SwitchComponent, AccordionComponent],
+    SwitchComponent,
+    RouterModule 
+  ],
   templateUrl: './card-api.component.html',
   styleUrl: './card-api.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardApiComponent implements OnInit, OnDestroy{
-  cards:string[] = [];
+  cards: apiServiceShortStructure[] = [];
   sub:Subscription | null = null;
-  constructor(private getapi: CardApiService, 
+  constructor(
+    private getapi: CardApiService, 
     private cd: ChangeDetectorRef,
+    private router: Router,
   ) {}
 
   ngOnDestroy(): void {
@@ -38,5 +43,8 @@ export class CardApiComponent implements OnInit, OnDestroy{
       console.log(it);
       this.cd.detectChanges();
     })
+  }
+  navigateToApiDetails(apiName: string): void {
+    this.router.navigate(['/api/ApiService', apiName]); // Переход на страницу API без передачи isActive
   }
 }
