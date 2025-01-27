@@ -6,8 +6,8 @@ import {TuiCardLarge, TuiHeader} from '@taiga-ui/layout';
 import { Subscription } from 'rxjs';
 import { CardApiService } from '../../../service/card-api.service';
 import { SwitchComponent } from "../switch/switch.component";
-import { AccordionComponent } from "../accordion/accordion.component";
-import { apiServiceShortStructure, apiServiceStructure } from '../../../service/apiServiceStructure';
+import { Router, RouterModule } from '@angular/router';
+import { apiServiceShortStructure } from '../../../service/service-structure-api';
 
 @Component({
   selector: 'app-card-api',
@@ -18,29 +18,33 @@ import { apiServiceShortStructure, apiServiceStructure } from '../../../service/
     TuiCardLarge,
     TuiHeader,
     TuiTitle,
-    SwitchComponent, AccordionComponent],
+    SwitchComponent,
+    RouterModule 
+  ],
   templateUrl: './card-api.component.html',
   styleUrl: './card-api.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardApiComponent {
-  @Input() apiInfo!: apiServiceShortStructure;
-  
-  constructor(private cardApiService: CardApiService) {}
+export class CardApiComponent implements OnInit, OnDestroy{
+  cards: apiServiceShortStructure[] = [];
+  sub:Subscription | null = null;
+  constructor(
+    private getapi: CardApiService, 
+    private cd: ChangeDetectorRef,
+    private router: Router,
+  ) {}
 
-  onToggleChange(newState: boolean) {
-    this.apiInfo.isActive = newState; // Обновляем состояние в родительском компоненте
-    console.log('Состояние переключателя изменилось на:', newState);
-
-    // Вызов метода для обновления состояния сервиса
-    this.cardApiService.updateServiceStatus(this.apiInfo.name, newState).subscribe({
-      next: (response) => {
-        console.log('Состояние сервиса обновлено:', response);
-      },
-      error: (error) => {
-        console.error('Ошибка при обновлении состояния сервиса:', error);
-      }
-    });
+  ngOnDestroy(): void {
+   this.sub?.unsubscribe();
   }
-  
-}  
+  ngOnInit(): void {
+    this.sub = this.getapi.getApiList().subscribe(it => {
+      this.cards = it;
+      console.log(it);
+      this.cd.detectChanges();
+    })
+  }
+  navigateToApiDetails(apiName: string): void {
+    this.router.navigate(['/api/ApiService', apiName]); // Переход на страницу API без передачи isActive
+  }
+}

@@ -11,9 +11,12 @@
         <div class="card-body">
           <span tuiSubtitle>{{apiInfo.description}}</span>
         </div>
-      </div>
       <div class="accordion-column">
       <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
+      <button tuiButton size="s" type="button" (click)="navigateToApiDetails(item.name)">
+      View Details
+       </button>
+      </div>
   </div>
     
   }

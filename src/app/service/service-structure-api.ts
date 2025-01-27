@@ -1,16 +1,17 @@
 export interface Action {
   route: string;
-  type: any;
+  type: string;
   isActive: boolean;
 }
 
 export interface Entity {
   name: string;
+  isActive: boolean;
   structure: string;
   actions: Action[];
 }
 
-export interface apiServiceStructure {
+export interface ApiServiceStructure {
   name: string;
   isActive: boolean;
   description: string;
@@ -21,4 +22,15 @@ export interface apiServiceShortStructure {
   name: string;
   isActive : boolean;
   description: string;
+}
+
+export interface EntityShort {
+  name: string;
+  isActive: boolean;
+  structure: string;
+}
+export interface ActionShort {
+  route: string;
+  type: string;
+  isActive: boolean;
 }
