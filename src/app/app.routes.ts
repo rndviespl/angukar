@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { CardApiComponent } from './data/first-page-with-card-api/card-api/card-api.component';
 import { CardWithEntityComponent } from './data/second-page-with-entity/card-with-entity/card-with-entity.component';
+import { CardApiListComponent } from './data/first-page-with-card-api/card-api-list/card-api-list.component';
 
 export const routes: Routes = [
     {
         path: '',
-        component: CardApiComponent,
+        component: CardApiListComponent,
         title: 'Home page',
     },
     {

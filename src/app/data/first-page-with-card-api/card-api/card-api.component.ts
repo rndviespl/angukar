@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, input, OnDestroy, OnInit } from '@angular/core';
 import {TuiAppearance, TuiButton, TuiTitle} from '@taiga-ui/core';
 import { TuiAvatar} from '@taiga-ui/kit';
 import {TuiCardLarge, TuiHeader} from '@taiga-ui/layout';
@@ -25,24 +25,26 @@ import { apiServiceShortStructure } from '../../../service/service-structure-api
   styleUrl: './card-api.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardApiComponent implements OnInit, OnDestroy{
-  cards: apiServiceShortStructure[] = [];
-  sub:Subscription | null = null;
-  constructor(
-    private getapi: CardApiService, 
-    private cd: ChangeDetectorRef,
-    private router: Router,
-  ) {}
 
-  ngOnDestroy(): void {
-   this.sub?.unsubscribe();
-  }
-  ngOnInit(): void {
-    this.sub = this.getapi.getApiList().subscribe(it => {
-      this.cards = it;
-      console.log(it);
-      this.cd.detectChanges();
-    })
+export class CardApiComponent {
+  @Input() apiInfo!: apiServiceShortStructure;
+  
+  constructor(private cardApiService: CardApiService,
+    private router: Router
+  ) {}
+  onToggleChange(newState: boolean) {
+    this.apiInfo.isActive = newState; // Обновляем состояние в родительском компоненте
+    console.log('Состояние переключателя изменилось на:', newState);
+
+    // Вызов метода для обновления состояния сервиса
+    this.cardApiService.updateServiceStatus(this.apiInfo.name, newState).subscribe({
+      next: (response) => {
+        console.log('Состояние сервиса обновлено:', response);
+      },
+      error: (error) => {
+        console.error('Ошибка при обновлении состояния сервиса:', error);
+      }
+    });
   }
   navigateToApiDetails(apiName: string): void {
     this.router.navigate(['/api/ApiService', apiName]); // Переход на страницу API без передачи isActive
