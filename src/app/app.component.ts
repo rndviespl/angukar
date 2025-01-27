@@ -2,10 +2,11 @@ import { TuiRoot } from "@taiga-ui/core";
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CardApiComponent } from "./data/first-page-with-card-api/card-api/card-api.component";
+import { CardApiListComponent } from "./data/first-page-with-card-api/card-api-list/card-api-list.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TuiRoot, CardApiComponent],
+  imports: [RouterOutlet, TuiRoot, CardApiComponent, CardApiListComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

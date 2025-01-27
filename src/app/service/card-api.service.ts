@@ -10,8 +10,8 @@ export class CardApiService {
 
   constructor(private http: HttpClient) { }
   
-  getApiList(): Observable<string[]> {
-    return this.http.get<string[]>('http://localhost:4200/api/ApiService'); 
+  getApiList(): Observable<apiServiceShortStructure[]> {
+    return this.http.get<apiServiceShortStructure[]>('http://localhost:4200/api/ApiService'); 
   }
 
   getApiStructureList(name: string): Observable<apiServiceStructure[]> {
@@ -20,6 +20,10 @@ export class CardApiService {
   
   getApiShortStructureList(name: string): Observable<apiServiceShortStructure[]> {
     return this.http.get<apiServiceShortStructure[]>(`http://localhost:4200/api/ApiService/${name}`); 
+  }
+  
+  updateServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
+    return this.http.patch<any>(`http://localhost:4200/api/ApiService/${serviceName}/${isActive}`, null); // Передаем null, если нет тела запроса
   }
   
 }

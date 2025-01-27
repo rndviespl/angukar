@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, input, OnDestroy, OnInit } from '@angular/core';
 import {TuiAppearance, TuiButton, TuiTitle} from '@taiga-ui/core';
 import { TuiAvatar} from '@taiga-ui/kit';
 import {TuiCardLarge, TuiHeader} from '@taiga-ui/layout';
@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { CardApiService } from '../../../service/card-api.service';
 import { SwitchComponent } from "../switch/switch.component";
 import { AccordionComponent } from "../accordion/accordion.component";
+import { apiServiceShortStructure, apiServiceStructure } from '../../../service/apiServiceStructure';
 
 @Component({
   selector: 'app-card-api',
@@ -22,21 +23,24 @@ import { AccordionComponent } from "../accordion/accordion.component";
   styleUrl: './card-api.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardApiComponent implements OnInit, OnDestroy{
-  cards:string[] = [];
-  sub:Subscription | null = null;
-  constructor(private getapi: CardApiService, 
-    private cd: ChangeDetectorRef,
-  ) {}
+export class CardApiComponent {
+  @Input() apiInfo!: apiServiceShortStructure;
+  
+  constructor(private cardApiService: CardApiService) {}
 
-  ngOnDestroy(): void {
-   this.sub?.unsubscribe();
+  onToggleChange(newState: boolean) {
+    this.apiInfo.isActive = newState; // Обновляем состояние в родительском компоненте
+    console.log('Состояние переключателя изменилось на:', newState);
+
+    // Вызов метода для обновления состояния сервиса
+    this.cardApiService.updateServiceStatus(this.apiInfo.name, newState).subscribe({
+      next: (response) => {
+        console.log('Состояние сервиса обновлено:', response);
+      },
+      error: (error) => {
+        console.error('Ошибка при обновлении состояния сервиса:', error);
+      }
+    });
   }
-  ngOnInit(): void {
-    this.sub = this.getapi.getApiList().subscribe(it => {
-      this.cards = it;
-      console.log(it);
-      this.cd.detectChanges();
-    })
-  }
-}
+  
+}  

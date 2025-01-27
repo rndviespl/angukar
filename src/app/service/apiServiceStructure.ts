@@ -13,6 +13,7 @@ export interface Entity {
 export interface apiServiceStructure {
   name: string;
   isActive: boolean;
+  description: string;
   entities: Entity[];
 }
 
