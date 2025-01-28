@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { CardWithEntityComponent } from './data/second-page-with-entity/card-with-entity/card-with-entity.component';
 import { CardApiListComponent } from './data/first-page-with-card-api/card-api-list/card-api-list.component';
+import { EntityCardListComponent } from './data/pages/entities-page/entity-card-list/entity-card-list.component';
 
 export const routes: Routes = [
     {
@@ -10,7 +10,7 @@ export const routes: Routes = [
     },
     {
         path: 'api/ApiService/:name',
-        component: CardWithEntityComponent,
+        component: EntityCardListComponent ,
         title: 'Api details',
     },
     // {
