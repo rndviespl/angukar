@@ -1,7 +1,7 @@
 import { Component, Input, inject } from '@angular/core';
 import { TuiAlertService, TuiIcon, TuiIconPipe } from '@taiga-ui/core';
 import { TuiSwitch } from '@taiga-ui/kit';
-import { AlertComponent } from '../../components/alert-on-delete/alert.component';
+import { AlertComponent } from '../../components/alert/alert.component';
 import { switchMap, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
