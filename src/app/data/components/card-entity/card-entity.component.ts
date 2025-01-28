@@ -1,9 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Entity } from '../../../service/service-structure-api';
 import { CardApiService } from '../../../service/card-api.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
+import { Subscription } from 'rxjs';
+import { RouteMemoryService } from '../../../service/route-memory.service';
 
 @Component({
   selector: 'app-card-entity',
@@ -13,16 +15,25 @@ import { SwitchComponent } from '../switch/switch.component';
 })
 export class CardEntityComponent {
   @Input() entityInfo!: Entity;
+  entities: Entity[] = [];
+  sub: Subscription | null = null;
+  apiName: string | null = null;
+  loading: boolean = false; // Add loading state
   
-  constructor(private cardApiService: CardApiService,
-    private router: Router
+  constructor(
+    private routeMemoryService: RouteMemoryService,
+    private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: Router,
+    private cardEntityService: CardApiService,
   ) {}
+
   onToggleChange(newState: boolean) {
-    this.entityInfo.isActive = newState; // Обновляем состояние в родительском компоненте
+    this.entityInfo.isActive = newState; // Update state in parent component
     console.log('Состояние переключателя изменилось на:', newState);
 
-    // Вызов метода для обновления состояния сервиса
-    this.cardApiService.updateServiceStatus(this.entityInfo.name, newState).subscribe({
+    // Call method to update service status
+    this.cardEntityService.updateServiceStatus(this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -31,7 +42,27 @@ export class CardEntityComponent {
       }
     });
   }
-  // navigateToApiDetails(apiName: string): void {
-  //   this.router.navigate(['/api/ApiService', apiName]); // Переход на страницу API без передачи isActive
-  // }
+
+  navigateToApiDetails(): void {
+    if (this.apiName && this.entityInfo) {
+      this.router.navigate(['/api/ApiEntity', this.apiName, this.entityInfo.name]);
+    }
+  }
+
+  onRefresh(): void {
+    if (this.apiName) {
+      this.loading = true; // Set loading to true
+      this.routeMemoryService.checkForUpdates(this.apiName);
+      this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
+        this.loading = false; // Set loading to false
+        if (apiStructure) {
+          this.entities = apiStructure.entities;
+          this.cd.markForCheck();
+        }
+      }, error => {
+        this.loading = false; // Set loading to false on error
+        console.error('Error fetching data:', error);
+      });
+    }
+  }
 }

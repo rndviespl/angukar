@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Entity, EntityShort } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
@@ -27,11 +27,13 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
   sub: Subscription | null = null;
   apiName: string | null = null;
-
+  loading: boolean = false; // Add loading state
+  
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private router: Router,
     private cardEntityService: CardApiService,
   ) {}
 
