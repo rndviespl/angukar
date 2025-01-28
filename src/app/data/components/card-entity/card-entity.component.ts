@@ -3,7 +3,7 @@ import { Entity } from '../../../service/service-structure-api';
 import { CardApiService } from '../../../service/card-api.service';
 import { Router } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
-import { SwitchComponent } from "../switch/switch.component";
+import { SwitchComponent } from '../switch/switch.component';
 
 @Component({
   selector: 'app-card-entity',

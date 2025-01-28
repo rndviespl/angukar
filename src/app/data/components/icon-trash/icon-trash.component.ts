@@ -1,19 +1,16 @@
 import { Component, Input, inject } from '@angular/core';
 import { TuiAlertService, TuiIcon, TuiIconPipe } from '@taiga-ui/core';
-import { TuiSwitch } from '@taiga-ui/kit';
-import { AlertComponent } from '../alert/alert.component';
 import { switchMap, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { AlertComponent } from '../alert/alert.component';
 
 @Component({
   selector: 'app-icon-trash',
   imports: [
-    TuiIcon,
     TuiIconPipe,
-    TuiSwitch,
     AlertComponent
-  ],
+],
   templateUrl: './icon-trash.component.html',
   styleUrls: ['./icon-trash.component.css']
 })

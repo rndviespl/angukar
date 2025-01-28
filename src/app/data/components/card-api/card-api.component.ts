@@ -5,9 +5,9 @@ import { TuiAvatar} from '@taiga-ui/kit';
 import {TuiCardLarge, TuiHeader} from '@taiga-ui/layout';
 import { Subscription } from 'rxjs';
 import { CardApiService } from '../../../service/card-api.service';
-import { SwitchComponent } from "../switch/switch.component";
 import { Router, RouterModule } from '@angular/router';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
+import { SwitchComponent } from '../switch/switch.component';
 
 @Component({
   selector: 'app-card-api',
@@ -18,8 +18,8 @@ import { apiServiceShortStructure } from '../../../service/service-structure-api
     TuiCardLarge,
     TuiHeader,
     TuiTitle,
-    SwitchComponent,
-    RouterModule 
+    RouterModule,
+    SwitchComponent
   ],
   templateUrl: './card-api.component.html',
   styleUrl: './card-api.component.css',

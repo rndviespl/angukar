@@ -1,19 +1,5 @@
 <div class="card-container">
-    <div *ngFor="let item of entity" tuiCardLarge class="card">
-        <div class="card-content">
-            <div class="card-header">
-                <h1 tuiTitle>{{ item.name }}</h1>
-            </div>
-           
-        </div>
-        <div class="card-actions">
-            <button tuiButton>редактировать</button>
-            <!-- <button tuiButton (click)="apiName ? navigateToApiDetails(apiName, item.name) : null">
-                детали
-            </button> -->
-            <div>
-                <app-icon-trash [item]="item"></app-icon-trash> <!-- Передаем данные карточки -->
-            </div>
-        </div>
+    <div *ngFor="let item of entities" tuiCardLarge class="card">
+        <app-card-entity [entityInfo]="item"></app-card-entity>
     </div>
 </div>

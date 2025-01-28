@@ -8,27 +8,25 @@ import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiButton } from '@taiga-ui/core';
 import { CardApiService } from '../../../service/card-api.service';
 import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
-import { SwitchComponent } from '../../components/switch/switch.component';
+import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
 
 @Component({
   selector: 'app-entity-card-list',
   imports: [
     TuiCardLarge,
     TuiButton,
-    SwitchComponent,
     CommonModule,
-    IconTrashComponent
-  ],
+    IconTrashComponent,
+    CardEntityComponent
+],
   templateUrl: './entity-card-list.component.html',
   styleUrls: ['./entity-card-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityCardListComponent implements OnInit, OnDestroy {
-  entity: Entity[] = [];
+  entities: Entity[] = [];
   sub: Subscription | null = null;
   apiName: string | null = null;
-
-  @Input() entityInfo!: EntityShort;
 
   constructor(
     private routeMemoryService: RouteMemoryService,
@@ -48,7 +46,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
       if (this.apiName) {
         this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
           if (apiStructure) {
-            this.entity = apiStructure.entities;
+            this.entities = apiStructure.entities;
             this.cd.markForCheck();
           }
         });
