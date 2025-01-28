@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { CardApiListComponent } from './data/first-page-with-card-api/card-api-list/card-api-list.component';
-import { EntityCardListComponent } from './data/pages/entities-page/entity-card-list/entity-card-list.component';
+import { CardApiListComponent } from './data/pages/card-api-list/card-api-list.component';
+import { EntityCardListComponent } from './data/pages/entity-card-list/entity-card-list.component';
 
 export const routes: Routes = [
     {

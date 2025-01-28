@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { RouteMemoryService } from '../../../../service/route-memory.service';
+import { RouteMemoryService } from '../../../service/route-memory.service';
 import { ActivatedRoute } from '@angular/router';
-import { Entity, EntityShort } from '../../../../service/service-structure-api';
+import { Entity, EntityShort } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiButton } from '@taiga-ui/core';
-import { CardApiService } from '../../../../service/card-api.service';
-import { IconTrashComponent } from "../../../second-page-with-entity/icon-trash/icon-trash.component";
-import { SwitchComponent } from '../../../first-page-with-card-api/switch/switch.component';
+import { CardApiService } from '../../../service/card-api.service';
+import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
+import { SwitchComponent } from '../../components/switch/switch.component';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -55,19 +55,4 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
       }
     });
   }
-  onToggleChange(newState: boolean) {
-    this.entityInfo.isActive = newState; // Обновляем состояние в родительском компоненте
-    console.log('Состояние переключателя изменилось на:', newState);
-
-    // Вызов метода для обновления состояния сервиса
-    this.cardEntityService.updateServiceStatus(this.entityInfo.name, newState).subscribe({
-      next: (response) => {
-        console.log('Состояние сервиса обновлено:', response);
-      },
-      error: (error) => {
-        console.error('Ошибка при обновлении состояния сервиса:', error);
-      }
-    });
-  }
-
 }
