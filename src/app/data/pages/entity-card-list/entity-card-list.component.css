@@ -6,9 +6,9 @@
     background-color: #f9f9f9; /* Light background for the container */
     padding: 1rem; /* Padding around the container */
     border-radius: 0.5rem; /* Rounded corners for the container */
-  }
-  
-  .card {
+}
+
+.card {
     flex: 1 1 calc(30% - 1rem); /* Responsive card width with spacing */
     margin: 0.5rem; /* Margin between cards */
     border-radius: 0.5rem; /* Rounded corners */
@@ -18,63 +18,77 @@
     min-width: 250px; /* Minimum width for cards */
     max-width: 400px; /* Maximum width for cards */
     background-color: #ffffff; /* White background for cards */
-  }
-  
-  .card:hover {
+}
+
+.card:hover {
     transform: translateY(-0.5rem); /* Lift effect on hover */
     box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
-  }
-  
-  .card-content {
+}
+
+.card-content {
     padding: 1rem; /* Padding inside the card */
     background-color: #f0f4f8; /* Light blue background for card content */
     border-radius: 0.5rem; /* Rounded corners for content */
-  }
-  
-  .card-header {
+}
+
+.card-header {
     margin-bottom: 0.5rem; /* Space below the header */
     background-color: #e0e7ff; /* Light purple background for header */
     padding: 0.5rem; /* Padding for header */
     border-radius: 0.5rem; /* Rounded corners for header */
-  }
-  
-  .card-header h1 {
+}
+
+.card-header h1 {
     font-size: 1.5rem; /* Adjust font size for the title */
     margin: 0; /* Remove default margin */
     color: #333; /* Dark text color for contrast */
-  }
-  
-  .card > div {
-    display: flex; /* Use flexbox for button layout */
-    justify-content: space-between; /* Space buttons evenly */
-    margin-top: 0.5rem; /* Space above the button group */
-  }
-  
-  button {
-    flex: 1; /* Allow buttons to grow equally */
-    margin: 0 0.5rem; /* Space between buttons */
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between; /* Distributes space between buttons */
+    align-items: center; /* Aligns items vertically */
+    flex-wrap: wrap; /* Allow buttons to wrap if necessary */
+}
+
+.card-actions button {
+    flex: 1 1 auto; /* Allow buttons to grow and shrink */
+    margin: 0 5px; /* Adds some space between buttons */
     padding: 0.5rem; /* Padding inside buttons */
     border-radius: 0.25rem; /* Rounded corners for buttons */
     cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.2s; /* Smooth transition for hover effect */
-    background-color: #d1fae5; /* Light green background for buttons */
+    transition: background-color 0.2s, transform 0.1s; /* Smooth transition for hover effect */
+    background-color: #d1f6fa; /* Light green background for buttons */
     color: #333; /* Dark text color for buttons */
-  }
-  
-  button:hover {
-    background-color: #a7f3d0; /* Darker green on hover */
-  }
-  
-  /* Media Queries for Responsive Design */
-  @media (max-width: 768px) {
+    min-width: 100px; /* Set a minimum width for buttons */
+    max-width: 150px; /* Set a maximum width for buttons */
+}
+
+.card-actions button:hover {
+    background-color: #a0e0e0; /* Change color on hover */
+}
+
+.card-actions button:active {
+    background-color: #688d8c; /* Darker green on click */
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
     .card {
-      flex: 1 1 calc(45% - 1rem); /* Adjust card width for smaller screens */
+        flex: 1 1 calc(45% - 1rem); /* Adjust card width for smaller screens */
     }
-  }
-  
-  @media (max-width: 480px) {
+    .card-actions button {
+        min-width: 80px; /* Adjust minimum width for smaller screens */
+        margin: 0 2px; /* Reduce margin for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
     .card {
-      flex: 1 1 calc(100% - 1rem); /* Full width for very small screens */
+        flex: 1 1 calc(100% - 1rem); /* Full width for very small screens */
     }
-  }
-  
+    .card-actions button {
+        min-width: 70px; /* Further adjust minimum width for very small screens */
+        margin: 0 1px; /* Further reduce margin for very small screens */
+    }
+}

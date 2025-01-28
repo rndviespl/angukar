@@ -97,7 +97,7 @@ export class CardApiService {
   }
   
   updateServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
-    return this.http.patch<any>(`${this.baseUrl}/api/ApiService/${serviceName}/${isActive}`, null); // Передаем null, если нет тела запроса
+    return this.http.patch<any>(`${this.baseUrl}/ApiService/${serviceName}/${isActive}`, null); // Передаем null, если нет тела запроса
   }
   
 }

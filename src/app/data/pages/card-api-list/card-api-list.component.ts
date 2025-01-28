@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { CardApiComponent } from "../card-api/card-api.component";
+import { CardApiComponent } from "../../components/card-api/card-api.component";
 import { Subscription } from 'rxjs';
 import { CardApiService } from '../../../service/card-api.service';
 import { CommonModule } from '@angular/common';
