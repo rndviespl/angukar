@@ -6,7 +6,7 @@
 </div>
 <div class="card-actions">
     <button tuiButton>редактировать</button>
-    <button tuiButton>детали</button>
+    <button tuiButton (click)="navigateToApiDetails()">детали</button>
     <div>
         <app-icon-trash [item]="entityInfo"></app-icon-trash> <!-- Передаем данные карточки -->
     </div>

@@ -47,6 +47,6 @@ export class CardApiComponent {
     });
   }
   navigateToApiDetails(apiName: string): void {
-    this.router.navigate(['/api/ApiService', apiName]); // Переход на страницу API без передачи isActive
+    this.router.navigate(['/ApiService', apiName]); // Переход на страницу API без передачи isActive
   }
 }
