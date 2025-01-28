@@ -18,7 +18,7 @@ import { SwitchComponent } from '../../components/switch/switch.component';
     SwitchComponent,
     CommonModule,
     IconTrashComponent
-],
+  ],
   templateUrl: './entity-card-list.component.html',
   styleUrls: ['./entity-card-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,11 +27,14 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   entity: Entity[] = [];
   sub: Subscription | null = null;
   apiName: string | null = null;
-@Input() entityInfo!: EntityShort;
+
+  @Input() entityInfo!: EntityShort;
+
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private router: Router,
     private cardEntityService: CardApiService,
   ) {}
 

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { CardApiListComponent } from './data/pages/card-api-list/card-api-list.component';
 import { EntityCardListComponent } from './data/pages/entity-card-list/entity-card-list.component';
+import { EndpoinCardListComponent } from './data/pages/endpoints-page/endpoin-card-list/endpoin-card-list.component';
 
 export const routes: Routes = [
     {
@@ -12,6 +13,11 @@ export const routes: Routes = [
         path: 'api/ApiService/:name',
         component: EntityCardListComponent ,
         title: 'Api details',
+    },
+    {
+        path: 'api/ApiEntity/:apiServiceName/:entityName ',
+        component: EndpoinCardListComponent,
+        title: 'Entity details',
     },
     // {
     //     path: 'entity/edit/:id',
