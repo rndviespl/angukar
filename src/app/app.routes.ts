@@ -14,11 +14,11 @@ export const routes: Routes = [
         component: EntityCardListComponent ,
         title: 'Api details',
     },
-    {
-        path: 'api/ApiEntity/:apiServiceName/:entityName ',
-        component: EndpoinCardListComponent,
-        title: 'Entity details',
-    },
+    // {
+    //     path: 'api/ApiEntity/:apiServiceName/:entityName ',
+    //     component: EndpoinCardListComponent,
+    //     title: 'Entity details',
+    // },
     // {
     //     path: 'entity/edit/:id',
     //     component: EditEntityComponent,

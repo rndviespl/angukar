@@ -4,13 +4,13 @@
             <div class="card-header">
                 <h1 tuiTitle>{{ item.name }}</h1>
             </div>
-            <app-switch [value]="item.isActive" (toggle)="onToggleChange(item, $event)"></app-switch>
+           
         </div>
         <div class="card-actions">
             <button tuiButton>редактировать</button>
-            <button tuiButton (click)="apiName ? navigateToApiDetails(apiName, item.name) : null">
+            <!-- <button tuiButton (click)="apiName ? navigateToApiDetails(apiName, item.name) : null">
                 детали
-            </button>
+            </button> -->
             <div>
                 <app-icon-trash [item]="item"></app-icon-trash> <!-- Передаем данные карточки -->
             </div>

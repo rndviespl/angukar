@@ -34,7 +34,6 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private router: Router,
     private cardEntityService: CardApiService,
   ) {}
 
