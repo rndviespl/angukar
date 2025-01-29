@@ -6,6 +6,8 @@ import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
+import { tuiDialog } from '@taiga-ui/core';
+import { EntityEditDialogComponent } from '../entity-edit-dialog/entity-edit-dialog.component';
 
 @Component({
   selector: 'app-card-entity',
@@ -19,7 +21,10 @@ export class CardEntityComponent {
   sub: Subscription | null = null;
   apiName: string | null = null;
   loading: boolean = false; // Add loading state
-  
+  private readonly dialog = tuiDialog(EntityEditDialogComponent, {
+    dismissible: true,
+    label: "Редактировать",
+});
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
@@ -48,6 +53,20 @@ export class CardEntityComponent {
       this.router.navigate(['/api/ApiEntity', this.apiName, this.entityInfo.name]);
     }
   }
+
+openEditDialog(): void{
+  this.dialog(this.entityInfo).subscribe({
+    next: (data) => {
+        console.info(`Dialog emitted data = ${data}`);
+        this.entityInfo = data;
+        this.cd.markForCheck();
+        
+    },
+    complete: () => {
+        console.info('Dialog closed');
+    },
+});
+}
 
   onRefresh(): void {
     if (this.apiName) {
