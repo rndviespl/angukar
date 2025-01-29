@@ -58,18 +58,20 @@ export class CardApiComponent {
 
   openEditDialog(): void {
     this.oldName = this.apiInfo.name;
-    this.dialog(this.apiInfo).subscribe({
+    this.dialog({... this.apiInfo}).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.apiInfo.name}}`);
+        
         this.cardApiService.updateApiService(this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
+            this.apiInfo = data;
+            this.cd.markForCheck();
           },
           error: (error) => {
             console.error('Ошибка при обновлении сущности:', error);
           }
         })
-        this.cd.markForCheck();
 
       },
       complete: () => {
