@@ -49,4 +49,8 @@ export class CardApiComponent {
   navigateToApiDetails(apiName: string): void {
     this.router.navigate(['/ApiService', apiName]); // Переход на страницу API без передачи isActive
   }
+
+  deleteCard(card: apiServiceShortStructure) {
+    console.log("delete")
+  }
 }

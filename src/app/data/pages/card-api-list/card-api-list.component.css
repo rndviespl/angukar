@@ -1,4 +1,88 @@
-.parent-container{
+.container {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+
+.card {
+    background-color: #e6f0fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     display: flex;
-    justify-content: center; /* Центрирование по умолчанию */
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.header {
+    background-color: #0056a6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header img {
+    height: 4rem;
+    /* Относительная высота логотипа */
+}
+
+.header button {
+    background-color: white;
+    border: none;
+    padding: 0.625rem 1.25rem;
+    /* Относительные отступы */
+    margin: 0.625rem 1.25rem;
+    /* Относительные отступы */
+    border-radius: 0.3125rem;
+    /* Относительный радиус скругления */
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+    /* Относительный размер шрифта */
+}
+
+.header button:hover {
+    background-color: #e6e6e6;
+}
+
+@media only screen and (max-width: 768px) {
+    .header {
+        display: flex;  
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .header img {
+        width: -webkit-fill-available;
+    }
 }
