@@ -1,36 +1,10 @@
-@if (apiInfo != null)
-{
-    <div class="card">
-        <div class="card-content">
-            <div class="card-header">
-                <h1 tuiTitle>{{ apiInfo.name }}</h1>
-                <p>{{ apiInfo.isActive }}</p>
-            </div>
-            <div class="card-body">
-                <span tuiSubtitle>{{ apiInfo.description }}</span>
-                <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
-            </div>
-        </div>
-        <div class="card-actions">
-            <button tuiButton>редактировать</button>
-            <button tuiButton (click)="navigateToApiDetails(apiInfo.name)">детали</button>
-        </div>
-    </div>
-}
-@else
-{
-    <div class="card">
-        <div class="card-content">
-            <div class="card-header">
-                <h1 tuiTitle>Информации нет</h1>
-            </div>
-            <div class="card-body">
-                <span tuiSubtitle>Объект не найден</span>
-            </div>
-        </div>
-        <div class="card-actions">
-            <button tuiButton>редактировать</button>
-            <button tuiButton>детали</button>
-        </div>
-    </div>
-}
+<div class="top-right">
+    <i class="fas fa-edit" (click)="deleteCard(apiInfo)"></i>
+    <i class="fas fa-trash" (click)="deleteCard(apiInfo)"></i>
+    <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
+</div>
+<h3>{{ apiInfo.name }}</h3>
+<p>{{ apiInfo.description }}</p>
+<div class="actions">
+    <button tuiButton (click)="navigateToApiDetails(apiInfo.name)">Детали</button>
+</div>
