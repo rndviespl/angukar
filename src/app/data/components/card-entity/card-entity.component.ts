@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Entity } from '../../../service/service-structure-api';
+import { apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
 import { CardApiService } from '../../../service/card-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
@@ -11,21 +11,22 @@ import { RouteMemoryService } from '../../../service/route-memory.service';
   selector: 'app-card-entity',
   imports: [IconTrashComponent, SwitchComponent],
   templateUrl: './card-entity.component.html',
-  styleUrl: './card-entity.component.css'
+  styleUrls: ['./card-entity.component.css']
 })
 export class CardEntityComponent {
+  @Input() apiInfo!: apiServiceShortStructure; // Ensure this is correct
   @Input() entityInfo!: Entity;
   entities: Entity[] = [];
   sub: Subscription | null = null;
   apiName: string | null = null;
   loading: boolean = false; // Add loading state
-  
+
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private cardEntityService: CardApiService,
+    private cardApiService: CardApiService,
   ) {}
 
   onToggleChange(newState: boolean) {
@@ -33,7 +34,7 @@ export class CardEntityComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.updateServiceStatus(this.entityInfo.name, newState).subscribe({
+    this.cardApiService.updateServiceStatus(this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -44,8 +45,10 @@ export class CardEntityComponent {
   }
 
   navigateToApiDetails(): void {
-    if (this.apiName && this.entityInfo) {
-      this.router.navigate(['/api/ApiEntity', this.apiName, this.entityInfo.name]);
+    console.log('apiInfo:', this.apiInfo);
+    console.log('entityInfo:', this.entityInfo);
+    if (this.apiInfo && this.entityInfo) {
+      this.router.navigate(['/ApiEntity', this.apiInfo.name, this.entityInfo.name]);
     }
   }
 

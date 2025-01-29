@@ -7,7 +7,7 @@ export interface Action {
 export interface Entity {
   name: string;
   isActive: boolean;
-  structure: string;
+  structure: any;
   actions: Action[];
 }
 
