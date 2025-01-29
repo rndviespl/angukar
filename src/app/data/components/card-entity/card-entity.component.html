@@ -5,7 +5,7 @@
     <app-switch></app-switch>
 </div>
 <div class="card-actions">
-    <button tuiButton>редактировать</button>
+    <button tuiButton (click)="openEditDialog()">редактировать</button>
     <button tuiButton (click)="navigateToApiDetails()">детали</button>
     <div>
         <app-icon-trash [item]="entityInfo"></app-icon-trash> <!-- Передаем данные карточки -->
