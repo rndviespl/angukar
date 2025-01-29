@@ -55,7 +55,7 @@ export class CardApiService {
   }
 
   // ApiAction Methods
-  getApiAction(apiServiceName: string, entityName: string): Observable<Action[]> {
+  getActionList(apiServiceName: string, entityName: string): Observable<Action[]> {
     return this.http.get<Action[]>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`);
   }
 
@@ -99,5 +99,4 @@ export class CardApiService {
   updateServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
     return this.http.patch<any>(`${this.baseUrl}/ApiService/${serviceName}/${isActive}`, null); // Передаем null, если нет тела запроса
   }
-  
 }

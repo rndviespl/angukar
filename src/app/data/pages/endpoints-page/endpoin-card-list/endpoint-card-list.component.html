@@ -1,1 +1,7 @@
-<p>endpoin-card-list works!</p>
+<p>endpoint list</p>
+
+<div class="card-container">
+    <div *ngFor="let item of actions" tuiAppearance="floating" tuiCardLarge class="card">
+        <app-card-endpoint [apiServiceName]="apiInfo.name" [entityName]="entityInfo.name"></app-card-endpoint>
+    </div>
+</div>

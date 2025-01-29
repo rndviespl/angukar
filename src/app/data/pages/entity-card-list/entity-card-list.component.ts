@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Entity, EntityShort } from '../../../service/service-structure-api';
+import { Entity, EntityShort, apiServiceShortStructure } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiButton } from '@taiga-ui/core';
@@ -18,7 +18,7 @@ import { CardEntityComponent } from '../../components/card-entity/card-entity.co
     CommonModule,
     IconTrashComponent,
     CardEntityComponent
-],
+  ],
   templateUrl: './entity-card-list.component.html',
   styleUrls: ['./entity-card-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +28,8 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   sub: Subscription | null = null;
   apiName!: string;
   loading: boolean = false; // Add loading state
-  
+  apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure; // Initialize apiInfo
+
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
@@ -44,11 +45,11 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.apiName = params['name'];
-
       if (this.apiName) {
         this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
           if (apiStructure) {
             this.entities = apiStructure.entities;
+            this.apiInfo = apiStructure as apiServiceShortStructure; // Assuming apiInfo is the entire apiStructure
             this.cd.markForCheck();
           }
         });

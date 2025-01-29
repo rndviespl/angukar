@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Entity } from '../../../service/service-structure-api';
+import { apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
 import { CardApiService } from '../../../service/card-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
@@ -13,11 +13,12 @@ import { EntityEditDialogComponent } from '../entity-edit-dialog/entity-edit-dia
   selector: 'app-card-entity',
   imports: [IconTrashComponent, SwitchComponent],
   templateUrl: './card-entity.component.html',
-  styleUrl: './card-entity.component.css'
+  styleUrls: ['./card-entity.component.css']
 })
 export class CardEntityComponent {
+  @Input() apiInfo!: apiServiceShortStructure; // Ensure this is correct
   @Input() entityInfo!: Entity;
-  @Input() apiName!: string;
+  @Input() apiName!: string = "";
   oldName: string = "";
   entities: Entity[] = [];
   sub: Subscription | null = null;
@@ -50,8 +51,10 @@ export class CardEntityComponent {
   }
 
   navigateToApiDetails(): void {
-    if (this.apiName && this.entityInfo) {
-      this.router.navigate(['/api/ApiEntity', this.apiName, this.entityInfo.name]);
+    console.log('apiInfo:', this.apiInfo);
+    console.log('entityInfo:', this.entityInfo);
+    if (this.apiInfo && this.entityInfo) {
+      this.router.navigate(['/ApiEntity', this.apiInfo.name, this.entityInfo.name]);
     }
   }
 
@@ -60,7 +63,7 @@ export class CardEntityComponent {
     this.dialog(this.entityInfo).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
-        this.cardEntityService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
+        this.cardEntityService.updateApiEntity(this.apiInfo.name, this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
           },

@@ -1,0 +1,36 @@
+@if (apiInfo && entityInfo != null){
+<div class="card">
+    <div class="card-content">
+        <div class="card-header">
+            <h1 tuiTitle>{{actionInfo.route}}</h1>
+            <p>{{ apiInfo.isActive }}</p>
+            <div class="card-body">
+                <span tuiSubtitle> {{actionInfo.type}}</span>
+                <app-switch [value]="actionInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
+            </div>
+            <div class="card-actions">
+                <button tuiButton>редактировать</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@else
+{
+<div class="card">
+    <div class="card-content">
+        <div class="card-header">
+            <h1 tuiTitle>Информация не найдена</h1>
+            <aside tuiAccessories>
+                <tui-avatar appearance="primary" src="@tui.star" />
+            </aside>
+        </div>
+        <div class="card-body">
+            <span tuiSubtitle>Subtitle</span>
+        </div>
+    </div>
+    <div class="card-actions">
+        <!-- You can add any additional actions here if needed -->
+    </div>
+</div>
+}
