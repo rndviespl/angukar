@@ -1,0 +1,10 @@
+<div class="top-right">
+    <i class="fas fa-edit" (click)="deleteCard(apiInfo)"></i>
+    <i class="fas fa-trash" (click)="deleteCard(apiInfo)"></i>
+    <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
+</div>
+<h3>{{ apiInfo.name }}</h3>
+<p>{{ apiInfo.description }}</p>
+<div class="actions">
+    <button tuiButton (click)="navigateToApiDetails(apiInfo.name)">Детали</button>
+</div>

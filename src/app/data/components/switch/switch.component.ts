@@ -16,7 +16,7 @@ import { TuiSwitch, tuiSwitchOptionsProvider } from '@taiga-ui/kit';
 })
 export class SwitchComponent implements OnInit {
   @Input() value: boolean = false; // Добавлено свойство value
-  @Output() toggle = new EventEmitter<void>(); // Добавлено событие toggle
+  @Output() toggle: EventEmitter<boolean> = new EventEmitter<boolean>(); 
 
   protected readonly invalidTrue = new FormControl(true, () => ({ invalid: true }));
   protected readonly invalidFalse = new FormControl(false, () => ({ invalid: true }));
@@ -27,7 +27,6 @@ export class SwitchComponent implements OnInit {
   }
 
   onToggle(): void {
-    this.value = !this.value; // Toggle the value
-    this.toggle.emit(); // Emit the toggle event
+    this.toggle.emit(this.value); // Emit the toggle event
   }
 }
