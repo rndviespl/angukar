@@ -2,10 +2,10 @@
     <div class="card-header">
       <h1 tuiTitle>{{ entityInfo.name }}</h1>
     </div>
-    <app-switch [value]="entityInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
-  </div>
-  <div class="card-actions">
-    <button tuiButton>редактировать</button>
+    <app-switch></app-switch>
+</div>
+<div class="card-actions">
+    <button tuiButton (click)="openEditDialog()">редактировать</button>
     <button tuiButton (click)="navigateToApiDetails()">детали</button>
     <div>
       <app-icon-trash [item]="entityInfo"></app-icon-trash> <!-- Передаем данные карточки -->
