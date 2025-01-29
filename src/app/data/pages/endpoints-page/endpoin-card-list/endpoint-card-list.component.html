@@ -1,7 +1,14 @@
-<p>endpoint list</p>
-
 <div class="card-container">
-    <div *ngFor="let item of actions" tuiAppearance="floating" tuiCardLarge class="card">
-        <app-card-endpoint [apiServiceName]="apiInfo.name" [entityName]="entityInfo.name"></app-card-endpoint>
+    <div *ngFor="let action of actions" class="action-card">
+      <div class="top-right">
+        <i class="fa fa-edit"></i>
+        <i class="fa fa-trash"></i>
+      </div>
+      <h3>{{ action.route }}</h3>
+      <p>{{ action.type }}</p>
+      <p>{{ action.isActive ? 'Active' : 'Inactive' }}</p>
+      <div class="actions">
+      </div>
     </div>
-</div>
+  </div>
+  
