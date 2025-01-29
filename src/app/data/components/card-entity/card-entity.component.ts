@@ -17,21 +17,22 @@ import { EntityEditDialogComponent } from '../entity-edit-dialog/entity-edit-dia
 })
 export class CardEntityComponent {
   @Input() entityInfo!: Entity;
+  @Input() apiName!: string;
+  oldName: string = "";
   entities: Entity[] = [];
   sub: Subscription | null = null;
-  apiName: string | null = null;
   loading: boolean = false; // Add loading state
   private readonly dialog = tuiDialog(EntityEditDialogComponent, {
     dismissible: true,
     label: "Редактировать",
-});
+  });
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
     private cardEntityService: CardApiService,
-  ) {}
+  ) { }
 
   onToggleChange(newState: boolean) {
     this.entityInfo.isActive = newState; // Update state in parent component
@@ -54,19 +55,27 @@ export class CardEntityComponent {
     }
   }
 
-openEditDialog(): void{
-  this.dialog(this.entityInfo).subscribe({
-    next: (data) => {
-        console.info(`Dialog emitted data = ${data}`);
-        this.entityInfo = data;
+  openEditDialog(): void {
+    this.oldName = this.entityInfo.name;
+    this.dialog(this.entityInfo).subscribe({
+      next: (data) => {
+        console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
+        this.cardEntityService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
+          next: (response) => {
+            console.log('Сущность обновлена:', response);
+          },
+          error: (error) => {
+            console.error('Ошибка при обновлении сущности:', error);
+          }
+        })
         this.cd.markForCheck();
-        
-    },
-    complete: () => {
+
+      },
+      complete: () => {
         console.info('Dialog closed');
-    },
-});
-}
+      },
+    });
+  }
 
   onRefresh(): void {
     if (this.apiName) {

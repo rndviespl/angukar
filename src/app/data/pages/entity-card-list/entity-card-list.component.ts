@@ -26,7 +26,7 @@ import { CardEntityComponent } from '../../components/card-entity/card-entity.co
 export class EntityCardListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
   sub: Subscription | null = null;
-  apiName: string | null = null;
+  apiName!: string;
   loading: boolean = false; // Add loading state
   
   constructor(
