@@ -18,7 +18,7 @@ import { EntityEditDialogComponent } from '../entity-edit-dialog/entity-edit-dia
 export class CardEntityComponent {
   @Input() apiInfo!: apiServiceShortStructure; // Ensure this is correct
   @Input() entityInfo!: Entity;
-  @Input() apiName!: string = "";
+  @Input() apiName: string = "";
   oldName: string = "";
   entities: Entity[] = [];
   sub: Subscription | null = null;
