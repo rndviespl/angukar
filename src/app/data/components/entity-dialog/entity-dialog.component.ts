@@ -13,10 +13,10 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
+import { Entity } from '../../../service/service-structure-api';
 
 @Component({
-  selector: 'app-api-edit-dialog',
+  selector: 'app-entity-edit-dialog',
   imports: [
     AsyncPipe,
     FormsModule,
@@ -30,20 +30,21 @@ import { apiServiceShortStructure, Entity } from '../../../service/service-struc
     TuiTextfield,
     TuiTextfieldControllerModule,
   ],
-  templateUrl: './api-edit-dialog.component.html',
-  styleUrl: './api-edit-dialog.component.css'
+  templateUrl: './entity-dialog.component.html',
+  styleUrl: './entity-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApiEditDialogComponent {
+export class EntityDialogComponent {
   private readonly dialogs = inject(TuiDialogService);
 
 
-  public readonly context = injectContext<TuiDialogContext<apiServiceShortStructure, apiServiceShortStructure>>();
+  public readonly context = injectContext<TuiDialogContext<Entity, Entity>>();
 
   protected get hasValue(): boolean {
-    return this.data.name.trim() !== '';
+      return this.data.name.trim() !== '';
   }
 
-  protected get data(): apiServiceShortStructure {
+  protected get data(): Entity {
     return this.context.data;
   }
 

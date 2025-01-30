@@ -7,7 +7,7 @@ import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog } from '@taiga-ui/core';
-import { EntityEditDialogComponent } from '../entity-edit-dialog/entity-edit-dialog.component';
+import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
 import { RouteInfoService } from '../../../service/route-info.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class CardEntityComponent {
   entities: Entity[] = [];
   sub: Subscription | null = null;
   loading: boolean = false;
-  private readonly dialog = tuiDialog(EntityEditDialogComponent, {
+  private readonly dialog = tuiDialog(EntityDialogComponent, {
     dismissible: true,
     label: "Редактировать",
   });
@@ -43,7 +43,7 @@ export class CardEntityComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.updateServiceStatus(this.entityInfo.name, newState).subscribe({
+    this.cardEntityService.updateEntityStatus(this.apiInfo.name, this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
