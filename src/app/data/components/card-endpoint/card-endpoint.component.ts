@@ -7,7 +7,7 @@ import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { CardApiService } from '../../../service/card-api.service';
 import { RouteInfoService } from '../../../service/route-info.service';
 import { tuiDialog } from '@taiga-ui/core';
-import { ApiEditDialogComponent } from '../api-edit-dialog/api-edit-dialog.component';
+import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -31,7 +31,7 @@ export class CardEndpointComponent {
   sub: Subscription | null = null;
   loading: boolean = false;
 
-  private readonly dialog = tuiDialog(ApiEditDialogComponent, {
+  private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
     label: "Редактировать",
   });

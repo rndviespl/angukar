@@ -22,7 +22,7 @@ import { SwitchComponent } from '../../components/switch/switch.component';
     CommonModule,
     IconTrashComponent,
     CardEntityComponent,
-    BackButtonComponent
+    BackButtonComponent,
     HeaderComponent,
     SwitchComponent
   ],
