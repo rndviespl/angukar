@@ -1,7 +1,4 @@
-<div class="header">
-  <img alt="Company Logo" src="https://www.titan2.ru/images/temp/logo__ru.jpg"/>
-  <button>Добавить API</button>
-</div>
+<app-header [buttonText]="'Добавить API'"/>
 <div class="container">
     <div *ngFor="let item of cards" tuiAppearance="floating" tuiCardLarge class="card">
       <app-card-api [apiInfo]="item"></app-card-api>
