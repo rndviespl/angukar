@@ -1,4 +1,4 @@
-<app-header [buttonText]="'Добавить API'" (create)="openCreateDialog()"/>
+<app-header [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()"/>
 <div class="container">
     <div *ngFor="let item of cards" tuiAppearance="floating" tuiCardLarge class="card">
       <app-card-api [apiInfo]="item"></app-card-api>
