@@ -60,18 +60,19 @@ export class CardEntityComponent {
 
   openEditDialog(): void {
     this.oldName = this.entityInfo.name;
-    this.dialog(this.entityInfo).subscribe({
+    this.dialog({... this.entityInfo}).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
         this.cardEntityService.updateApiEntity(this.apiInfo.name, this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
+            this.entityInfo = data;
+            this.cd.markForCheck();
           },
           error: (error) => {
             console.error('Ошибка при обновлении сущности:', error);
           }
         })
-        this.cd.markForCheck();
 
       },
       complete: () => {
