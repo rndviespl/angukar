@@ -5,12 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Entity, EntityShort, apiServiceShortStructure } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { TuiButton } from '@taiga-ui/core';
+import { TuiButton, tuiDialog } from '@taiga-ui/core';
 import { CardApiService } from '../../../service/card-api.service';
 import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
+import { EntityDialogComponent } from '../../components/entity-dialog/entity-dialog.component';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -33,7 +34,16 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   apiName!: string;
   loading: boolean = false; // Add loading state
   apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure; // Initialize apiInfo
-
+  private readonly dialog = tuiDialog(EntityDialogComponent, {
+    dismissible: true,
+    label: "Создать",
+  });
+  entity:Entity = {
+    name: '',
+    isActive: false,
+    structure: '',
+    actions: []
+  };
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
@@ -61,6 +71,27 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
       } else {
         console.error('API name is null');
       }
+    });
+  }
+
+  openCreateDialog(): void {
+    this.dialog({... this.entity}).subscribe({
+      next: (data) => {        
+        this.cardEntityService.createApiEntity(this.apiName,data).subscribe({
+          next: (response) => {
+            console.log('entity добавлено:', response);
+            this.entities.push(data);
+            this.cd.markForCheck();
+          },
+          error: (error) => {
+            console.error('Ошибка при создании сущности:', error);
+          }
+        })
+
+      },
+      complete: () => {
+        console.info('Dialog closed');
+      },
     });
   }
 }
