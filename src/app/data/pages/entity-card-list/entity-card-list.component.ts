@@ -9,6 +9,8 @@ import { TuiButton } from '@taiga-ui/core';
 import { CardApiService } from '../../../service/card-api.service';
 import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
+import { RouteInfoService } from '../../../service/route-info.service';
+import { BackButtonComponent } from '../../components/back-button/back-button.component';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -17,7 +19,8 @@ import { CardEntityComponent } from '../../components/card-entity/card-entity.co
     TuiButton,
     CommonModule,
     IconTrashComponent,
-    CardEntityComponent
+    CardEntityComponent,
+    BackButtonComponent
   ],
   templateUrl: './entity-card-list.component.html',
   styleUrls: ['./entity-card-list.component.css'],

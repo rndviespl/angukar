@@ -24,6 +24,7 @@ export class CardEntityComponent {
   entities: Entity[] = [];
   sub: Subscription | null = null;
   loading: boolean = false;
+  
   private readonly dialog = tuiDialog(EntityEditDialogComponent, {
     dismissible: true,
     label: "Редактировать",
@@ -56,9 +57,11 @@ export class CardEntityComponent {
   navigateToApiDetails(): void {
     console.log('apiInfo:', this.apiInfo);
     console.log('entityInfo:', this.entityInfo);
+    
     if (this.apiInfo && this.entityInfo) {
       this.routeInfoService.setApiServiceName(this.apiInfo.name); // Set API name
       this.routeInfoService.setEntityName(this.entityInfo.name); // Set entity name
+      this.routeInfoService.setPreviousPath(this.router.url);
       this.router.navigate(['/ApiEntity', this.apiInfo.name, this.entityInfo.name]);
     }
   }

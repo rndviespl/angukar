@@ -1,44 +1,13 @@
-@if (apiInfo && entityInfo != null){
-<div class="card">
-    <div class="card-content">
-        <div class="card-header">
-          <h1 tuiTitle>{{ entityInfo.name }}</h1>
-        </div>
-        <app-switch></app-switch>
-      </div>
-      <div class="card-actions">
-        <button tuiButton (click)="openEditDialog()">редактировать</button>
-        <div>
-          <app-icon-trash [item]="entityInfo"></app-icon-trash> <!-- Передаем данные карточки -->
-        </div>
-      </div>
-      <div class="endpoint-list">
-        <app-endpoint-card-list
-          [apiServiceName]="apiInfo.name"
-          [entityName]="entityInfo.name"
-          [apiInfo]="apiInfo"
-          [entityInfo]="entityInfo">
-        </app-endpoint-card-list>
-      </div>
-      
+<div class="top-right">
+    <i class="fa fa-edit" (click)="openEditDialog()"></i>
+    <app-icon-trash [item]="actionInfo"></app-icon-trash>
+    <app-switch [value]="actionInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
 </div>
-}
-@else
-{
-<div class="card">
-    <div class="card-content">
-        <div class="card-header">
-            <h1 tuiTitle>Информация не найдена</h1>
-            <aside tuiAccessories>
-                <tui-avatar appearance="primary" src="@tui.star" />
-            </aside>
-        </div>
-        <div class="card-body">
-            <span tuiSubtitle>Subtitle</span>
-        </div>
+<div class="card-content">
+    <div class="card-header">
+        <h1 tuiTitle>{{ entityInfo.name }}</h1>
     </div>
-    <div class="card-actions">
-        <!-- You can add any additional actions here if needed -->
-    </div>
+    <h3>{{ actionInfo.route }}</h3>
+    <p>{{ actionInfo.type }}</p>
+    <p>{{ actionInfo.isActive ? 'Active' : 'Inactive' }}</p>
 </div>
-}
