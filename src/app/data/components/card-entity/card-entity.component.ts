@@ -7,7 +7,7 @@ import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog } from '@taiga-ui/core';
-import { EntityEditDialogComponent } from '../entity-edit-dialog/entity-edit-dialog.component';
+import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
 import { RouteInfoService } from '../../../service/route-info.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class CardEntityComponent {
   entities: Entity[] = [];
   sub: Subscription | null = null;
   loading: boolean = false;
-  private readonly dialog = tuiDialog(EntityEditDialogComponent, {
+  private readonly dialog = tuiDialog(EntityDialogComponent, {
     dismissible: true,
     label: "Редактировать",
   });

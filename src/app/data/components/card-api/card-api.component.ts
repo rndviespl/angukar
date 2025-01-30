@@ -8,7 +8,7 @@ import { CardApiService } from '../../../service/card-api.service';
 import { Router, RouterModule } from '@angular/router';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
 import { SwitchComponent } from '../switch/switch.component';
-import { ApiEditDialogComponent } from '../api-edit-dialog/api-edit-dialog.component';
+import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 
 @Component({
   selector: 'app-card-api',
@@ -30,7 +30,7 @@ import { ApiEditDialogComponent } from '../api-edit-dialog/api-edit-dialog.compo
 export class CardApiComponent {
   @Input() apiInfo!: apiServiceShortStructure;
   oldName: string = "";
-  private readonly dialog = tuiDialog(ApiEditDialogComponent, {
+  private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
     label: "Редактировать",
   });

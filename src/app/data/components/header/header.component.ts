@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -9,4 +9,10 @@ import { Component, Input } from '@angular/core';
 export class HeaderComponent {
   @Input() logoUrl: string = "https://www.titan2.ru/images/temp/logo__ru.jpg"; // URL логотипа
   @Input() buttonText: string = ''; // Текст кнопки
+  @Output() click: EventEmitter<void> = new EventEmitter<void>(); 
+
+  Click(): void {
+    this.click.emit(); // Emit the toggle event
+  }
+  
 }
