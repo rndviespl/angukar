@@ -8,7 +8,9 @@ import { CardApiService } from '../../../service/card-api.service';
 import { Router, RouterModule } from '@angular/router';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
 import { SwitchComponent } from '../switch/switch.component';
+import { RouteInfoService } from '../../../service/route-info.service';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
+
 
 @Component({
   selector: 'app-card-api',
@@ -36,7 +38,8 @@ export class CardApiComponent {
   });
   constructor(private cardApiService: CardApiService,
     private cd: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private routeInfoService: RouteInfoService,
   ) {}
   onToggleChange(newState: boolean) {
     this.apiInfo.isActive = newState; // Обновляем состояние в родительском компоненте
@@ -53,6 +56,7 @@ export class CardApiComponent {
     });
   }
   navigateToApiDetails(apiName: string): void {
+    this.routeInfoService.setPreviousPath(this.router.url);
     this.router.navigate(['/ApiService', apiName]); // Переход на страницу API без передачи isActive
   }
 

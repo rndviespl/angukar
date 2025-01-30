@@ -9,6 +9,8 @@ import { TuiButton } from '@taiga-ui/core';
 import { CardApiService } from '../../../service/card-api.service';
 import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
+import { RouteInfoService } from '../../../service/route-info.service';
+import { BackButtonComponent } from '../../components/back-button/back-button.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
 
@@ -20,6 +22,7 @@ import { SwitchComponent } from '../../components/switch/switch.component';
     CommonModule,
     IconTrashComponent,
     CardEntityComponent,
+    BackButtonComponent
     HeaderComponent,
     SwitchComponent
   ],

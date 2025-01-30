@@ -1,14 +1,14 @@
-<div class="card-container">
-    <div *ngFor="let action of actions" class="action-card">
-      <div class="top-right">
-        <i class="fa fa-edit"></i>
-        <i class="fa fa-trash"></i>
-      </div>
-      <h3>{{ action.route }}</h3>
-      <p>{{ action.type }}</p>
-      <p>{{ action.isActive ? 'Active' : 'Inactive' }}</p>
-      <div class="actions">
-      </div>
+<div class="header">
+    <img alt="Company Logo" src="https://www.titan2.ru/images/temp/logo__ru.jpg"/>
+    <app-back-button></app-back-button>
+</div>
+<div class="container">
+    <div *ngFor="let action of actions" tuiAppearance="floating" tuiCardLarge class="card">
+        <app-card-endpoint
+          [apiInfo]="apiInfo"
+          [entityInfo]="entityInfo"
+          [actionInfo]="action"
+          [apiName]="apiName"
+        ></app-card-endpoint>
     </div>
-  </div>
-  
+</div>

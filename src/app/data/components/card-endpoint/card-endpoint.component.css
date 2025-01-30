@@ -1,126 +1,21 @@
 .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 16px;
+    margin: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    padding: 20px;
-    background-color: #fff;
 }
 
 .card-content {
-    display: flex;
-    flex-direction: column;
+    margin-top: 16px;
 }
 
 .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.card-header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #0056a6;
-}
-
-.card-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.card-actions button {
-    background-color: #0056a6;
-    color: white;
-    border: none;
-    padding: 7px 13px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.card-actions button:hover {
-    background-color: #004080;
-}
-
-.endpoint-list {
-    margin-top: 20px;
+    margin-bottom: 16px;
 }
 
 .top-right {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    align-items: center;
-}
-
-.top-right i {
-    margin-right: 10px;
-    cursor: pointer;
-    color: #666;
-    transition: color 0.3s;
-}
-
-.top-right i:hover {
-    color: #000;
-}
-
-h3 {
-    margin: 0;
-    font-size: 24px;
-    color: #0056a6;
-}
-
-p {
-    margin: 10px 0;
-    color: #666;
-    font-size: 16px;
-    line-height: 1.5;
-    height: calc(1.5em * 2);
-    overflow-y: auto;
-    box-sizing: border-box;
-}
-
-/* Стилизация полосы прокрутки для WebKit-браузеров (Chrome, Safari, Edge) */
-p::-webkit-scrollbar {
-    width: 8px;
-}
-
-p::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-p::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-p::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-.actions {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-}
-
-.actions button {
-    background-color: #0056a6;
-    color: white;
-    border: none;
-    padding: 7px 13px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.actions button:hover {
-    background-color: #004080;
 }
