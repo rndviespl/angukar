@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog } from '@taiga-ui/core';
 import { EntityEditDialogComponent } from '../entity-edit-dialog/entity-edit-dialog.component';
+import { RouteInfoService } from '../../../service/route-info.service';
 
 @Component({
   selector: 'app-card-entity',
@@ -16,23 +17,25 @@ import { EntityEditDialogComponent } from '../entity-edit-dialog/entity-edit-dia
   styleUrls: ['./card-entity.component.css']
 })
 export class CardEntityComponent {
-  @Input() apiInfo!: apiServiceShortStructure; // Ensure this is correct
+  @Input() apiInfo!: apiServiceShortStructure;
   @Input() entityInfo!: Entity;
   @Input() apiName: string = "";
   oldName: string = "";
   entities: Entity[] = [];
   sub: Subscription | null = null;
-  loading: boolean = false; // Add loading state
+  loading: boolean = false;
   private readonly dialog = tuiDialog(EntityEditDialogComponent, {
     dismissible: true,
     label: "Редактировать",
   });
+  
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
     private cardEntityService: CardApiService,
+    private routeInfoService: RouteInfoService // Inject the shared service
   ) { }
 
   onToggleChange(newState: boolean) {
@@ -54,6 +57,8 @@ export class CardEntityComponent {
     console.log('apiInfo:', this.apiInfo);
     console.log('entityInfo:', this.entityInfo);
     if (this.apiInfo && this.entityInfo) {
+      this.routeInfoService.setApiServiceName(this.apiInfo.name); // Set API name
+      this.routeInfoService.setEntityName(this.entityInfo.name); // Set entity name
       this.router.navigate(['/ApiEntity', this.apiInfo.name, this.entityInfo.name]);
     }
   }

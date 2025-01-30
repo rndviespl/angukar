@@ -2,17 +2,25 @@
 <div class="card">
     <div class="card-content">
         <div class="card-header">
-            <h1 tuiTitle>{{actionInfo.route}}</h1>
-            <p>{{ apiInfo.isActive }}</p>
-            <div class="card-body">
-                <span tuiSubtitle> {{actionInfo.type}}</span>
-                <app-switch [value]="actionInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
-            </div>
-            <div class="card-actions">
-                <button tuiButton>редактировать</button>
-            </div>
+          <h1 tuiTitle>{{ entityInfo.name }}</h1>
         </div>
-    </div>
+        <app-switch></app-switch>
+      </div>
+      <div class="card-actions">
+        <button tuiButton (click)="openEditDialog()">редактировать</button>
+        <div>
+          <app-icon-trash [item]="entityInfo"></app-icon-trash> <!-- Передаем данные карточки -->
+        </div>
+      </div>
+      <div class="endpoint-list">
+        <app-endpoint-card-list
+          [apiServiceName]="apiInfo.name"
+          [entityName]="entityInfo.name"
+          [apiInfo]="apiInfo"
+          [entityInfo]="entityInfo">
+        </app-endpoint-card-list>
+      </div>
+      
 </div>
 }
 @else
