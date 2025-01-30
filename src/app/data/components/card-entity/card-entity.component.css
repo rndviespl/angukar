@@ -1,94 +1,50 @@
-.card-container {
-    display: flex; /* Use flexbox for layout */
-    flex-wrap: wrap; /* Allow cards to wrap to the next line */
-    justify-content: space-between; /* Space out cards evenly */
-    margin: 2rem; /* Margin around the container */
-    background-color: #f9f9f9; /* Light background for the container */
-    padding: 1rem; /* Padding around the container */
-    border-radius: 0.5rem; /* Rounded corners for the container */
+h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #0056a6;
+    width: 75%; /* Ширина элемента */
+    text-overflow: ellipsis; /* Добавляем троеточие */
+    white-space: nowrap; /* Запрещаем перенос текста на новую строку */
+    overflow: hidden; /* Скрываем текст, который не помещается */
 }
-
-.card {
-    flex: 1 1 calc(25% - 1rem); /* Responsive card width with spacing (4 cards per row) */
-    margin: 0.5rem; /* Margin between cards */
-    border-radius: 0.5rem; /* Rounded corners */
-    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    overflow: hidden; /* Prevent overflow of content */
-    transition: transform 0.2s; /* Smooth transition for hover effect */
-    min-width: 200px; /* Minimum width for cards */
-    max-width: 300px; /* Maximum width for cards */
-    background-color: #ffffff; /* White background for cards */
-}
-
-.card:hover {
-    transform: translateY(-0.5rem); /* Lift effect on hover */
-    box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
-}
-
-.card-content {
-    padding: 1rem; /* Padding inside the card */
-    background-color: #f0f4f8; /* Light blue background for card content */
-    border-radius: 0.5rem; /* Rounded corners for content */
-}
-
-.card-header {
-    margin-bottom: 0.5rem; /* Space below the header */
-    background-color: #e0e7ff; /* Light purple background for header */
-    padding: 0.5rem; /* Padding for header */
-    border-radius: 0.5rem; /* Rounded corners for header */
-}
-
-.card-header h1 {
-    font-size: 1.5rem; /* Adjust font size for the title */
-    margin: 0; /* Remove default margin */
-    color: #333; /* Dark text color for contrast */
-}
-
-.card-actions {
+  
+.actions {
     display: flex;
-    justify-content: space-between; /* Distributes space between buttons */
-    align-items: center; /* Aligns items vertically */
-    flex-wrap: wrap; /* Allow buttons to wrap if necessary */
-}
-
-.card-actions button {
-    flex: 1 1 auto; /* Allow buttons to grow and shrink */
-    margin: 0 5px; /* Adds some space between buttons */
-    padding: 0.5rem; /* Padding inside buttons */
-    border-radius: 0.25rem; /* Rounded corners for buttons */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.2s, transform 0.1s; /* Smooth transition for hover effect */
-    background-color: #d1f6fa; /* Light green background for buttons */
-    color: #333; /* Dark text color for buttons */
-    min-width: 100px; /* Set a minimum width for buttons */
-    max-width: 150px; /* Set a maximum width for buttons */
-}
-
-.card-actions button:hover {
-    background-color: #a0e0e0; /* Change color on hover */
-}
-
-.card-actions button:active {
-    background-color: #688d8c; /* Darker green on click */
-}
-
-/* Media Queries for Responsive Design */
-@media (max-width: 768px) {
-    .card {
-        flex: 1 1 calc(50% - 1rem); /* Adjust card width for smaller screens (2 cards per row) */
-    }
-    .card-actions button {
-        min-width: 80px; /* Adjust minimum width for smaller screens */
-        margin: 0 2px; /* Reduce margin for smaller screens */
-    }
-}
-
-@media (max-width: 480px) {
-    .card {
-        flex: 1 1 calc(100% - 1rem); /* Full width for very small screens */
-    }
-    .card-actions button {
-        min-width: 70px; /* Further adjust minimum width for very small screens */
-        margin: 0 1px; /* Further reduce margin for very small screens */
-    }
-}
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+.actions button {
+    background-color: #0056a6;
+    color: white;
+    border: none;
+    block-size: auto;
+    padding: 7px 13px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+.actions button:hover {
+    background-color: #004080;
+  }
+  
+.top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+.top-right i {
+    margin-right: 10px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.3s;
+  }
+  
+.top-right i:hover {
+    color: #000;
+  }

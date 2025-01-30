@@ -42,7 +42,7 @@ export class EntityEditDialogComponent { private readonly dialogs = inject(TuiDi
   public readonly context = injectContext<TuiDialogContext<Entity, Entity>>();
 
   protected get hasValue(): boolean {
-      return this.data.name.trim() !== '' && this.data.structure.trim() !== '';
+      return this.data.name.trim() !== '';
   }
 
   protected get data(): Entity {
