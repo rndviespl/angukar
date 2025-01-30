@@ -43,7 +43,7 @@ export class CardEntityComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.updateServiceStatus(this.entityInfo.name, newState).subscribe({
+    this.cardEntityService.updateEntityStatus(this.apiInfo.name, this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
