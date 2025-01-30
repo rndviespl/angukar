@@ -1,5 +1,9 @@
-<div class="parent-container">
-    <div *ngFor="let item of entities" tuiCardLarge class="card">
+<div class="header">
+  <img alt="Company Logo" src="https://www.titan2.ru/images/temp/logo__ru.jpg"/>
+  <button>Добавить сущность</button>
+</div>
+<div class="container">
+    <div *ngFor="let item of entities" tuiAppearance="floating" tuiCardLarge class="card">
       <app-card-entity [entityInfo]="item" [apiInfo]="apiInfo"></app-card-entity>
     </div>
   </div>

@@ -41,7 +41,7 @@ export class EntityEditDialogComponent {
   public readonly context = injectContext<TuiDialogContext<Entity, Entity>>();
 
   protected get hasValue(): boolean {
-    return this.data.name.trim() !== '';
+      return this.data.name.trim() !== '';
   }
 
   protected get data(): Entity {
