@@ -1,21 +1,80 @@
 .container {
     padding: 20px;
+    position: relative; /* Добавляем относительное позиционирование для контейнера */
+}
+
+.infoApi {
+    margin-bottom: 40px; /* Добавляем отступ снизу для разделения секций */
+}
+
+.header-section {
+    position: relative; /* Добавляем относительное позиционирование для заголовочной секции */
+    margin-bottom: 20px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px; /* Расстояние между кнопками */
+}
+
+.edit-button, .delete-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.edit-button {
+    background-color: #0056a6;
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #004080;
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+}
+
+.separator-section {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.separator-section h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.separator {
+    border: 0;
+    height: 1px;
+    background-color: #ddd;
+    margin: 0 auto;
+    width: 50%;
+}
+
+.grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
-
 
 .card {
     background-color: #e6f0fa;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: normal;
-    position: relative;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -25,19 +84,32 @@
 }
 
 @media (max-width: 1200px) {
-    .container {
+    .grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 992px) {
-    .container {
+    .grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
-    .container {
+    .grid {
         grid-template-columns: 1fr;
     }
+}
+
+p {
+    word-wrap: break-word; /* Перенос слов на новую строку, если они не помещаются */
+    white-space: normal; /* Разрешаем перенос текста на новую строку */
+}
+
+.top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
 }

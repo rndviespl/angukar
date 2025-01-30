@@ -10,6 +10,7 @@ import { CardApiService } from '../../../service/card-api.service';
 import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
 import { HeaderComponent } from '../../components/header/header.component';
+import { SwitchComponent } from '../../components/switch/switch.component';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -19,7 +20,8 @@ import { HeaderComponent } from '../../components/header/header.component';
     CommonModule,
     IconTrashComponent,
     CardEntityComponent,
-    HeaderComponent
+    HeaderComponent,
+    SwitchComponent
   ],
   templateUrl: './entity-card-list.component.html',
   styleUrls: ['./entity-card-list.component.css'],
@@ -52,6 +54,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
           if (apiStructure) {
             this.entities = apiStructure.entities;
             this.apiInfo = apiStructure as apiServiceShortStructure; // Assuming apiInfo is the entire apiStructure
+            console.log(this.apiInfo)
             this.cd.markForCheck();
           }
         });
