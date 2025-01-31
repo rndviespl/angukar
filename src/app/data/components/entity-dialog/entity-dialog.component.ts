@@ -30,33 +30,32 @@ import { Entity } from '../../../service/service-structure-api';
     TuiTextfield,
     TuiTextfieldControllerModule,
   ],
-  templateUrl: './entity-edit-dialog.component.html',
-  styleUrl: './entity-edit-dialog.component.css',
+  templateUrl: './entity-dialog.component.html',
+  styleUrl: './entity-dialog.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EntityEditDialogComponent { private readonly dialogs = inject(TuiDialogService);
- 
-  protected name = '';
-  protected items = [10, 50, 100];
+export class EntityDialogComponent {
+  private readonly dialogs = inject(TuiDialogService);
+
 
   public readonly context = injectContext<TuiDialogContext<Entity, Entity>>();
 
   protected get hasValue(): boolean {
-      return this.data.name.trim() !== '' && this.data.structure.trim() !== '';
+      return this.data.name.trim() !== '';
   }
 
   protected get data(): Entity {
-      return this.context.data;
+    return this.context.data;
   }
 
   protected submit(): void {
-      if (this.hasValue) {
-          this.context.completeWith(this.data);
-      }
+    if (this.hasValue) {
+      this.context.completeWith(this.data);
+    }
   }
 
   protected showDialog(content: TemplateRef<TuiDialogContext>): void {
-      this.dialogs.open(content, {dismissible: true}).subscribe();
+    this.dialogs.open(content, { dismissible: true }).subscribe();
   }
 
 }

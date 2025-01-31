@@ -1,0 +1,14 @@
+<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.name">
+    Имя сущности
+</tui-input>
+
+<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.structure">
+    Структура
+</tui-input>
+
+
+<p>
+    <button size="m" tuiButton type="button" [disabled]="!hasValue" (click)="submit()">
+        Submit
+    </button>
+</p>

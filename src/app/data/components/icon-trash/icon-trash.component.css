@@ -1,9 +1,10 @@
-:host {
-    display: flex;
-    gap: 0.625rem;
-}
-
-img {
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
-}
+i {
+    margin-right: 10px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.3s;
+  }
+  
+i:hover {
+    color: #000;
+  }
