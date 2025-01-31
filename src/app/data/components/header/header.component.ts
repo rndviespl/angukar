@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BackButtonComponent } from '../back-button/back-button.component';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [BackButtonComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
