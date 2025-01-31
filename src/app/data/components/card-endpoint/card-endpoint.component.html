@@ -3,11 +3,5 @@
     <app-icon-trash [item]="actionInfo"></app-icon-trash>
     <app-switch [value]="actionInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
 </div>
-<div class="card-content">
-    <div class="card-header">
-        <h1 tuiTitle>{{ entityInfo.name }}</h1>
-    </div>
-    <h3>{{ actionInfo.route }}</h3>
-    <p>{{ actionInfo.type }}</p>
-    <p>{{ actionInfo.isActive ? 'Active' : 'Inactive' }}</p>
-</div>
+<h3>{{ actionInfo.route }}</h3>
+<p>Тип: {{ actionInfo.type }}</p>   

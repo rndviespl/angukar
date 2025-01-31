@@ -9,6 +9,7 @@ import { TuiButton } from '@taiga-ui/core';
 import { IconTrashComponent } from '../../../components/icon-trash/icon-trash.component';
 import { BackButtonComponent } from '../../../components/back-button/back-button.component';
 import { CardEndpointComponent } from '../../../components/card-endpoint/card-endpoint.component';
+import { HeaderComponent } from '../../../components/header/header.component';
 
 @Component({
   selector: 'app-endpoint-card-list',
@@ -18,7 +19,8 @@ import { CardEndpointComponent } from '../../../components/card-endpoint/card-en
     TuiButton,
     IconTrashComponent,
     CardEndpointComponent,
-    BackButtonComponent
+    BackButtonComponent,
+    HeaderComponent
   ],
   
   templateUrl: './endpoint-card-list.component.html',
