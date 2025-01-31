@@ -1,14 +1,29 @@
-<div class="header">
-    <img alt="Company Logo" src="https://www.titan2.ru/images/temp/logo__ru.jpg"/>
-    <app-back-button></app-back-button>
-</div>
+<app-header [buttonText]="'Добавить эндпоинт'" />
 <div class="container">
-    <div *ngFor="let action of actions" tuiAppearance="floating" tuiCardLarge class="card">
-        <app-card-endpoint
-          [apiInfo]="apiInfo"
-          [entityInfo]="entityInfo"
-          [actionInfo]="action"
-          [apiName]="apiName"
-        ></app-card-endpoint>
+    <div class="mb-40">
+        <!-- Заголовок и описание -->
+        <div class="header-section">
+            <div class="top-right">
+                <app-switch></app-switch>
+            </div>
+            <h1>ИМЯ СУЩНОСТИ</h1>
+            <div class="actions">
+                <button class="edit-button">Редактировать</button>
+                <button class="delete-button">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Сепаратор и заголовок "Сущности" -->
+    <div class="separator-section">
+        <h2>Эндпоинты</h2>
+        <hr class="separator" />
+    </div>
+
+    <div class="grid">
+        <div *ngFor="let action of actions" tuiAppearance="floating" tuiCardLarge class="card">
+            <app-card-endpoint [apiInfo]="apiInfo" [entityInfo]="entityInfo" [actionInfo]="action"
+                [apiName]="apiName"></app-card-endpoint>
+        </div>
     </div>
 </div>

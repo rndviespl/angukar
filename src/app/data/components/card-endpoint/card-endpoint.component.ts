@@ -46,7 +46,7 @@ export class CardEndpointComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Вызов метода для обновления состояния сервиса
-    this.cardEndpointService.updateServiceStatus(this.actionInfo.route, newState).subscribe({
+    this.cardEndpointService.updateEndpointStatus(this.apiInfo.name, this.entityInfo.name, this.actionInfo.route, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },

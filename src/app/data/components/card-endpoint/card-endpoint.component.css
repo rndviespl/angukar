@@ -1,21 +1,29 @@
-.card {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 16px;
-    margin: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #0056a6;
+    width: 70%; /* Ширина элемента */
+    text-overflow: ellipsis; /* Добавляем троеточие */
+    white-space: nowrap; /* Запрещаем перенос текста на новую строку */
+    overflow: hidden; /* Скрываем текст, который не помещается */
+    height: 2rem;
 }
-
-.card-content {
-    margin-top: 16px;
-}
-
-.card-header {
-    margin-bottom: 16px;
-}
-
+  
 .top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-}
+  }
+  
+.top-right i {
+    margin-right: 10px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.3s;
+  }
+  
+.top-right i:hover {
+    color: #000;
+  }
