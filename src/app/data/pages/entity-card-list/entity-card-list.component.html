@@ -24,7 +24,7 @@
   <!-- Список сущностей -->
   <div class="grid">
     <div *ngFor="let item of entities" tuiAppearance="floating" tuiCardLarge class="card">
-      <app-card-entity [entityInfo]="item" [apiInfo]="apiInfo"></app-card-entity>
+      <app-card-entity [entityInfo]="item" [apiName]="apiInfo.name"></app-card-entity>
     </div>
   </div>
 </div>

@@ -10,6 +10,7 @@ import { IconTrashComponent } from '../../../components/icon-trash/icon-trash.co
 import { BackButtonComponent } from '../../../components/back-button/back-button.component';
 import { CardEndpointComponent } from '../../../components/card-endpoint/card-endpoint.component';
 import { HeaderComponent } from '../../../components/header/header.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-endpoint-card-list',
@@ -34,13 +35,13 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   sub: Subscription | null = null;
   actions: Action[] = [];
-  entities: Entity[] = [];
   entityInfo: Entity = {} as Entity; // Ensure entityInfo is of type Entity
   apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
 
   constructor(
     private getAction: CardApiService,
     private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
     private routeInfoService: RouteInfoService, // Inject the shared service
   ) { }
 
@@ -49,21 +50,15 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.apiName = this.routeInfoService.getApiServiceName(); // Get API name
-    this.entityName = this.routeInfoService.getEntityName(); // Get entity name
-
-    console.log('apiServiceName:', this.apiName);
-    console.log('entityName:', this.entityName);
-
-    if (this.apiName && this.entityName) {
+    this.route.params.subscribe(params => {
+      this.apiName = params['apiServiceName'];
+      this.entityName = params['entityName'];
       this.sub = this.getAction.getActionList(this.apiName, this.entityName).subscribe(it => {
         this.actions = it;
         console.log('Fetched actions:', it);
         console.log('Actions after assignment:', this.actions); // Добавленный лог
         this.cd.detectChanges();
       });
-    } else {
-      console.error('apiServiceName or entityName is undefined');
-    }
+    } )
   }
 }
