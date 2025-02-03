@@ -4,14 +4,10 @@
     <!-- Заголовок и описание -->
     <div class="header-section">
       <div class="top-right">
-        <app-switch [value]="apiInfo.isActive"></app-switch>
+        <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
       </div>
       <h1>{{ apiInfo.name }}</h1>
       <p>{{ apiInfo.description }}</p>
-      <div class="actions">
-        <button class="edit-button">Редактировать</button>
-        <button class="delete-button">Удалить</button>
-      </div>
     </div>
   </div>
 
@@ -24,7 +20,7 @@
   <!-- Список сущностей -->
   <div class="grid">
     <div *ngFor="let item of entities" tuiAppearance="floating" tuiCardLarge class="card">
-      <app-card-entity [entityInfo]="item" [apiInfo]="apiInfo"></app-card-entity>
+      <app-card-entity [entityInfo]="item" [apiName]="apiInfo.name"></app-card-entity>
     </div>
   </div>
 </div>

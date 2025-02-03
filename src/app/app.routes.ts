@@ -15,7 +15,7 @@ export const routes: Routes = [
         title: 'Api details',
     },
     {
-        path: 'ApiEntity/:apiServiceName/:entityName ',
+        path: 'ApiEntity/:apiServiceName/:entityName',
         component: EndpointCardListComponent,
         title: 'Entity details',
     },

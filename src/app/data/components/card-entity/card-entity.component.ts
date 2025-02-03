@@ -17,7 +17,6 @@ import { RouteInfoService } from '../../../service/route-info.service';
   styleUrls: ['./card-entity.component.css']
 })
 export class CardEntityComponent {
-  @Input() apiInfo!: apiServiceShortStructure;
   @Input() entityInfo!: Entity;
   @Input() apiName: string = "";
   oldName: string = "";
@@ -44,7 +43,7 @@ export class CardEntityComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.updateEntityStatus(this.apiInfo.name, this.entityInfo.name, newState).subscribe({
+    this.cardEntityService.updateEntityStatus(this.apiName, this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -55,14 +54,14 @@ export class CardEntityComponent {
   }
 
   navigateToApiDetails(): void {
-    console.log('apiInfo:', this.apiInfo);
+    console.log('apiName:', this.apiName);
     console.log('entityInfo:', this.entityInfo);
     
-    if (this.apiInfo && this.entityInfo) {
-      this.routeInfoService.setApiServiceName(this.apiInfo.name); // Set API name
+    if (this.apiName && this.entityInfo) {
+      this.routeInfoService.setApiServiceName(this.apiName); // Set API name
       this.routeInfoService.setEntityName(this.entityInfo.name); // Set entity name
       this.routeInfoService.setPreviousPath(this.router.url);
-      this.router.navigate(['/ApiEntity', this.apiInfo.name, this.entityInfo.name]);
+      this.router.navigate(['/ApiEntity', this.apiName, this.entityInfo.name]);
     }
   }
 
@@ -71,7 +70,7 @@ export class CardEntityComponent {
     this.dialog({... this.entityInfo}).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
-        this.cardEntityService.updateApiEntity(this.apiInfo.name, this.oldName, data).subscribe({
+        this.cardEntityService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.entityInfo = data;
@@ -92,8 +91,8 @@ export class CardEntityComponent {
   onRefresh(): void {
     if (this.apiName) {
       this.loading = true; // Set loading to true
-      this.routeMemoryService.checkForUpdates(this.apiName);
-      this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
+      this.routeMemoryService.checkForApiUpdates(this.apiName);
+      this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
         this.loading = false; // Set loading to false
         if (apiStructure) {
           this.entities = apiStructure.entities;
