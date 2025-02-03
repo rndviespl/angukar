@@ -8,13 +8,13 @@ import { CardApiService } from '../../../service/card-api.service';
 import { Router, RouterModule } from '@angular/router';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
 import { SwitchComponent } from '../switch/switch.component';
-import { RouteInfoService } from '../../../service/route-info.service';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
-
+import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 @Component({
   selector: 'app-card-api',
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     TuiAppearance,
     TuiAvatar,
     TuiButton,
@@ -22,8 +22,9 @@ import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
     TuiHeader,
     TuiTitle,
     RouterModule,
-    SwitchComponent
+    SwitchComponent,
   ],
+  
   templateUrl: './card-api.component.html',
   styleUrl: './card-api.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,15 +33,21 @@ import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 export class CardApiComponent {
   @Input() apiInfo!: apiServiceShortStructure;
   oldName: string = "";
+  location: Location;
+
   private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
     label: "Редактировать",
   });
-  constructor(private cardApiService: CardApiService,
+
+  constructor(
+    private cardApiService: CardApiService,
     private cd: ChangeDetectorRef,
     private router: Router,
-    private routeInfoService: RouteInfoService,
-  ) {}
+    location: Location // Injecting Location correctly
+  ) {
+    this.location = location; // Assigning the injected instance
+  }
   onToggleChange(newState: boolean) {
     this.apiInfo.isActive = newState; // Обновляем состояние в родительском компоненте
     console.log('Состояние переключателя изменилось на:', newState);
@@ -55,11 +62,7 @@ export class CardApiComponent {
       }
     });
   }
-  navigateToApiDetails(apiName: string): void {
-    this.routeInfoService.setPreviousPath(this.router.url);
-    this.router.navigate(['/ApiService', apiName]); // Переход на страницу API без передачи isActive
-  }
-
+  
   openEditDialog(): void {
     this.oldName = this.apiInfo.name;
     this.dialog({... this.apiInfo}).subscribe({

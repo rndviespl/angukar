@@ -1,18 +1,18 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
 import { CardApiService } from '../../../service/card-api.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog } from '@taiga-ui/core';
 import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
-import { RouteInfoService } from '../../../service/route-info.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-card-entity',
-  imports: [IconTrashComponent, SwitchComponent],
+  imports: [IconTrashComponent, SwitchComponent,CommonModule,RouterModule,],
   templateUrl: './card-entity.component.html',
   styleUrls: ['./card-entity.component.css']
 })
@@ -35,7 +35,6 @@ export class CardEntityComponent {
     private route: ActivatedRoute,
     private router: Router,
     private cardEntityService: CardApiService,
-    private routeInfoService: RouteInfoService // Inject the shared service
   ) { }
 
   onToggleChange(newState: boolean) {
@@ -51,18 +50,6 @@ export class CardEntityComponent {
         console.error('Ошибка при обновлении состояния сервиса:', error);
       }
     });
-  }
-
-  navigateToApiDetails(): void {
-    console.log('apiName:', this.apiName);
-    console.log('entityInfo:', this.entityInfo);
-    
-    if (this.apiName && this.entityInfo) {
-      this.routeInfoService.setApiServiceName(this.apiName); // Set API name
-      this.routeInfoService.setEntityName(this.entityInfo.name); // Set entity name
-      this.routeInfoService.setPreviousPath(this.router.url);
-      this.router.navigate(['/ApiEntity', this.apiName, this.entityInfo.name]);
-    }
   }
 
   openEditDialog(): void {

@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { SwitchComponent } from "../switch/switch.component";
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { CardApiService } from '../../../service/card-api.service';
-import { RouteInfoService } from '../../../service/route-info.service';
 import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 import { CommonModule } from '@angular/common';
@@ -40,6 +39,7 @@ export class CardEndpointComponent {
   constructor(
     private cardEndpointService: CardApiService,
     private cd: ChangeDetectorRef,
+    
   ) {}
 
   onToggleChange(newState: boolean) {

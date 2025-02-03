@@ -2,14 +2,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Entity, EntityShort, apiServiceShortStructure } from '../../../service/service-structure-api';
+import { Entity, apiServiceShortStructure } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiButton, tuiDialog } from '@taiga-ui/core';
 import { CardApiService } from '../../../service/card-api.service';
 import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
-import { RouteInfoService } from '../../../service/route-info.service';
 import { BackButtonComponent } from '../../components/back-button/back-button.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
@@ -77,7 +76,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onToggleChange(newState: boolean) {
+onToggleChange(newState: boolean) {
     this.apiInfo.isActive = newState; // Update state in parent component
     console.log('Состояние переключателя изменилось на:', newState);
 
@@ -91,7 +90,6 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   openCreateDialog(): void {
     this.dialog({... this.entity}).subscribe({
       next: (data) => {        

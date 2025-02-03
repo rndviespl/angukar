@@ -2,18 +2,19 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, CUSTOM_ELEMENTS_
 import { Subscription } from 'rxjs';
 import { Action, apiServiceShortStructure, Entity } from '../../../../service/service-structure-api';
 import { CardApiService } from '../../../../service/card-api.service';
-import { CommonModule } from '@angular/common';
-import { RouteInfoService } from '../../../../service/route-info.service';
+import { CommonModule, Location } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiButton, tuiDialog } from '@taiga-ui/core';
 import { IconTrashComponent } from '../../../components/icon-trash/icon-trash.component';
 import { BackButtonComponent } from '../../../components/back-button/back-button.component';
 import { CardEndpointComponent } from '../../../components/card-endpoint/card-endpoint.component';
 import { HeaderComponent } from '../../../components/header/header.component';
+import { Router, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { EndpointDialogComponent } from '../../../components/endpoint-dialog/endpoint-dialog.component';
 import { SwitchComponent } from '../../../components/switch/switch.component';
 import { CardEntityComponent } from "../../../components/card-entity/card-entity.component";
+
 @Component({
   selector: 'app-endpoint-card-list',
   imports: [
@@ -22,7 +23,9 @@ import { CardEntityComponent } from "../../../components/card-entity/card-entity
     TuiButton,
     IconTrashComponent,
     CardEndpointComponent,
-    BackButtonComponent,
+    BackButtonComponent
+    RouterModule,
+    HeaderComponent,
     HeaderComponent,
     SwitchComponent,
     CardEntityComponent
@@ -41,6 +44,8 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   actions: Action[] = [];
   entityInfo: Entity = {} as Entity; // Ensure entityInfo is of type Entity
   apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
+  location: Location;
+
   private readonly dialog = tuiDialog(EndpointDialogComponent, {
     dismissible: true,
     label: "Создать",
@@ -50,9 +55,15 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     type: 'get',
     isActive: false
   };
+
   constructor(
+    private router: Router,
     private getAction: CardApiService,
     private cd: ChangeDetectorRef,
+    location: Location
+  ) {
+    this.location = location; // Assigning the injected instance
+  }
     private route: ActivatedRoute,
     private routeInfoService: RouteInfoService, // Inject the shared service
     private cardEndpointService: CardApiService,

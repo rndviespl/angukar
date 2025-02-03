@@ -5,6 +5,6 @@
   </div>
   <h3>{{ entityInfo.name }}</h3>
   <div class="actions">
-      <button tuiButton (click)="navigateToApiDetails()">Детали</button>
+    <button tuiButton [routerLink]="['/ApiEntity', apiInfo.name, entityInfo.name]">Детали</button>
   </div>
   
