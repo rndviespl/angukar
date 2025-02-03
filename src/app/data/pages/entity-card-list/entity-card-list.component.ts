@@ -44,7 +44,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   entity:Entity = {
     name: '',
     isActive: false,
-    structure: '',
+    structure: null,
     actions: []
   };
   constructor(
