@@ -8,6 +8,7 @@ import { CardApiService } from '../../../service/card-api.service';
 import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 import { CommonModule } from '@angular/common';
+import { EndpointDialogComponent } from '../endpoint-dialog/endpoint-dialog.component';
 
 @Component({
   selector: 'app-card-endpoint',
@@ -30,7 +31,7 @@ export class CardEndpointComponent {
   sub: Subscription | null = null;
   loading: boolean = false;
 
-  private readonly dialog = tuiDialog(ApiDialogComponent, {
+  private readonly dialog = tuiDialog(EndpointDialogComponent, {
     dismissible: true,
     label: "Редактировать",
   });
@@ -46,7 +47,7 @@ export class CardEndpointComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Вызов метода для обновления состояния сервиса
-    this.cardEndpointService.updateEndpointStatus(this.apiInfo.name, this.entityInfo.name, this.actionInfo.route, newState).subscribe({
+    this.cardEndpointService.updateEndpointStatus(this.apiName, this.entityInfo.name, this.actionInfo.route, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -57,15 +58,14 @@ export class CardEndpointComponent {
   }
 
   openEditDialog(): void {
-    this.oldName = this.apiInfo.name;
-    this.dialog({ ...this.apiInfo }).subscribe({
+    this.dialog({ ...this.actionInfo }).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.apiInfo.name}`);
 
-        this.cardEndpointService.updateApiService(this.oldName, data).subscribe({
+        this.cardEndpointService.updateApiEndpoint(this.apiInfo.name, this.entityInfo.name, this.actionInfo.route, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
-            this.apiInfo = data;
+            this.actionInfo = data;
             this.cd.markForCheck();
           },
           error: (error) => {

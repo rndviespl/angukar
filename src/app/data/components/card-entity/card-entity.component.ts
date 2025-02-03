@@ -17,7 +17,6 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./card-entity.component.css']
 })
 export class CardEntityComponent {
-  @Input() apiInfo!: apiServiceShortStructure;
   @Input() entityInfo!: Entity;
   @Input() apiName: string = "";
   oldName: string = "";
@@ -43,7 +42,7 @@ export class CardEntityComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.updateEntityStatus(this.apiInfo.name, this.entityInfo.name, newState).subscribe({
+    this.cardEntityService.updateEntityStatus(this.apiName, this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -58,7 +57,7 @@ export class CardEntityComponent {
     this.dialog({... this.entityInfo}).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
-        this.cardEntityService.updateApiEntity(this.apiInfo.name, this.oldName, data).subscribe({
+        this.cardEntityService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.entityInfo = data;
@@ -79,8 +78,8 @@ export class CardEntityComponent {
   onRefresh(): void {
     if (this.apiName) {
       this.loading = true; // Set loading to true
-      this.routeMemoryService.checkForUpdates(this.apiName);
-      this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
+      this.routeMemoryService.checkForApiUpdates(this.apiName);
+      this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
         this.loading = false; // Set loading to false
         if (apiStructure) {
           this.entities = apiStructure.entities;

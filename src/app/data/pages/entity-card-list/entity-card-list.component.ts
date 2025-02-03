@@ -43,7 +43,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   entity:Entity = {
     name: '',
     isActive: false,
-    structure: '',
+    structure: null,
     actions: []
   };
   constructor(
@@ -62,7 +62,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.apiName = params['name'];
       if (this.apiName) {
-        this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
+        this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
           if (apiStructure) {
             this.entities = apiStructure.entities;
             this.apiInfo = apiStructure as apiServiceShortStructure; // Assuming apiInfo is the entire apiStructure
@@ -76,7 +76,20 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     });
   }
 
+onToggleChange(newState: boolean) {
+    this.apiInfo.isActive = newState; // Update state in parent component
+    console.log('Состояние переключателя изменилось на:', newState);
 
+    // Call method to update service status
+    this.cardEntityService.patchApiServiceStatus(this.apiName, newState).subscribe({
+      next: (response) => {
+        console.log('Состояние сервиса обновлено:', response);
+      },
+      error: (error) => {
+        console.error('Ошибка при обновлении состояния сервиса:', error);
+      }
+    });
+  }
   openCreateDialog(): void {
     this.dialog({... this.entity}).subscribe({
       next: (data) => {        

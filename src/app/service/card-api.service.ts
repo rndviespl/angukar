@@ -40,6 +40,10 @@ export class CardApiService {
   // ApiEntity Methods
   getApiEntityList(apiServiceName: string): Observable<Entity[]> {
     return this.http.get<Entity[]>(`${this.baseUrl}/ApiEntity/${apiServiceName}`);
+  } 
+
+  getApiEntity(apiServiceName: string, entityName: string): Observable<Entity> {
+    return this.http.get<Entity>(`${this.baseUrl}/ApiEntity/${apiServiceName}/${entityName}`);
   }
 
   createApiEntity(apiServiceName: string, entity: Entity): Observable<Entity> {
@@ -67,7 +71,7 @@ export class CardApiService {
     return this.http.get<Action>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`);
   }
 
-  updateApiAction(apiServiceName: string, entityName: string, actionName: string, action: Action): Observable<Action> {
+  updateApiEndpoint(apiServiceName: string, entityName: string, actionName: string, action: Action): Observable<Action> {
     return this.http.put<Action>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`, action);
   }
 

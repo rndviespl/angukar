@@ -28,7 +28,7 @@ export class EntityDataHandlerComponent implements OnInit, OnDestroy {
       this.apiName = params['name'];
 
       if (this.apiName) {
-        this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
+        this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
           // Обработка данных, если необходимо
         });
 
@@ -43,7 +43,7 @@ export class EntityDataHandlerComponent implements OnInit, OnDestroy {
 
   refreshData(): void {
     if (this.apiName) {
-      this.routeMemoryService.checkForUpdates(this.apiName);
+      this.routeMemoryService.checkForApiUpdates(this.apiName);
     }
   }
 }

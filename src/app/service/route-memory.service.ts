@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { CardApiService } from './card-api.service'; // Импортируйте ваш API сервис
-import { Action, Entity } from './service-structure-api'; // Импортируйте интерфейс Entity
+import { Action as Endpoint, Entity } from './service-structure-api'; // Импортируйте интерфейс Entity
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +12,10 @@ export class RouteMemoryService {
 
   constructor(private apiService: CardApiService) {}
 
-  getData(apiName: string): Observable<any> {
+  getApiData(apiName: string): Observable<any> {
     if (!this.cache[apiName]) {
       this.cache[apiName] = new BehaviorSubject(null);
-      this.fetchData(apiName);
+      this.fetchApiData(apiName);
     }
     return this.cache[apiName].asObservable();
   }
@@ -26,9 +26,8 @@ export class RouteMemoryService {
       this.fetchEntityData(apiServiceName);
     }
     return this.entityCache[apiServiceName].asObservable();
-  }
-
-  private fetchData(apiName: string): void {
+  }  
+  private fetchApiData(apiName: string): void {
     this.apiService.getApiStructureList(apiName).subscribe(data => {
       this.cache[apiName].next(data);
     });
@@ -39,11 +38,11 @@ export class RouteMemoryService {
       this.entityCache[apiServiceName].next(data);
     });
   }
-
+  
   // Метод для проверки обновлений
-  checkForUpdates(apiName: string): void {
+  checkForApiUpdates(apiName: string): void {
     if (this.cache[apiName]) {
-      this.fetchData(apiName);
+      this.fetchApiData(apiName);
     }
   }
 
@@ -54,7 +53,7 @@ export class RouteMemoryService {
   }
   getActionList(apiServiceName: string, entityName: string): Observable<Entity> {
     return this.apiService.getActionList(apiServiceName, entityName).pipe(
-      map((actions: Action[]) => {
+      map((actions: Endpoint[]) => {
         // Create an Entity object that includes the actions
         const entity: Entity = {
           name: entityName, // Assuming you have a name property
