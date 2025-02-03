@@ -32,17 +32,17 @@ export class CardApiListComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-   }
-   ngOnInit(): void {
-     this.sub = this.getapi.getApiList().subscribe(it => {
-       this.cards = it;
-       console.log(it);
-       this.cd.detectChanges();
+  }
+  ngOnInit(): void {
+    this.sub = this.getapi.getApiList().subscribe(it => {
+      this.cards = it;
+      console.log(it);
+      this.cd.detectChanges();
      })
-   }
-   openCreateDialog(): void {
+  }
+  openCreateDialog(): void {
     this.dialog({... this.api}).subscribe({
-      next: (data) => {        
+      next: (data) => {
         this.getapi.createApiService(data).subscribe({
           next: (response) => {
             console.log('api добавлено:', response);
@@ -60,4 +60,4 @@ export class CardApiListComponent implements OnInit, OnDestroy{
       },
     });
   }
- }
+}
