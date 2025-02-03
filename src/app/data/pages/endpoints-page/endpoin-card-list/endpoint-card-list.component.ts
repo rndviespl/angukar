@@ -12,7 +12,8 @@ import { CardEndpointComponent } from '../../../components/card-endpoint/card-en
 import { HeaderComponent } from '../../../components/header/header.component';
 import { ActivatedRoute } from '@angular/router';
 import { EndpointDialogComponent } from '../../../components/endpoint-dialog/endpoint-dialog.component';
-
+import { SwitchComponent } from '../../../components/switch/switch.component';
+import { CardEntityComponent } from "../../../components/card-entity/card-entity.component";
 @Component({
   selector: 'app-endpoint-card-list',
   imports: [
@@ -22,8 +23,10 @@ import { EndpointDialogComponent } from '../../../components/endpoint-dialog/end
     IconTrashComponent,
     CardEndpointComponent,
     BackButtonComponent,
-    HeaderComponent
-  ],
+    HeaderComponent,
+    SwitchComponent,
+    CardEntityComponent
+],
   
   templateUrl: './endpoint-card-list.component.html',
   styleUrls: ['./endpoint-card-list.component.css'],
@@ -63,6 +66,10 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.apiName = params['apiServiceName'];
       this.entityName = params['entityName'];
+      this.getAction.getApiEntity(this.apiName,this.entityName).subscribe(it => {
+        this.entityInfo = it;
+        this.cd.detectChanges();
+      });
       this.sub = this.getAction.getActionList(this.apiName, this.entityName).subscribe(it => {
         this.actions = it;
         console.log('Fetched actions:', it);
@@ -91,6 +98,20 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
       complete: () => {
         console.info('Dialog closed');
       },
+    });
+  }  
+  onToggleChange(newState: boolean) {
+    this.apiInfo.isActive = newState; // Update state in parent component
+    console.log('Состояние переключателя изменилось на:', newState);
+
+    // Call method to update service status
+    this.cardEndpointService.updateEntityStatus(this.apiName, this.entityName, newState).subscribe({
+      next: (response) => {
+        console.log('Состояние сервиса обновлено:', response);
+      },
+      error: (error) => {
+        console.error('Ошибка при обновлении состояния сервиса:', error);
+      }
     });
   }
 }

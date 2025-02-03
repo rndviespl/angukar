@@ -91,8 +91,8 @@ export class CardEntityComponent {
   onRefresh(): void {
     if (this.apiName) {
       this.loading = true; // Set loading to true
-      this.routeMemoryService.checkForUpdates(this.apiName);
-      this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
+      this.routeMemoryService.checkForApiUpdates(this.apiName);
+      this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
         this.loading = false; // Set loading to false
         if (apiStructure) {
           this.entities = apiStructure.entities;

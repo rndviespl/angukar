@@ -40,6 +40,10 @@ export class CardApiService {
   // ApiEntity Methods
   getApiEntityList(apiServiceName: string): Observable<Entity[]> {
     return this.http.get<Entity[]>(`${this.baseUrl}/ApiEntity/${apiServiceName}`);
+  } 
+
+  getApiEntity(apiServiceName: string, entityName: string): Observable<Entity> {
+    return this.http.get<Entity>(`${this.baseUrl}/ApiEntity/${apiServiceName}/${entityName}`);
   }
 
   createApiEntity(apiServiceName: string, entity: Entity): Observable<Entity> {

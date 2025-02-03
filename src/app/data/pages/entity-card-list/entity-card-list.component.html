@@ -4,14 +4,10 @@
     <!-- Заголовок и описание -->
     <div class="header-section">
       <div class="top-right">
-        <app-switch [value]="apiInfo.isActive"></app-switch>
+        <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
       </div>
       <h1>{{ apiInfo.name }}</h1>
       <p>{{ apiInfo.description }}</p>
-      <div class="actions">
-        <button class="edit-button">Редактировать</button>
-        <button class="delete-button">Удалить</button>
-      </div>
     </div>
   </div>
 
