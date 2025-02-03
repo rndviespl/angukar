@@ -5,12 +5,13 @@ import { CardApiService } from '../../../../service/card-api.service';
 import { CommonModule } from '@angular/common';
 import { RouteInfoService } from '../../../../service/route-info.service';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { TuiButton } from '@taiga-ui/core';
+import { TuiButton, tuiDialog } from '@taiga-ui/core';
 import { IconTrashComponent } from '../../../components/icon-trash/icon-trash.component';
 import { BackButtonComponent } from '../../../components/back-button/back-button.component';
 import { CardEndpointComponent } from '../../../components/card-endpoint/card-endpoint.component';
 import { HeaderComponent } from '../../../components/header/header.component';
 import { ActivatedRoute } from '@angular/router';
+import { EndpointDialogComponent } from '../../../components/endpoint-dialog/endpoint-dialog.component';
 
 @Component({
   selector: 'app-endpoint-card-list',
@@ -37,12 +38,21 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   actions: Action[] = [];
   entityInfo: Entity = {} as Entity; // Ensure entityInfo is of type Entity
   apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
-
+  private readonly dialog = tuiDialog(EndpointDialogComponent, {
+    dismissible: true,
+    label: "Создать",
+  });
+  action:Action = {
+    route: '',
+    type: 'get',
+    isActive: false
+  };
   constructor(
     private getAction: CardApiService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private routeInfoService: RouteInfoService, // Inject the shared service
+    private cardEndpointService: CardApiService,
   ) { }
 
   ngOnDestroy(): void {
@@ -60,5 +70,27 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
         this.cd.detectChanges();
       });
     } )
+  }
+
+  openCreateDialog(): void {
+    this.dialog({ ...this.action }).subscribe({
+      next: (data) => {
+        console.info(`Dialog emitted data = ${data} - ${this.apiInfo.name}`);
+
+        this.cardEndpointService.createApiAction(this.apiName, this.entityName, data).subscribe({
+          next: (response) => {
+            console.log('Сущность обновлена:', response);
+            this.actions.push(data);
+            this.cd.markForCheck();
+          },
+          error: (error) => {
+            console.error('Ошибка при обновлении сущности:', error);
+          }
+        });
+      },
+      complete: () => {
+        console.info('Dialog closed');
+      },
+    });
   }
 }

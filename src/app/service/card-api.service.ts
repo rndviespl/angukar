@@ -67,7 +67,7 @@ export class CardApiService {
     return this.http.get<Action>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`);
   }
 
-  updateApiAction(apiServiceName: string, entityName: string, actionName: string, action: Action): Observable<Action> {
+  updateApiEndpoint(apiServiceName: string, entityName: string, actionName: string, action: Action): Observable<Action> {
     return this.http.put<Action>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`, action);
   }
 

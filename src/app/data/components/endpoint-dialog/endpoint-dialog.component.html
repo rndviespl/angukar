@@ -1,0 +1,15 @@
+<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.route">
+    Имя сущности
+</tui-input>
+
+<tui-select tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.type">
+    Описание
+    <select tuiSelect [items]="types" ></select>
+</tui-select>
+
+
+<p>
+    <button size="m" tuiButton type="button" [disabled]="!hasValue" (click)="submit()">
+        Submit
+    </button>
+</p>
