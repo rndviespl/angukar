@@ -22,7 +22,6 @@ import { EndpointDialogComponent } from '../endpoint-dialog/endpoint-dialog.comp
   styleUrls: ['./card-endpoint.component.css']
 })
 export class CardEndpointComponent {
-  @Input() apiInfo!: apiServiceShortStructure;
   @Input() entityInfo!: Entity;
   @Input() actionInfo!: Action;
   @Input() apiName: string = "";
@@ -60,9 +59,9 @@ export class CardEndpointComponent {
   openEditDialog(): void {
     this.dialog({ ...this.actionInfo }).subscribe({
       next: (data) => {
-        console.info(`Dialog emitted data = ${data} - ${this.apiInfo.name}`);
+        console.info(`Dialog emitted data = ${data} - ${this.apiName}`);
 
-        this.cardEndpointService.updateApiEndpoint(this.apiInfo.name, this.entityInfo.name, this.actionInfo.route, data).subscribe({
+        this.cardEndpointService.updateApiEndpoint(this.apiName, this.entityInfo.name, this.actionInfo.route, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.actionInfo = data;

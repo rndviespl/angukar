@@ -23,7 +23,7 @@ import { CardEntityComponent } from "../../../components/card-entity/card-entity
     TuiButton,
     IconTrashComponent,
     CardEndpointComponent,
-    BackButtonComponent
+    BackButtonComponent,
     RouterModule,
     HeaderComponent,
     HeaderComponent,
@@ -60,14 +60,12 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     private router: Router,
     private getAction: CardApiService,
     private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private cardEndpointService: CardApiService,
     location: Location
   ) {
     this.location = location; // Assigning the injected instance
   }
-    private route: ActivatedRoute,
-    private routeInfoService: RouteInfoService, // Inject the shared service
-    private cardEndpointService: CardApiService,
-  ) { }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
