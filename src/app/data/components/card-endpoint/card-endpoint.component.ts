@@ -79,7 +79,7 @@ export class CardEndpointComponent {
     });
   }
   onDeleteConfirmed(): void {
-    this.cardEndpointService.deleteApiAction(this.apiName, this.entityInfo.name, this.actionInfo.route).subscribe({
+    this.endpointRepositoryService.deleteApiAction(this.apiName, this.entityInfo.name, this.actionInfo.route).subscribe({
       next: () => {
         console.log(`Действие "${this.actionInfo.route}" удалено.`);
         this.actionDeleted.emit(this.actionInfo.route); // Emit the event to notify the parent component
