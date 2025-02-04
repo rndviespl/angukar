@@ -67,7 +67,6 @@ export class CardEntityComponent {
             console.error('Ошибка при обновлении сущности:', error);
           }
         })
-
       },
       complete: () => {
         console.info('Dialog closed');
