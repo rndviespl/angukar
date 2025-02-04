@@ -18,8 +18,8 @@
     </div>
 
     <div class="grid">
-        <div *ngFor="let action of actions" tuiAppearance="floating" tuiCardLarge class="card">
-            <app-card-endpoint [entityInfo]="entityInfo" [actionInfo]="action" [apiName]="apiName"></app-card-endpoint>
+        <div *ngFor="let endpoint of endpoints" tuiAppearance="floating" tuiCardLarge class="card">
+            <app-card-endpoint [entityInfo]="entityInfo" [endpointInfo]="endpoint" [apiName]="apiName"></app-card-endpoint>
         </div>
     </div>
 </div>

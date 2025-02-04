@@ -1,7 +1,7 @@
 <div class="top-right">
     <i class="fa fa-edit" (click)="openEditDialog()"></i>
-    <app-icon-trash [item]="actionInfo"></app-icon-trash>
-    <app-switch [value]="actionInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
+    <app-icon-trash [item]="endpointInfo"></app-icon-trash>
+    <app-switch [value]="endpointInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
 </div>
-<h3>{{ actionInfo.route }}</h3>
-<p>Тип: {{ actionInfo.type }}</p>   
+<h3>{{ endpointInfo.route }}</h3>
+<p>Тип: {{ endpointInfo.type }}</p>   

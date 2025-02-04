@@ -23,7 +23,7 @@ import { EndpointRepositoryService } from '../../../repositories/endpoint-reposi
 })
 export class CardEndpointComponent {
   @Input() entityInfo!: Entity;
-  @Input() actionInfo!: Endpoint;
+  @Input() endpointInfo!: Endpoint;
   @Input() apiName: string = "";
   oldName: string = "";
   actions: Endpoint[] = [];
@@ -42,11 +42,11 @@ export class CardEndpointComponent {
   ) {}
 
   onToggleChange(newState: boolean) {
-    this.actionInfo.isActive = newState; // Обновляем состояние в родительском компоненте
+    this.endpointInfo.isActive = newState; // Обновляем состояние в родительском компоненте
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Вызов метода для обновления состояния сервиса
-    this.endpointRepositoryService.updateEndpointStatus(this.apiName, this.entityInfo.name, this.actionInfo.route, newState).subscribe({
+    this.endpointRepositoryService.updateEndpointStatus(this.apiName, this.entityInfo.name, this.endpointInfo.route, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -57,14 +57,14 @@ export class CardEndpointComponent {
   }
 
   openEditDialog(): void {
-    this.dialog({ ...this.actionInfo }).subscribe({
+    this.dialog({ ...this.endpointInfo }).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.apiName}`);
 
-        this.endpointRepositoryService.updateEndpoint(this.apiName, this.entityInfo.name, this.actionInfo.route, data).subscribe({
+        this.endpointRepositoryService.updateEndpoint(this.apiName, this.entityInfo.name, this.endpointInfo.route, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
-            this.actionInfo = data;
+            this.endpointInfo = data;
             this.cd.markForCheck();
           },
           error: (error) => {
