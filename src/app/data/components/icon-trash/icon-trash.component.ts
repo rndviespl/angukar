@@ -21,7 +21,6 @@ export class IconTrashComponent {
   @Input() entityInfo!: EntityShort;
   @Input() endpointInfo!: Endpoint;
   @Output() responseAlert = new EventEmitter<boolean>();
-
   constructor(
     private alerts: TuiAlertService,
     private router: Router,
