@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Entity } from '../../../service/service-structure-api';
-import { CardApiService } from '../../../service/card-api.service';
 import { RouterModule } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
@@ -9,6 +8,7 @@ import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog } from '@taiga-ui/core';
 import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
 import { CommonModule } from '@angular/common';
+import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
 
 @Component({
   selector: 'app-card-entity',
@@ -33,7 +33,7 @@ export class CardEntityComponent {
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
-    private cardEntityService: CardApiService,
+    private entityRepositoryService: EntityRepositoryService,
   ) { }
 
   onToggleChange(newState: boolean) {
@@ -41,7 +41,7 @@ export class CardEntityComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.updateEntityStatus(this.apiName, this.entityInfo.name, newState).subscribe({
+    this.entityRepositoryService.updateEntityStatus(this.apiName, this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -56,7 +56,7 @@ export class CardEntityComponent {
     this.dialog({... this.entityInfo}).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
-        this.cardEntityService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
+        this.entityRepositoryService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.entityInfo = data;
@@ -91,7 +91,7 @@ export class CardEntityComponent {
   }
 
   onDeleteConfirmed(): void {
-    this.cardEntityService.deleteApiEntity(this.apiName, this.entityInfo.name).subscribe({
+    this.entityRepositoryService.deleteApiEntity(this.apiName, this.entityInfo.name).subscribe({
       next: () => {
         console.log(`Сущность "${this.entityInfo.name}" удалена.`);
         this.entityDeleted.emit(this.entityInfo.name); // Emit the event to notify the parent component

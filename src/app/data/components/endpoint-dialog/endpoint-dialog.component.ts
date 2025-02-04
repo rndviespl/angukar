@@ -13,7 +13,7 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { Action, Entity } from '../../../service/service-structure-api';
+import { Endpoint, Entity } from '../../../service/service-structure-api';
 
 @Component({
   selector: 'app-endpoint-dialog',
@@ -43,13 +43,13 @@ export class EndpointDialogComponent {
     "getbyindex"
   ]
 
-  public readonly context = injectContext<TuiDialogContext<Action, Action>>();
+  public readonly context = injectContext<TuiDialogContext<Endpoint, Endpoint>>();
 
   protected get hasValue(): boolean {
     return this.data.route.trim() !== '';
   }
 
-  protected get data(): Action {
+  protected get data(): Endpoint {
     return this.context.data;
   }
 

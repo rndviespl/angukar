@@ -6,11 +6,12 @@ import { Entity, apiServiceShortStructure } from '../../../service/service-struc
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { tuiDialog } from '@taiga-ui/core';
-import { CardApiService } from '../../../service/card-api.service';
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
 import { EntityDialogComponent } from '../../components/entity-dialog/entity-dialog.component';
+import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
+import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -41,12 +42,16 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     structure: null,
     actions: []
   };
+
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private cardEntityService: CardApiService,
-  ) { }
+    private router: Router,
+    private entityRepositoryService: EntityRepositoryService,
+    private apiServiceRepositoryService: ApiServiceRepositoryService
+  ) {}
+
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -75,7 +80,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.patchApiServiceStatus(this.apiName, newState).subscribe({
+    this.apiServiceRepositoryService.updateApiServiceStatus(this.apiName, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -85,9 +90,9 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     });
   }
   openCreateDialog(): void {
-    this.dialog({ ... this.entity }).subscribe({
-      next: (data) => {
-        this.cardEntityService.createApiEntity(this.apiName, data).subscribe({
+    this.dialog({... this.entity}).subscribe({
+      next: (data) => {        
+        this.entityRepositoryService.createApiEntity(this.apiName,data).subscribe({
           next: (response) => {
             console.log('entity добавлено:', response);
             this.entities.push(data);

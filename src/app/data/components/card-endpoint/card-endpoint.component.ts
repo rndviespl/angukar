@@ -1,14 +1,14 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { Action, apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
+import { Endpoint, apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
 import { Subscription } from 'rxjs';
 import { SwitchComponent } from "../switch/switch.component";
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
-import { CardApiService } from '../../../service/card-api.service';
 import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 import { CommonModule } from '@angular/common';
 import { EndpointDialogComponent } from '../endpoint-dialog/endpoint-dialog.component';
+import { EndpointRepositoryService } from '../../../repositories/endpoint-repository.service';
 
 @Component({
   selector: 'app-card-endpoint',
@@ -23,11 +23,11 @@ import { EndpointDialogComponent } from '../endpoint-dialog/endpoint-dialog.comp
 })
 export class CardEndpointComponent {
   @Input() entityInfo!: Entity;
-  @Input() actionInfo!: Action;
+  @Input() actionInfo!: Endpoint;
   @Input() apiName: string = "";
   @Output() actionDeleted = new EventEmitter<string>();
   oldName: string = "";
-  actions: Action[] = [];
+  actions: Endpoint[] = [];
   sub: Subscription | null = null;
   loading: boolean = false;
 
@@ -37,7 +37,7 @@ export class CardEndpointComponent {
   });
 
   constructor(
-    private cardEndpointService: CardApiService,
+    private endpointRepositoryService: EndpointRepositoryService,
     private cd: ChangeDetectorRef,
 
   ) { }
@@ -47,7 +47,7 @@ export class CardEndpointComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Вызов метода для обновления состояния сервиса
-    this.cardEndpointService.updateEndpointStatus(this.apiName, this.entityInfo.name, this.actionInfo.route, newState).subscribe({
+    this.endpointRepositoryService.updateEndpointStatus(this.apiName, this.entityInfo.name, this.actionInfo.route, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -62,7 +62,7 @@ export class CardEndpointComponent {
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.apiName}`);
 
-        this.cardEndpointService.updateApiEndpoint(this.apiName, this.entityInfo.name, this.actionInfo.route, data).subscribe({
+        this.endpointRepositoryService.updateApiEndpoint(this.apiName, this.entityInfo.name, this.actionInfo.route, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.actionInfo = data;
