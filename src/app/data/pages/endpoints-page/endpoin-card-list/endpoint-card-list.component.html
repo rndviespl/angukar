@@ -19,7 +19,8 @@
 
     <div class="grid">
         <div *ngFor="let action of actions" tuiAppearance="floating" tuiCardLarge class="card">
-            <app-card-endpoint [entityInfo]="entityInfo" [actionInfo]="action" [apiName]="apiName"></app-card-endpoint>
+            <app-card-endpoint [entityInfo]="entityInfo" [actionInfo]="action" [apiName]="apiName"
+                (actionDeleted)="onActionDeleted(action.route)"></app-card-endpoint>
         </div>
     </div>
 </div>

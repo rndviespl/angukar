@@ -1,6 +1,6 @@
 <div class="top-right">
     <i class="fa fa-edit" (click)="openEditDialog()"></i>
-    <app-icon-trash [item]="actionInfo"></app-icon-trash>
+    <app-icon-trash [item]="actionInfo" (responseAlert)="onDeleteConfirmed()"></app-icon-trash>
     <app-switch [value]="actionInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
 </div>
 <h3>{{ actionInfo.route }}</h3>

@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Entity } from '../../../service/service-structure-api';
 import { CardApiService } from '../../../service/card-api.service';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 export class CardEntityComponent {
   @Input() entityInfo!: Entity;
   @Input() apiName: string = "";
+  @Output() entityDeleted = new EventEmitter<string>();
   oldName: string = "";
   entities: Entity[] = [];
   sub: Subscription | null = null;
@@ -32,8 +33,6 @@ export class CardEntityComponent {
   constructor(
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private router: Router,
     private cardEntityService: CardApiService,
   ) { }
 
@@ -90,5 +89,17 @@ export class CardEntityComponent {
         console.error('Error fetching data:', error);
       });
     }
+  }
+
+  onDeleteConfirmed(): void {
+    this.cardEntityService.deleteApiEntity(this.apiName, this.entityInfo.name).subscribe({
+      next: () => {
+        console.log(`Сущность "${this.entityInfo.name}" удалена.`);
+        this.entityDeleted.emit(this.entityInfo.name); // Emit the event to notify the parent component
+      },
+      error: (error) => {
+        console.error('Ошибка при удалении сущности:', error);
+      }
+    });
   }
 }

@@ -1,6 +1,6 @@
 <div class="top-right">
     <i (click)="openEditDialog()" class="fas fa-edit"></i>
-    <app-icon-trash [item]="entityInfo"></app-icon-trash>
+    <app-icon-trash [item]="entityInfo" (responseAlert)="onDeleteConfirmed()"></app-icon-trash>
     <app-switch [value]="entityInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
   </div>
   <h3>{{ entityInfo.name }}</h3>

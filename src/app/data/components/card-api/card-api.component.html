@@ -1,6 +1,6 @@
 <div class="top-right">
     <i class="fas fa-edit" (click)="openEditDialog()"></i>
-    <i class="fas fa-trash" (click)="deleteCard(apiInfo)"></i>
+    <app-icon-trash class="fas fa-trash" [item]="apiInfo" (responseAlert)="onDeleteConfirmed()"></app-icon-trash>
     <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
 </div>
 <h3>{{ apiInfo.name }}</h3>

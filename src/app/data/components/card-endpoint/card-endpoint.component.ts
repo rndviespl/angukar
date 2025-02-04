@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Action, apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
 import { Subscription } from 'rxjs';
@@ -25,6 +25,7 @@ export class CardEndpointComponent {
   @Input() entityInfo!: Entity;
   @Input() actionInfo!: Action;
   @Input() apiName: string = "";
+  @Output() actionDeleted = new EventEmitter<string>();
   oldName: string = "";
   actions: Action[] = [];
   sub: Subscription | null = null;
@@ -38,8 +39,8 @@ export class CardEndpointComponent {
   constructor(
     private cardEndpointService: CardApiService,
     private cd: ChangeDetectorRef,
-    
-  ) {}
+
+  ) { }
 
   onToggleChange(newState: boolean) {
     this.actionInfo.isActive = newState; // Обновляем состояние в родительском компоненте
@@ -75,6 +76,17 @@ export class CardEndpointComponent {
       complete: () => {
         console.info('Dialog closed');
       },
+    });
+  }
+  onDeleteConfirmed(): void {
+    this.cardEndpointService.deleteApiAction(this.apiName, this.entityInfo.name, this.actionInfo.route).subscribe({
+      next: () => {
+        console.log(`Действие "${this.actionInfo.route}" удалено.`);
+        this.actionDeleted.emit(this.actionInfo.route); // Emit the event to notify the parent component
+      },
+      error: (error) => {
+        console.error('Ошибка при удалении действия:', error);
+      }
     });
   }
 }
