@@ -4,12 +4,12 @@ import {TuiAppearance, TuiButton, tuiDialog, TuiTitle} from '@taiga-ui/core';
 import { TuiAvatar} from '@taiga-ui/kit';
 import {TuiCardLarge, TuiHeader} from '@taiga-ui/layout';
 import { Subscription } from 'rxjs';
-import { CardApiService } from '../../../service/card-api.service';
 import { Router, RouterModule } from '@angular/router';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
 import { SwitchComponent } from '../switch/switch.component';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 
 @Component({
   selector: 'app-card-api',
@@ -41,7 +41,7 @@ export class CardApiComponent {
   });
 
   constructor(
-    private cardApiService: CardApiService,
+    private apiServiceRepository: ApiServiceRepositoryService,
     private cd: ChangeDetectorRef,
     private router: Router,
     location: Location // Injecting Location correctly
@@ -53,7 +53,7 @@ export class CardApiComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Вызов метода для обновления состояния сервиса
-    this.cardApiService.updateServiceStatus(this.apiInfo.name, newState).subscribe({
+    this.apiServiceRepository.updateApiServiceStatus(this.apiInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -69,7 +69,7 @@ export class CardApiComponent {
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.apiInfo.name}}`);
         
-        this.cardApiService.updateApiService(this.oldName, data).subscribe({
+        this.apiServiceRepository.updateApiService(this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.apiInfo = data;

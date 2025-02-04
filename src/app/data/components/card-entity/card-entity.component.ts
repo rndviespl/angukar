@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
-import { CardApiService } from '../../../service/card-api.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
@@ -9,6 +8,7 @@ import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog } from '@taiga-ui/core';
 import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
 import { CommonModule } from '@angular/common';
+import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
 
 @Component({
   selector: 'app-card-entity',
@@ -34,7 +34,7 @@ export class CardEntityComponent {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private cardEntityService: CardApiService,
+    private entityRepositoryService: EntityRepositoryService,
   ) { }
 
   onToggleChange(newState: boolean) {
@@ -42,7 +42,7 @@ export class CardEntityComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.updateEntityStatus(this.apiName, this.entityInfo.name, newState).subscribe({
+    this.entityRepositoryService.updateEntityStatus(this.apiName, this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -57,7 +57,7 @@ export class CardEntityComponent {
     this.dialog({... this.entityInfo}).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
-        this.cardEntityService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
+        this.entityRepositoryService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.entityInfo = data;

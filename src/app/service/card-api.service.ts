@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { apiServiceShortStructure, ApiServiceStructure, Entity, Action } from './service-structure-api';
+import { apiServiceShortStructure, ApiServiceStructure, Entity, Endpoint } from './service-structure-api';
 
 @Injectable({
   providedIn: 'root'
@@ -59,20 +59,20 @@ export class CardApiService {
   }
 
   // ApiAction Methods
-  getActionList(apiServiceName: string, entityName: string): Observable<Action[]> {
-    return this.http.get<Action[]>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`);
+  getActionList(apiServiceName: string, entityName: string): Observable<Endpoint[]> {
+    return this.http.get<Endpoint[]>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`);
   }
 
-  createApiAction(apiServiceName: string, entityName: string, action: Action): Observable<Action> {
-    return this.http.post<Action>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`, action);
+  createApiAction(apiServiceName: string, entityName: string, action: Endpoint): Observable<Endpoint> {
+    return this.http.post<Endpoint>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`, action);
   }
 
-  getApiActionByName(apiServiceName: string, entityName: string, actionName: string): Observable<Action> {
-    return this.http.get<Action>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`);
+  getApiActionByName(apiServiceName: string, entityName: string, actionName: string): Observable<Endpoint> {
+    return this.http.get<Endpoint>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`);
   }
 
-  updateApiEndpoint(apiServiceName: string, entityName: string, actionName: string, action: Action): Observable<Action> {
-    return this.http.put<Action>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`, action);
+  updateApiEndpoint(apiServiceName: string, entityName: string, actionName: string, action: Endpoint): Observable<Endpoint> {
+    return this.http.put<Endpoint>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`, action);
   }
 
   deleteApiAction(apiServiceName: string, entityName: string, actionName: string): Observable<void> {
