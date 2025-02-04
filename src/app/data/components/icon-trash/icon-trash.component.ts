@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TuiAlertService, TuiIconPipe } from '@taiga-ui/core';
 import { switchMap, takeUntil } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router,  } from '@angular/router';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { AlertComponent } from '../alert/alert.component';
 import { apiServiceShortStructure, EntityShort, Endpoint } from '../../../service/service-structure-api';
-import { CardApiService } from '../../../service/card-api.service';
 
 @Component({
   selector: 'app-icon-trash',
@@ -22,7 +21,6 @@ export class IconTrashComponent {
   @Input() entityInfo!: EntityShort;
   @Input() actionInfo!: Endpoint;
   @Output() responseAlert = new EventEmitter<boolean>();
-
   constructor(
     private alerts: TuiAlertService,
     private router: Router,
