@@ -10,24 +10,24 @@ export class EndpointRepositoryService {
 
   constructor(private endpointService: EndpointService) { }
 
-  getActionList(apiServiceName: string, entityName: string): Observable<Endpoint[]> {
-    return this.endpointService.getActionList(apiServiceName, entityName);
+  getEndpointList(apiServiceName: string, entityName: string): Observable<Endpoint[]> {
+    return this.endpointService.getEndpointList(apiServiceName, entityName);
   }
 
-  createApiAction(apiServiceName: string, entityName: string, action: Endpoint): Observable<Endpoint> {
-    return this.endpointService.createApiAction(apiServiceName, entityName, action);
+  createEndpoint(apiServiceName: string, entityName: string, endpoint: Endpoint): Observable<Endpoint> {
+    return this.endpointService.createEndpoint(apiServiceName, entityName, endpoint);
   }
 
-  getApiActionByName(apiServiceName: string, entityName: string, endpointName: string): Observable<Endpoint> {
-    return this.endpointService.getApiActionByName(apiServiceName, entityName, endpointName);
+  getEndpointByName(apiServiceName: string, entityName: string, endpointName: string): Observable<Endpoint> {
+    return this.endpointService.getEndpointByName(apiServiceName, entityName, endpointName);
   }
 
-  updateApiEndpoint(apiServiceName: string, entityName: string, endpointName: string, endpoint: Endpoint): Observable<Endpoint> {
-    return this.endpointService.updateApiEndpoint(apiServiceName, entityName, endpointName, endpoint);
+  updateEndpoint(apiServiceName: string, entityName: string, endpointName: string, endpoint: Endpoint): Observable<Endpoint> {
+    return this.endpointService.updateEndpoint(apiServiceName, entityName, endpointName, endpoint);
   }
 
-  deleteApiAction(apiServiceName: string, entityName: string, endpointName: string): Observable<void> {
-    return this.endpointService.deleteApiAction(apiServiceName, entityName, endpointName);
+  deleteEndpoint(apiServiceName: string, entityName: string, endpointName: string): Observable<void> {
+    return this.endpointService.deleteEndpoint(apiServiceName, entityName, endpointName);
   }
   
   updateEndpointStatus(apiServiceName: string, entityName: string, endpointName: string, isActive: boolean): Observable<any> {

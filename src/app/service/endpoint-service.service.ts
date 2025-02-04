@@ -13,23 +13,23 @@ export class EndpointServiceService {
 
   constructor(private http: HttpClient) { }
 
-  getActionList(apiServiceName: string, entityName: string): Observable<Endpoint[]> {
+  getEndpointList(apiServiceName: string, entityName: string): Observable<Endpoint[]> {
     return this.http.get<Endpoint[]>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`);
   }
 
-  createApiAction(apiServiceName: string, entityName: string, action: Endpoint): Observable<Endpoint> {
+  createEndpoint(apiServiceName: string, entityName: string, action: Endpoint): Observable<Endpoint> {
     return this.http.post<Endpoint>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`, action);
   }
 
-  getApiActionByName(apiServiceName: string, entityName: string, actionName: string): Observable<Endpoint> {
+  getEndpointByName(apiServiceName: string, entityName: string, actionName: string): Observable<Endpoint> {
     return this.http.get<Endpoint>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`);
   }
 
-  updateApiEndpoint(apiServiceName: string, entityName: string, actionName: string, action: Endpoint): Observable<Endpoint> {
+  updateEndpoint(apiServiceName: string, entityName: string, actionName: string, action: Endpoint): Observable<Endpoint> {
     return this.http.put<Endpoint>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`, action);
   }
 
-  deleteApiAction(apiServiceName: string, entityName: string, actionName: string): Observable<void> {
+  deleteEndpoint(apiServiceName: string, entityName: string, actionName: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`);
   }
 

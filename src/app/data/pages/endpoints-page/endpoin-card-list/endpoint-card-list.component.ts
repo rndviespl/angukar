@@ -42,7 +42,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   entityName!: string;
   loading: boolean = false;
   sub: Subscription | null = null;
-  actions: Endpoint[] = [];
+  endpoints: Endpoint[] = [];
   entityInfo: Entity = {} as Entity; // Ensure entityInfo is of type Entity
   apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
   location: Location;
@@ -51,7 +51,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     dismissible: true,
     label: "Создать",
   });
-  action:Endpoint = {
+  endpoint:Endpoint = {
     route: '',
     type: 'get',
     isActive: false
@@ -80,24 +80,24 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
         this.entityInfo = it;
         this.cd.detectChanges();
       });
-      this.sub = this.endpointRepositoryService.getActionList(this.apiName, this.entityName).subscribe(it => {
-        this.actions = it;
+      this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe(it => {
+        this.endpoints = it;
         console.log('Fetched actions:', it);
-        console.log('Actions after assignment:', this.actions); // Добавленный лог
+        console.log('Actions after assignment:', this.endpoints); // Добавленный лог
         this.cd.detectChanges();
       });
     } )
   }
 
   openCreateDialog(): void {
-    this.dialog({ ...this.action }).subscribe({
+    this.dialog({ ...this.endpoint }).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.apiInfo.name}`);
 
-        this.endpointRepositoryService.createApiAction(this.apiName, this.entityName, data).subscribe({
+        this.endpointRepositoryService.createEndpoint(this.apiName, this.entityName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
-            this.actions.push(data);
+            this.endpoints.push(data);
             this.cd.markForCheck();
           },
           error: (error) => {
