@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CardApiComponent } from "../../components/card-api/card-api.component";
 import { HeaderComponent } from "../../components/header/header.component";
 import { Subscription } from 'rxjs';
-import { CardApiService } from '../../../service/card-api.service';
 import { CommonModule } from '@angular/common';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
 import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
+import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 
 @Component({
   selector: 'app-card-api-list',
@@ -26,24 +26,24 @@ export class CardApiListComponent implements OnInit, OnDestroy{
     dismissible: true,
     label: "Создать",
   });
-  constructor(private getapi: CardApiService, 
+  constructor(private apiServiceRepository: ApiServiceRepositoryService, 
     private cd: ChangeDetectorRef,
   ) {}
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-   }
-   ngOnInit(): void {
-     this.sub = this.getapi.getApiList().subscribe(it => {
-       this.cards = it;
-       console.log(it);
-       this.cd.detectChanges();
+  }
+  ngOnInit(): void {
+    this.sub = this.apiServiceRepository.getApiList().subscribe(it => {
+      this.cards = it;
+      console.log(it);
+      this.cd.detectChanges();
      })
-   }
-   openCreateDialog(): void {
+  }
+  openCreateDialog(): void {
     this.dialog({... this.api}).subscribe({
-      next: (data) => {        
-        this.getapi.createApiService(data).subscribe({
+      next: (data) => {
+        this.apiServiceRepository.createApiService(data).subscribe({
           next: (response) => {
             console.log('api добавлено:', response);
             this.cards.push(data);
@@ -60,4 +60,4 @@ export class CardApiListComponent implements OnInit, OnDestroy{
       },
     });
   }
- }
+}

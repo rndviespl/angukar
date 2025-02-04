@@ -1,23 +1,22 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
-import { CardApiService } from '../../../service/card-api.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog } from '@taiga-ui/core';
 import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
-import { RouteInfoService } from '../../../service/route-info.service';
+import { CommonModule } from '@angular/common';
+import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
 
 @Component({
   selector: 'app-card-entity',
-  imports: [IconTrashComponent, SwitchComponent],
+  imports: [IconTrashComponent, SwitchComponent,CommonModule,RouterModule,],
   templateUrl: './card-entity.component.html',
   styleUrls: ['./card-entity.component.css']
 })
 export class CardEntityComponent {
-  @Input() apiInfo!: apiServiceShortStructure;
   @Input() entityInfo!: Entity;
   @Input() apiName: string = "";
   oldName: string = "";
@@ -35,8 +34,7 @@ export class CardEntityComponent {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private cardEntityService: CardApiService,
-    private routeInfoService: RouteInfoService // Inject the shared service
+    private entityRepositoryService: EntityRepositoryService,
   ) { }
 
   onToggleChange(newState: boolean) {
@@ -44,7 +42,7 @@ export class CardEntityComponent {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.updateEntityStatus(this.apiInfo.name, this.entityInfo.name, newState).subscribe({
+    this.entityRepositoryService.updateEntityStatus(this.apiName, this.entityInfo.name, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -54,24 +52,12 @@ export class CardEntityComponent {
     });
   }
 
-  navigateToApiDetails(): void {
-    console.log('apiInfo:', this.apiInfo);
-    console.log('entityInfo:', this.entityInfo);
-    
-    if (this.apiInfo && this.entityInfo) {
-      this.routeInfoService.setApiServiceName(this.apiInfo.name); // Set API name
-      this.routeInfoService.setEntityName(this.entityInfo.name); // Set entity name
-      this.routeInfoService.setPreviousPath(this.router.url);
-      this.router.navigate(['/ApiEntity', this.apiInfo.name, this.entityInfo.name]);
-    }
-  }
-
   openEditDialog(): void {
     this.oldName = this.entityInfo.name;
     this.dialog({... this.entityInfo}).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
-        this.cardEntityService.updateApiEntity(this.apiInfo.name, this.oldName, data).subscribe({
+        this.entityRepositoryService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.entityInfo = data;
@@ -81,7 +67,6 @@ export class CardEntityComponent {
             console.error('Ошибка при обновлении сущности:', error);
           }
         })
-
       },
       complete: () => {
         console.info('Dialog closed');
@@ -92,8 +77,8 @@ export class CardEntityComponent {
   onRefresh(): void {
     if (this.apiName) {
       this.loading = true; // Set loading to true
-      this.routeMemoryService.checkForUpdates(this.apiName);
-      this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
+      this.routeMemoryService.checkForApiUpdates(this.apiName);
+      this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
         this.loading = false; // Set loading to false
         if (apiStructure) {
           this.entities = apiStructure.entities;

@@ -9,7 +9,6 @@ import { CardApiListComponent } from "./data/pages/card-api-list/card-api-list.c
     RouterOutlet, 
     TuiRoot, 
     RouterModule,
-    CardApiListComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

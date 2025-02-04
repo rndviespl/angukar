@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TuiButton } from '@taiga-ui/core';
-import { RouteInfoService } from '../../../service/route-info.service';
 
 @Component({
   selector: 'app-back-button',
@@ -13,16 +13,9 @@ import { RouteInfoService } from '../../../service/route-info.service';
   styleUrl: './back-button.component.css'
 })
 export class BackButtonComponent {
-  constructor(private router: Router, private routeInfoService: RouteInfoService) {}
+  constructor( private location: Location, ) {}
 
   goBack(): void {
-    const previousPath = this.routeInfoService.getPreviousPath();
-    if (previousPath) {
-      this.router.navigateByUrl(previousPath);
-    } else {
-      console.warn('No previous path found in localStorage');
-      // Можно добавить дополнительную логику, например, навигацию на домашнюю страницу
-      this.router.navigate(['/home']);
-    }
+    this.location.back();
   }
 }

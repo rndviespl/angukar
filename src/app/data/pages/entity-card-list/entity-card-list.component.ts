@@ -2,18 +2,18 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Entity, EntityShort, apiServiceShortStructure } from '../../../service/service-structure-api';
+import { Entity, apiServiceShortStructure } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiButton, tuiDialog } from '@taiga-ui/core';
-import { CardApiService } from '../../../service/card-api.service';
 import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
-import { RouteInfoService } from '../../../service/route-info.service';
 import { BackButtonComponent } from '../../components/back-button/back-button.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
 import { EntityDialogComponent } from '../../components/entity-dialog/entity-dialog.component';
+import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
+import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -44,7 +44,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   entity:Entity = {
     name: '',
     isActive: false,
-    structure: '',
+    structure: null,
     actions: []
   };
   constructor(
@@ -52,7 +52,8 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private cardEntityService: CardApiService,
+    private entityRepositoryService: EntityRepositoryService,
+    private apiServiceRepositoryService: ApiServiceRepositoryService
   ) {}
 
   ngOnDestroy(): void {
@@ -63,7 +64,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.apiName = params['name'];
       if (this.apiName) {
-        this.sub = this.routeMemoryService.getData(this.apiName).subscribe(apiStructure => {
+        this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
           if (apiStructure) {
             this.entities = apiStructure.entities;
             this.apiInfo = apiStructure as apiServiceShortStructure; // Assuming apiInfo is the entire apiStructure
@@ -77,10 +78,24 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     });
   }
 
+onToggleChange(newState: boolean) {
+    this.apiInfo.isActive = newState; // Update state in parent component
+    console.log('Состояние переключателя изменилось на:', newState);
+
+    // Call method to update service status
+    this.apiServiceRepositoryService.updateApiServiceStatus(this.apiName, newState).subscribe({
+      next: (response) => {
+        console.log('Состояние сервиса обновлено:', response);
+      },
+      error: (error) => {
+        console.error('Ошибка при обновлении состояния сервиса:', error);
+      }
+    });
+  }
   openCreateDialog(): void {
     this.dialog({... this.entity}).subscribe({
       next: (data) => {        
-        this.cardEntityService.createApiEntity(this.apiName,data).subscribe({
+        this.entityRepositoryService.createApiEntity(this.apiName,data).subscribe({
           next: (response) => {
             console.log('entity добавлено:', response);
             this.entities.push(data);
