@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Endpoint, apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
 import { Subscription } from 'rxjs';
@@ -25,8 +25,9 @@ export class CardEndpointComponent {
   @Input() entityInfo!: Entity;
   @Input() endpointInfo!: Endpoint;
   @Input() apiName: string = "";
+  @Output() endpointDeleted = new EventEmitter<string>();
   oldName: string = "";
-  actions: Endpoint[] = [];
+  endpoint: Endpoint[] = [];
   sub: Subscription | null = null;
   loading: boolean = false;
 
@@ -38,8 +39,8 @@ export class CardEndpointComponent {
   constructor(
     private endpointRepositoryService: EndpointRepositoryService,
     private cd: ChangeDetectorRef,
-    
-  ) {}
+
+  ) { }
 
   onToggleChange(newState: boolean) {
     this.endpointInfo.isActive = newState; // Обновляем состояние в родительском компоненте
@@ -75,6 +76,18 @@ export class CardEndpointComponent {
       complete: () => {
         console.info('Dialog closed');
       },
+    });
+  }
+
+  onDeleteConfirmed(): void {
+    this.endpointRepositoryService.deleteEndpoint(this.apiName, this.entityInfo.name, this.endpointInfo.route).subscribe({
+      next: () => {
+        console.log(`Действие "${this.endpointInfo.route}" удалено.`);
+        this.endpointDeleted.emit(this.endpointInfo.route); // Emit the event to notify the parent component
+      },
+      error: (error) => {
+        console.error('Ошибка при удалении действия:', error);
+      }
     });
   }
 }

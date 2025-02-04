@@ -19,7 +19,8 @@
 
     <div class="grid">
         <div *ngFor="let endpoint of endpoints" tuiAppearance="floating" tuiCardLarge class="card">
-            <app-card-endpoint [entityInfo]="entityInfo" [endpointInfo]="endpoint" [apiName]="apiName"></app-card-endpoint>
+            <app-card-endpoint [entityInfo]="entityInfo" [endpointInfo]="endpoint" [apiName]="apiName"
+                (endpointDeleted)="onEndpointDeleted(endpoint.route)"></app-card-endpoint>
         </div>
     </div>
 </div>
