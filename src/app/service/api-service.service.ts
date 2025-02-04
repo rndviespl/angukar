@@ -33,7 +33,7 @@ export class ApiService {
     return this.http.delete<void>(`${this.baseUrl}/ApiService/${serviceName}`);
   }
 
-  updateServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
+  updateApiServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
     return this.http.patch<any>(`${this.baseUrl}/ApiService/${serviceName}/${isActive}`, null); // Передаем null, если нет тела запроса
   }
 

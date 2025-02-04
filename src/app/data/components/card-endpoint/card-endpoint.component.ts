@@ -62,7 +62,7 @@ export class CardEndpointComponent {
       next: (data) => {
         console.info(`Dialog emitted data = ${data} - ${this.apiName}`);
 
-        this.endpointRepositoryService.updateApiEndpoint(this.apiName, this.entityInfo.name, this.actionInfo.route, data).subscribe({
+        this.endpointRepositoryService.updateEndpoint(this.apiName, this.entityInfo.name, this.actionInfo.route, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
             this.actionInfo = data;

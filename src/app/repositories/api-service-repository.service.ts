@@ -28,11 +28,11 @@ export class ApiServiceRepositoryService {
   }
 
   deleteApiService(serviceName: string): Observable<void> {
-    return this.deleteApiService(serviceName);
+    return this.apiService.deleteApiService(serviceName);
   }
 
   updateApiServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
-    return this.updateApiServiceStatus(serviceName, isActive)
+    return this.apiService.updateApiServiceStatus(serviceName, isActive)
   }
 }
 
