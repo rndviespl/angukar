@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { CardApiService } from './card-api.service'; // Импортируйте ваш API сервис
-import { Action as Endpoint, Entity } from './service-structure-api'; // Импортируйте интерфейс Entity
+import { Endpoint as Endpoint, Entity } from './service-structure-api'; // Импортируйте интерфейс Entity
 
 @Injectable({
   providedIn: 'root'

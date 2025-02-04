@@ -6,13 +6,14 @@ import { Entity, apiServiceShortStructure } from '../../../service/service-struc
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiButton, tuiDialog } from '@taiga-ui/core';
-import { CardApiService } from '../../../service/card-api.service';
 import { IconTrashComponent } from "../../components/icon-trash/icon-trash.component";
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
 import { BackButtonComponent } from '../../components/back-button/back-button.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
 import { EntityDialogComponent } from '../../components/entity-dialog/entity-dialog.component';
+import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
+import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -51,7 +52,8 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private cardEntityService: CardApiService,
+    private entityRepositoryService: EntityRepositoryService,
+    private apiServiceRepositoryService: ApiServiceRepositoryService
   ) {}
 
   ngOnDestroy(): void {
@@ -81,7 +83,7 @@ onToggleChange(newState: boolean) {
     console.log('Состояние переключателя изменилось на:', newState);
 
     // Call method to update service status
-    this.cardEntityService.patchApiServiceStatus(this.apiName, newState).subscribe({
+    this.apiServiceRepositoryService.updateApiServiceStatus(this.apiName, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
       },
@@ -93,7 +95,7 @@ onToggleChange(newState: boolean) {
   openCreateDialog(): void {
     this.dialog({... this.entity}).subscribe({
       next: (data) => {        
-        this.cardEntityService.createApiEntity(this.apiName,data).subscribe({
+        this.entityRepositoryService.createApiEntity(this.apiName,data).subscribe({
           next: (response) => {
             console.log('entity добавлено:', response);
             this.entities.push(data);
