@@ -7,7 +7,7 @@ import { TuiAutoFocus } from '@taiga-ui/cdk';
 import type { TuiDialogContext } from '@taiga-ui/core';
 import { TuiButton, TuiDialogService, TuiTextfield, TuiAlertService } from '@taiga-ui/core';
 import { TuiDataListWrapper, TuiSlider } from '@taiga-ui/kit';
-import {TuiTextareaModule} from '@taiga-ui/legacy';
+import { TuiTextareaModule } from '@taiga-ui/legacy';
 import {
   TuiInputModule,
   TuiSelectModule,
@@ -77,12 +77,15 @@ export class EntityDialogComponent {
         return;
       }
       this.isCanSumbit = false;
-      this.showError('JSON не правильной структуры');
     }
   }
 
   protected submit(): void {
-    if (this.hasValue && this.isCanSumbit) {
+    if (!this.isCanSumbit) {
+      this.showError('JSON не правильной структуры');
+      return;
+    }
+    if (this.hasValue) {
       this.context.completeWith(this.data);
     }
   }
