@@ -6,9 +6,16 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.header img {
+.header a{
     height: 4rem;
-    /* Относительная высота логотипа */
+}
+
+.header a {
+    outline: none; /* Убирает стандартное выделение */
+}
+
+.header a img{
+    height: 4rem;
 }
 
 .header button {
@@ -16,7 +23,7 @@
     border: none;
     padding: 0.625rem 1.25rem;
     /* Относительные отступы */
-    margin: 0.625rem 1.25rem;
+    margin: 0.625rem 0.5rem;
     /* Относительные отступы */
     border-radius: 0.3125rem;
     /* Относительный радиус скругления */
@@ -39,7 +46,13 @@
         flex-wrap: wrap;
     }
 
-    .header img {
+    .header a{
         width: -webkit-fill-available;
+        height: auto;
+    }
+
+    .header a img{
+        width: -webkit-fill-available;
+        height: auto;
     }
 }
