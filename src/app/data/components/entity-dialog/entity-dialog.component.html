@@ -1,4 +1,4 @@
-<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.name">
+<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.name" (input)="onInput($event)">
     Имя сущности
 </tui-input>
 <br>

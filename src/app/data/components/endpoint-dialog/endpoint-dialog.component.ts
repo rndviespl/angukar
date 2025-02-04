@@ -63,4 +63,15 @@ export class EndpointDialogComponent {
     this.dialogs.open(content, { dismissible: true }).subscribe();
   }
 
+  protected onInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+  
+    // Очищаем значение поля ввода от недопустимых символов
+    const cleanedValue = value.replace(/[^a-zA-Z0-9]/g, '');
+    input.value = cleanedValue;
+  
+    // Обновляем значение в data
+    this.data.route = cleanedValue;
+  }
 }
