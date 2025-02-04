@@ -27,7 +27,7 @@ export class CardEndpointComponent {
   @Input() apiName: string = "";
   @Output() actionDeleted = new EventEmitter<string>();
   oldName: string = "";
-  actions: Endpoint[] = [];
+  endpoint: Endpoint[] = [];
   sub: Subscription | null = null;
   loading: boolean = false;
 
