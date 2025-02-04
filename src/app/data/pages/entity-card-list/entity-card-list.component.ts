@@ -30,8 +30,8 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
   sub: Subscription | null = null;
   apiName!: string;
-  loading: boolean = false; // Add loading state
-  apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure; // Initialize apiInfo
+  loading: boolean = false;
+  apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
   private readonly dialog = tuiDialog(EntityDialogComponent, {
     dismissible: true,
     label: "Создать",
@@ -64,8 +64,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
         this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
           if (apiStructure) {
             this.entities = apiStructure.entities;
-            this.apiInfo = apiStructure as apiServiceShortStructure; // Assuming apiInfo is the entire apiStructure
-            console.log(this.apiInfo)
+            this.apiInfo = apiStructure as apiServiceShortStructure;
             this.cd.markForCheck();
           }
         });
@@ -79,7 +78,6 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     this.apiInfo.isActive = newState; // Update state in parent component
     console.log('Состояние переключателя изменилось на:', newState);
 
-    // Call method to update service status
     this.apiServiceRepositoryService.updateApiServiceStatus(this.apiName, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
@@ -89,10 +87,11 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   openCreateDialog(): void {
-    this.dialog({... this.entity}).subscribe({
-      next: (data) => {        
-        this.entityRepositoryService.createApiEntity(this.apiName,data).subscribe({
+    this.dialog({ ...this.entity }).subscribe({
+      next: (data) => {
+        this.entityRepositoryService.createApiEntity(this.apiName, data).subscribe({
           next: (response) => {
             console.log('entity добавлено:', response);
             this.entities.push(data);
@@ -101,8 +100,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
           error: (error) => {
             console.error('Ошибка при создании сущности:', error);
           }
-        })
-
+        });
       },
       complete: () => {
         console.info('Dialog closed');

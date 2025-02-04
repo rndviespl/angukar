@@ -27,11 +27,9 @@ import { EntityRepositoryService } from '../../../../repositories/entity-reposit
     BackButtonComponent,
     RouterModule,
     HeaderComponent,
-    HeaderComponent,
     SwitchComponent,
     CardEntityComponent
-],
-  
+  ],
   templateUrl: './endpoint-card-list.component.html',
   styleUrls: ['./endpoint-card-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,7 +41,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   sub: Subscription | null = null;
   endpoints: Endpoint[] = [];
-  entityInfo: Entity = {} as Entity; // Ensure entityInfo is of type Entity
+  entityInfo: Entity = {} as Entity;
   apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
   location: Location;
 
@@ -51,7 +49,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     dismissible: true,
     label: "Создать",
   });
-  endpoint:Endpoint = {
+  endpoint: Endpoint = {
     route: '',
     type: 'get',
     isActive: false
@@ -65,7 +63,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     private entityRepositoryService: EntityRepositoryService,
     location: Location
   ) {
-    this.location = location; // Assigning the injected instance
+    this.location = location;
   }
 
   ngOnDestroy(): void {
@@ -76,24 +74,25 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.apiName = params['apiServiceName'];
       this.entityName = params['entityName'];
-      this.entityRepositoryService.getApiEntity(this.apiName,this.entityName).subscribe(it => {
-        this.entityInfo = it;
-        this.cd.detectChanges();
-      });
-      this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe(it => {
-        this.endpoints = it;
-        console.log('Fetched actions:', it);
-        console.log('Actions after assignment:', this.endpoints); // Добавленный лог
-        this.cd.detectChanges();
-      });
-    } )
+      this.loadData();
+    });
+  }
+
+  loadData(): void {
+    this.entityRepositoryService.getApiEntity(this.apiName, this.entityName).subscribe(it => {
+      this.entityInfo = it;
+      this.cd.detectChanges();
+    });
+    this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe(it => {
+      this.endpoints = it;
+      console.log('Fetched actions:', it);
+      this.cd.detectChanges();
+    });
   }
 
   openCreateDialog(): void {
     this.dialog({ ...this.endpoint }).subscribe({
       next: (data) => {
-        console.info(`Dialog emitted data = ${data} - ${this.apiInfo.name}`);
-
         this.endpointRepositoryService.createEndpoint(this.apiName, this.entityName, data).subscribe({
           next: (response) => {
             console.log('Сущность обновлена:', response);
@@ -109,12 +108,12 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
         console.info('Dialog closed');
       },
     });
-  }  
+  }
+
   onToggleChange(newState: boolean) {
-    this.apiInfo.isActive = newState; // Update state in parent component
+    this.apiInfo.isActive = newState;
     console.log('Состояние переключателя изменилось на:', newState);
 
-    // Call method to update service status
     this.entityRepositoryService.updateEntityStatus(this.apiName, this.entityName, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
@@ -127,6 +126,6 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
 
   onEndpointDeleted(endpointRoute: string): void {
     this.endpoints = this.endpoints.filter(endpoint => endpoint.route !== endpointRoute);
-    this.cd.markForCheck(); // Notify Angular to check for changes
+    this.cd.markForCheck();
   }
 }

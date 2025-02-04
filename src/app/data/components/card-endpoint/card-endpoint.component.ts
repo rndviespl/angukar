@@ -25,7 +25,7 @@ export class CardEndpointComponent {
   @Input() entityInfo!: Entity;
   @Input() endpointInfo!: Endpoint;
   @Input() apiName: string = "";
-  @Output() actionDeleted = new EventEmitter<string>();
+  @Output() endpointDeleted = new EventEmitter<string>();
   oldName: string = "";
   endpoint: Endpoint[] = [];
   sub: Subscription | null = null;
@@ -78,11 +78,12 @@ export class CardEndpointComponent {
       },
     });
   }
+
   onDeleteConfirmed(): void {
     this.endpointRepositoryService.deleteEndpoint(this.apiName, this.entityInfo.name, this.endpointInfo.route).subscribe({
       next: () => {
         console.log(`Действие "${this.endpointInfo.route}" удалено.`);
-        this.actionDeleted.emit(this.endpointInfo.route); // Emit the event to notify the parent component
+        this.endpointDeleted.emit(this.endpointInfo.route); // Emit the event to notify the parent component
       },
       error: (error) => {
         console.error('Ошибка при удалении действия:', error);
