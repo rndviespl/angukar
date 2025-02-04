@@ -1,11 +1,10 @@
-<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.name">
+<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.name" (input)="onInput($event)">
     Имя API
 </tui-input>
-
+<br>
 <tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.description">
     Описание
 </tui-input>
-
 
 <p>
     <button size="m" tuiButton type="button" [disabled]="!hasValue" (click)="submit()">

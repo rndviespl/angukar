@@ -1,7 +1,7 @@
-<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.route">
+<tui-input tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.route" (input)="onInput($event)">
     Имя эндпоинта
 </tui-input>
-
+<br>
 <tui-select tuiAutoFocus tuiTextfieldSize="m" [(ngModel)]="data.type">
     Тип
     <select tuiSelect [items]="types" ></select>
