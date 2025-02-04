@@ -4,7 +4,7 @@ import { switchMap, takeUntil } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { AlertComponent } from '../alert/alert.component';
-import { apiServiceShortStructure, EntityShort, Action } from '../../../service/service-structure-api';
+import { apiServiceShortStructure, EntityShort, Endpoint } from '../../../service/service-structure-api';
 import { CardApiService } from '../../../service/card-api.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class IconTrashComponent {
   @Input() item: any;
   @Input() apiInfo!: apiServiceShortStructure;
   @Input() entityInfo!: EntityShort;
-  @Input() actionInfo!: Action;
+  @Input() actionInfo!: Endpoint;
   @Output() responseAlert = new EventEmitter<boolean>();
 
   constructor(

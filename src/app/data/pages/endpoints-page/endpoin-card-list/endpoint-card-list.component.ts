@@ -125,8 +125,8 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onActionDeleted(actionRoute: string): void {
-    this.actions = this.actions.filter(action => action.route !== actionRoute);
+  onEndpointDeleted(endpointRoute: string): void {
+    this.endpoints = this.endpoints.filter(endpoint => endpoint.route !== endpointRoute);
     this.cd.markForCheck(); // Notify Angular to check for changes
   }
 }
