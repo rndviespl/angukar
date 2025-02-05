@@ -1,4 +1,10 @@
 <app-header [buttonText]="'Добавить сущность'" (buttonClick)="openCreateDialog()" />
+@if (loading)
+{
+  <app-loading></app-loading>
+}
+@else 
+{
 <div class="container">
   <div class="mb-40">
     <!-- Заголовок и описание -->
@@ -25,3 +31,4 @@
     </div>
   </div>
 </div>
+}

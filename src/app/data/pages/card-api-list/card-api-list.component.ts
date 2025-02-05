@@ -9,6 +9,8 @@ import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.compo
 import { RouterModule } from '@angular/router';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 import { Router } from '@angular/router';
+import { LoadingComponent } from "../../components/loading/loading.component";
+import { TuiAlertService } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-card-api-list',
@@ -17,6 +19,8 @@ import { Router } from '@angular/router';
     CommonModule,
     HeaderComponent,
     RouterModule,
+    LoadingComponent,
+    RouterModule
   ],
   templateUrl: './card-api-list.component.html',
   styleUrls: ['./card-api-list.component.css']
@@ -29,6 +33,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     description: ''
   };
   sub: Subscription | null = null;
+  loading: boolean = true;
   private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
     label: "Создать",
@@ -37,7 +42,8 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   constructor(
     private apiServiceRepository: ApiServiceRepositoryService,
     private cd: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private readonly alerts: TuiAlertService,
   ) { }
 
   ngOnDestroy(): void {
@@ -54,6 +60,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
         this.cards = it;
         console.log(it);
         this.cd.detectChanges();
+        this.loading = false
       },
       error: (error) => {
         console.error('Error fetching API list', error);
@@ -65,19 +72,48 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   openCreateDialog(): void {
     this.dialog({ ...this.api }).subscribe({
       next: (data) => {
+        // Проверка на существование имени в текущем списке
+        const isNameExists = this.cards.some(card => card.name === data.name);
+        if (isNameExists) {
+          this.alerts
+            .open('Ошибка: API с таким именем уже существует', {
+              appearance: 'negative',
+            })
+            .subscribe();
+          return;
+        }
+  
         this.apiServiceRepository.createApiService(data).subscribe({
           next: (response) => {
-            console.log('api добавлено:', response);
+            console.log('API добавлено:', response);
             this.cards.push(data);
             this.cd.markForCheck();
+            this.alerts
+              .open('API успешно создано', {
+                appearance: 'success',
+              })
+              .subscribe();
           },
           error: (error) => {
-            console.error('Ошибка при создании сущности:', error);
+            if (error.status === 409) {
+              this.alerts
+                .open('Ошибка: API с таким именем уже существует', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            } else {
+              this.alerts
+                .open('Ошибка при создании API', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            }
+            console.error('Ошибка при создании API:', error);
           }
         });
       },
       complete: () => {
-        console.info('Dialog closed');
+        console.info('Диалог закрыт');
       },
     });
   }

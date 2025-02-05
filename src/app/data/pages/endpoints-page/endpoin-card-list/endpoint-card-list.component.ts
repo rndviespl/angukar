@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { Endpoint, apiServiceShortStructure, Entity } from '../../../../service/service-structure-api';
 import { CommonModule, Location } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { TuiButton, tuiDialog } from '@taiga-ui/core';
+import { TuiButton, tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { IconTrashComponent } from '../../../components/icon-trash/icon-trash.component';
 import { BackButtonComponent } from '../../../components/back-button/back-button.component';
 import { CardEndpointComponent } from '../../../components/card-endpoint/card-endpoint.component';
@@ -15,6 +15,7 @@ import { SwitchComponent } from '../../../components/switch/switch.component';
 import { CardEntityComponent } from "../../../components/card-entity/card-entity.component";
 import { EndpointRepositoryService } from '../../../../repositories/endpoint-repository.service';
 import { EntityRepositoryService } from '../../../../repositories/entity-repository.service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'app-endpoint-card-list',
@@ -28,7 +29,8 @@ import { EntityRepositoryService } from '../../../../repositories/entity-reposit
     RouterModule,
     HeaderComponent,
     SwitchComponent,
-    CardEntityComponent
+    CardEntityComponent,
+    LoadingComponent
   ],
   templateUrl: './endpoint-card-list.component.html',
   styleUrls: ['./endpoint-card-list.component.css'],
@@ -38,7 +40,7 @@ import { EntityRepositoryService } from '../../../../repositories/entity-reposit
 export class EndpointCardListComponent implements OnInit, OnDestroy {
   apiName!: string;
   entityName!: string;
-  loading: boolean = false;
+  loading: boolean = true;
   sub: Subscription | null = null;
   endpoints: Endpoint[] = [];
   entityInfo: Entity = {} as Entity;
@@ -61,6 +63,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private endpointRepositoryService: EndpointRepositoryService,
     private entityRepositoryService: EntityRepositoryService,
+    private alerts: TuiAlertService,
     location: Location
   ) {
     this.location = location;
@@ -83,6 +86,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
       next: (it) => {
         this.entityInfo = it;
         this.cd.detectChanges();
+        this.loading = false
       },
       error: (error) => {
         console.error('Error fetching entity data', error);
@@ -105,14 +109,43 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   openCreateDialog(): void {
     this.dialog({ ...this.endpoint }).subscribe({
       next: (data) => {
+        // Проверка на существование маршрута в текущем списке
+        const isRouteExists = this.endpoints.some(endpoint => endpoint.route === data.route);
+        if (isRouteExists) {
+          this.alerts
+            .open('Ошибка: Эндпоинт с таким маршрутом уже существует', {
+              appearance: 'negative',
+            })
+            .subscribe();
+          return; // Прекращаем выполнение, если эндпоинт уже существует
+        }
+  
         this.endpointRepositoryService.createEndpoint(this.apiName, this.entityName, data).subscribe({
           next: (response) => {
-            console.log('Сущность обновлена:', response);
+            console.log('Эндпоинт добавлен:', response);
             this.endpoints.push(data);
             this.cd.markForCheck();
+            this.alerts
+              .open('Эндпоинт успешно создан', {
+                appearance: 'success',
+              })
+              .subscribe();
           },
           error: (error) => {
-            console.error('Ошибка при обновлении сущности:', error);
+            if (error.status === 409) {
+              this.alerts
+                .open('Ошибка: Эндпоинт с таким именем уже существует', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            } else {
+              this.alerts
+                .open('Ошибка при создании эндпоинта', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            }
+            console.error('Ошибка при создании эндпоинта:', error);
           }
         });
       },
