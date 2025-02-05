@@ -10,7 +10,7 @@
     height: 80px;
     position: relative;
     display: inline-block;
-    --base-color: #fff; /*use your base color*/
+    --base-color: #fff; /* Используйте свой базовый цвет */
 }
 
 .loader::before {
