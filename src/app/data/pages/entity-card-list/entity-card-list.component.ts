@@ -112,8 +112,26 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
             console.log('Cущность добавлена:', response);
             this.entities.push(data);
             this.cd.markForCheck();
+            this.alerts
+              .open('Сущность успешно создана', {
+                appearance: 'success',
+              })
+              .subscribe();
           },
           error: (error) => {
+            if (error.status === 409) {
+              this.alerts
+                .open('Ошибка: Сущность с таким именем уже существует', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            } else {
+              this.alerts
+                .open('Ошибка при создании сущности', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            }
             console.error('Ошибка при создании сущности:', error);
           }
         });

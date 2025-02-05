@@ -12,8 +12,13 @@
         </div>
         <h1 class="entity-title">{{ entityInfo.name }}</h1>
         <div class="entity-structure">
-            <h3>Структура сущности</h3>
-            <textarea readonly class="structure-content">{{ entityInfo.structure | json }}</textarea>
+            @if(entityInfo.structure != null){
+                 <h3>Структура сущности</h3>
+                <textarea readonly class="structure-content">{{ entityInfo.structure | json }}</textarea>
+            }
+            @else{
+                <h3>Структура сущности отсутствует</h3>
+            }
         </div>
     </div>
 
