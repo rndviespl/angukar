@@ -116,8 +116,26 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
             console.log('Эндпоинт добавлен:', response);
             this.endpoints.push(data);
             this.cd.markForCheck();
+            this.alerts
+              .open('Эндпоинт успешно создан', {
+                appearance: 'success',
+              })
+              .subscribe();
           },
           error: (error) => {
+            if (error.status === 409) {
+              this.alerts
+                .open('Ошибка: Эндпоинт с таким именем уже существует', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            } else {
+              this.alerts
+                .open('Ошибка при создании эндпоинта', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            }
             console.error('Ошибка при создании эндпоинта:', error);
           }
         });

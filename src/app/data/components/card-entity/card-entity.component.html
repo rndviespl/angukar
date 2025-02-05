@@ -4,6 +4,14 @@
     <app-switch [value]="entityInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
   </div>
   <h3>{{ entityInfo.name }}</h3>
+  <p>Структура 
+    @if(entityInfo.structure == null){
+      отсутствует
+    }
+    @else{
+      есть
+    }
+  </p>
   <div class="actions">
     <button tuiButton [routerLink]="['/ApiEntity', apiName, entityInfo.name]">Детали</button>
   </div>
