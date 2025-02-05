@@ -29,10 +29,6 @@ export class CardApiService {
     return this.http.put<apiServiceShortStructure>(`${this.baseUrl}/ApiService/${oldName}`, service);
   }
 
-  deleteApiService(serviceName: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/ApiService/${serviceName}`);
-  }
-
   patchApiServiceStatus(serviceName: string, isActive: boolean): Observable<void> {
     return this.http.patch<void>(`${this.baseUrl}/ApiService/${serviceName}/${isActive}`, null);
   }
@@ -40,7 +36,7 @@ export class CardApiService {
   // ApiEntity Methods
   getApiEntityList(apiServiceName: string): Observable<Entity[]> {
     return this.http.get<Entity[]>(`${this.baseUrl}/ApiEntity/${apiServiceName}`);
-  } 
+  }
 
   getApiEntity(apiServiceName: string, entityName: string): Observable<Entity> {
     return this.http.get<Entity>(`${this.baseUrl}/ApiEntity/${apiServiceName}/${entityName}`);
@@ -53,11 +49,19 @@ export class CardApiService {
   updateApiEntity(apiServiceName: string, entityName: string, entity: Entity): Observable<Entity> {
     return this.http.put<Entity>(`${this.baseUrl}/ApiEntity/${apiServiceName}/${entityName}`, entity);
   }
+  //cccccccccccccccccccccccc
+  deleteApiService(serviceName: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/ApiService/${serviceName}`);
+  }
 
   deleteApiEntity(apiServiceName: string, entityName: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/ApiEntity/${apiServiceName}/${entityName}`);
   }
 
+  deleteApiAction(apiServiceName: string, entityName: string, actionName: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`);
+  }
+//fcccccccccccccccccccccc
   // ApiAction Methods
   getActionList(apiServiceName: string, entityName: string): Observable<Endpoint[]> {
     return this.http.get<Endpoint[]>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`);
@@ -73,10 +77,6 @@ export class CardApiService {
 
   updateApiEndpoint(apiServiceName: string, entityName: string, actionName: string, action: Endpoint): Observable<Endpoint> {
     return this.http.put<Endpoint>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`, action);
-  }
-
-  deleteApiAction(apiServiceName: string, entityName: string, actionName: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`);
   }
 
   // ApiEmu Methods
@@ -99,7 +99,7 @@ export class CardApiService {
   deleteApiEmu(apiName: string, entityName: string, endpoint: string, id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/ApiEmu/${apiName}/${entityName}/${endpoint}/${id}`);
   }
-  
+
   updateServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
     return this.http.patch<any>(`${this.baseUrl}/ApiService/${serviceName}/${isActive}`, null); // Передаем null, если нет тела запроса
   }

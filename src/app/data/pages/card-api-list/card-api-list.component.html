@@ -1,6 +1,13 @@
-<app-header [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()"/>
-<div class="container">
+<app-header [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()" />
+@if (loading)
+{
+  <app-loading></app-loading>
+}
+@else 
+{
+  <div class="container">
     <div *ngFor="let item of cards" tuiAppearance="floating" tuiCardLarge class="card">
-      <app-card-api [apiInfo]="item"></app-card-api>
+      <app-card-api [apiInfo]="item" (apiDeleted)="onApiDeleted(item.name)"></app-card-api>
     </div>
-</div>
+  </div>
+}

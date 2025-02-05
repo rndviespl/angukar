@@ -1,4 +1,10 @@
 <app-header [buttonText]="'Добавить сущность'" (buttonClick)="openCreateDialog()" />
+@if (loading)
+{
+  <app-loading></app-loading>
+}
+@else 
+{
 <div class="container">
   <div class="mb-40">
     <!-- Заголовок и описание -->
@@ -20,7 +26,9 @@
   <!-- Список сущностей -->
   <div class="grid">
     <div *ngFor="let item of entities" tuiAppearance="floating" tuiCardLarge class="card">
-      <app-card-entity [entityInfo]="item" [apiName]="apiInfo.name"></app-card-entity>
+      <app-card-entity [entityInfo]="item" [apiName]="apiInfo.name"
+        (entityDeleted)="onEntityDeleted(item.name)"></app-card-entity>
     </div>
   </div>
 </div>
+}

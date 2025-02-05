@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, input, OnDestroy, OnInit, Output } from '@angular/core';
 import {TuiAppearance, TuiButton, tuiDialog, TuiTitle} from '@taiga-ui/core';
 import { TuiAvatar} from '@taiga-ui/kit';
 import {TuiCardLarge, TuiHeader} from '@taiga-ui/layout';
@@ -9,6 +9,7 @@ import { apiServiceShortStructure } from '../../../service/service-structure-api
 import { SwitchComponent } from '../switch/switch.component';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { IconTrashComponent } from '../icon-trash/icon-trash.component';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 
 @Component({
@@ -23,6 +24,7 @@ import { ApiServiceRepositoryService } from '../../../repositories/api-service-r
     TuiTitle,
     RouterModule,
     SwitchComponent,
+    IconTrashComponent,
   ],
   
   templateUrl: './card-api.component.html',
@@ -32,6 +34,7 @@ import { ApiServiceRepositoryService } from '../../../repositories/api-service-r
 
 export class CardApiComponent {
   @Input() apiInfo!: apiServiceShortStructure;
+  @Output() apiDeleted = new EventEmitter<void>();
   oldName: string = "";
   location: Location;
 
@@ -87,7 +90,15 @@ export class CardApiComponent {
     });
   }
 
-  deleteCard(card: apiServiceShortStructure) {
-    console.log("delete")
+  onDeleteConfirmed(): void {
+    this.apiServiceRepository.deleteApiService(this.apiInfo.name).subscribe({
+      next: () => {
+        console.log(`Сервис "${this.apiInfo.name}" удален.`);
+        this.apiDeleted.emit(); // Emit the event to notify the parent component
+      },
+      error: (error) => {
+        console.error('Ошибка при удалении сервиса:', error);
+      }
+    });
   }
 }

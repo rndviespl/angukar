@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { Endpoint, apiServiceShortStructure, Entity } from '../../../../service/service-structure-api';
 import { CommonModule, Location } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { TuiButton, tuiDialog } from '@taiga-ui/core';
+import { TuiButton, tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { IconTrashComponent } from '../../../components/icon-trash/icon-trash.component';
 import { BackButtonComponent } from '../../../components/back-button/back-button.component';
 import { CardEndpointComponent } from '../../../components/card-endpoint/card-endpoint.component';
@@ -15,6 +15,7 @@ import { SwitchComponent } from '../../../components/switch/switch.component';
 import { CardEntityComponent } from "../../../components/card-entity/card-entity.component";
 import { EndpointRepositoryService } from '../../../../repositories/endpoint-repository.service';
 import { EntityRepositoryService } from '../../../../repositories/entity-repository.service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'app-endpoint-card-list',
@@ -27,11 +28,10 @@ import { EntityRepositoryService } from '../../../../repositories/entity-reposit
     BackButtonComponent,
     RouterModule,
     HeaderComponent,
-    HeaderComponent,
     SwitchComponent,
-    CardEntityComponent
-],
-  
+    CardEntityComponent,
+    LoadingComponent
+  ],
   templateUrl: './endpoint-card-list.component.html',
   styleUrls: ['./endpoint-card-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,10 +40,10 @@ import { EntityRepositoryService } from '../../../../repositories/entity-reposit
 export class EndpointCardListComponent implements OnInit, OnDestroy {
   apiName!: string;
   entityName!: string;
-  loading: boolean = false;
+  loading: boolean = true;
   sub: Subscription | null = null;
   endpoints: Endpoint[] = [];
-  entityInfo: Entity = {} as Entity; // Ensure entityInfo is of type Entity
+  entityInfo: Entity = {} as Entity;
   apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
   location: Location;
 
@@ -51,7 +51,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     dismissible: true,
     label: "Создать",
   });
-  endpoint:Endpoint = {
+  endpoint: Endpoint = {
     route: '',
     type: 'get',
     isActive: false
@@ -63,9 +63,10 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private endpointRepositoryService: EndpointRepositoryService,
     private entityRepositoryService: EntityRepositoryService,
+    private alerts: TuiAlertService,
     location: Location
   ) {
-    this.location = location; // Assigning the injected instance
+    this.location = location;
   }
 
   ngOnDestroy(): void {
@@ -76,32 +77,48 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.apiName = params['apiServiceName'];
       this.entityName = params['entityName'];
-      this.entityRepositoryService.getApiEntity(this.apiName,this.entityName).subscribe(it => {
-        this.entityInfo = it;
-        this.cd.detectChanges();
-      });
-      this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe(it => {
+      this.loadData();
+    });
+  }
+
+  loadData(): void {
+    this.entityRepositoryService.getApiEntity(this.apiName, this.entityName).subscribe(it => {
+      this.entityInfo = it;
+      this.cd.detectChanges();
+      this.loading = false
+    });
+    this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe({
+      next: (it) => {
         this.endpoints = it;
         console.log('Fetched actions:', it);
-        console.log('Actions after assignment:', this.endpoints); // Добавленный лог
         this.cd.detectChanges();
-      });
-    } )
+        this.loading = false
+      },
+    });
   }
 
   openCreateDialog(): void {
     this.dialog({ ...this.endpoint }).subscribe({
       next: (data) => {
-        console.info(`Dialog emitted data = ${data} - ${this.apiInfo.name}`);
-
+        // Проверка на существование маршрута в текущем списке
+        const isRouteExists = this.endpoints.some(endpoint => endpoint.route === data.route);
+        if (isRouteExists) {
+          this.alerts
+            .open('Ошибка: Эндпоинт с таким маршрутом уже существует', {
+              appearance: 'negative',
+            })
+            .subscribe();
+          return; // Прекращаем выполнение, если эндпоинт уже существует
+        }
+  
         this.endpointRepositoryService.createEndpoint(this.apiName, this.entityName, data).subscribe({
           next: (response) => {
-            console.log('Сущность обновлена:', response);
+            console.log('Эндпоинт добавлен:', response);
             this.endpoints.push(data);
             this.cd.markForCheck();
           },
           error: (error) => {
-            console.error('Ошибка при обновлении сущности:', error);
+            console.error('Ошибка при создании эндпоинта:', error);
           }
         });
       },
@@ -109,12 +126,12 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
         console.info('Dialog closed');
       },
     });
-  }  
+  }
+
   onToggleChange(newState: boolean) {
-    this.apiInfo.isActive = newState; // Update state in parent component
+    this.apiInfo.isActive = newState;
     console.log('Состояние переключателя изменилось на:', newState);
 
-    // Call method to update service status
     this.entityRepositoryService.updateEntityStatus(this.apiName, this.entityName, newState).subscribe({
       next: (response) => {
         console.log('Состояние сервиса обновлено:', response);
@@ -123,5 +140,10 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
         console.error('Ошибка при обновлении состояния сервиса:', error);
       }
     });
+  }
+
+  onEndpointDeleted(endpointRoute: string): void {
+    this.endpoints = this.endpoints.filter(endpoint => endpoint.route !== endpointRoute);
+    this.cd.markForCheck();
   }
 }

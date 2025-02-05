@@ -6,58 +6,116 @@ import { CommonModule } from '@angular/common';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
 import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
+import { RouterModule } from '@angular/router';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
+import { LoadingComponent } from "../../components/loading/loading.component";
+import { TuiAlertService } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-card-api-list',
-  imports: [CardApiComponent, CommonModule, HeaderComponent],
+  imports: [
+    CardApiComponent,
+    CommonModule,
+    HeaderComponent,
+    RouterModule,
+    LoadingComponent,
+    RouterModule
+  ],
   templateUrl: './card-api-list.component.html',
-  styleUrl: './card-api-list.component.css'
+  styleUrls: ['./card-api-list.component.css']
 })
-export class CardApiListComponent implements OnInit, OnDestroy{
-  cards:apiServiceShortStructure[] = [];
-  api:apiServiceShortStructure = {
+export class CardApiListComponent implements OnInit, OnDestroy {
+  cards: apiServiceShortStructure[] = [];
+  api: apiServiceShortStructure = {
     name: '',
     isActive: false,
     description: ''
   };
-  sub:Subscription | null = null;
+  sub: Subscription | null = null;
+  loading: boolean = true;
   private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
     label: "Создать",
   });
-  constructor(private apiServiceRepository: ApiServiceRepositoryService, 
+
+  constructor(
+    private apiServiceRepository: ApiServiceRepositoryService,
     private cd: ChangeDetectorRef,
-  ) {}
+    private readonly alerts: TuiAlertService,
+  ) { }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }
+
+
   ngOnInit(): void {
-    this.sub = this.apiServiceRepository.getApiList().subscribe(it => {
-      this.cards = it;
-      console.log(it);
-      this.cd.detectChanges();
-     })
+    this.loadApiList();
   }
+
+  loadApiList(): void {
+    this.sub = this.apiServiceRepository.getApiList().subscribe({
+      next: (it) => {
+        this.cards = it;
+        console.log(it);
+        this.cd.detectChanges();
+        this.loading = false
+      }
+    });
+  }
+
+
   openCreateDialog(): void {
-    this.dialog({... this.api}).subscribe({
+    this.dialog({ ...this.api }).subscribe({
       next: (data) => {
+        // Проверка на существование имени в текущем списке
+        const isNameExists = this.cards.some(card => card.name === data.name);
+        if (isNameExists) {
+          this.alerts
+            .open('Ошибка: API с таким именем уже существует', {
+              appearance: 'negative',
+            })
+            .subscribe();
+          return;
+        }
+  
         this.apiServiceRepository.createApiService(data).subscribe({
           next: (response) => {
-            console.log('api добавлено:', response);
+            console.log('API добавлено:', response);
             this.cards.push(data);
             this.cd.markForCheck();
+            this.alerts
+              .open('API успешно создано', {
+                appearance: 'success',
+              })
+              .subscribe();
           },
           error: (error) => {
-            console.error('Ошибка при создании сущности:', error);
+            if (error.status === 409) {
+              this.alerts
+                .open('Ошибка: API с таким именем уже существует', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            } else {
+              this.alerts
+                .open('Ошибка при создании API', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            }
+            console.error('Ошибка при создании API:', error);
           }
-        })
-
+        });
       },
       complete: () => {
-        console.info('Dialog closed');
+        console.info('Диалог закрыт');
       },
     });
+  }
+
+  onApiDeleted(apiName: string): void {
+    this.cards = this.cards.filter(card => card.name !== apiName);
+    this.cd.markForCheck(); // Notify Angular to check for changes
   }
 }
