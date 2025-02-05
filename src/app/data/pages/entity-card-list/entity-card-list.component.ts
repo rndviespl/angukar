@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Entity, apiServiceShortStructure } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { tuiDialog } from '@taiga-ui/core';
+import { tuiDialog, TuiAlertService  } from '@taiga-ui/core';
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
@@ -51,8 +51,9 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private entityRepositoryService: EntityRepositoryService,
-    private apiServiceRepositoryService: ApiServiceRepositoryService
-  ) { }
+    private apiServiceRepositoryService: ApiServiceRepositoryService,
+    private alerts: TuiAlertService
+  ) {}
 
 
   ngOnDestroy(): void {
@@ -96,9 +97,19 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   openCreateDialog(): void {
     this.dialog({ ...this.entity }).subscribe({
       next: (data) => {
+        const isNameExists = this.entities.some(entity => entity.name === data.name);
+        if (isNameExists) {
+          this.alerts
+            .open('Ошибка: Сущность с таким именем уже существует', {
+              appearance: 'negative',
+            })
+            .subscribe();
+          return;
+        }
+  
         this.entityRepositoryService.createApiEntity(this.apiName, data).subscribe({
           next: (response) => {
-            console.log('entity добавлено:', response);
+            console.log('Cущность добавлена:', response);
             this.entities.push(data);
             this.cd.markForCheck();
           },

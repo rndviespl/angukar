@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { Endpoint, apiServiceShortStructure, Entity } from '../../../../service/service-structure-api';
 import { CommonModule, Location } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { TuiButton, tuiDialog } from '@taiga-ui/core';
+import { TuiButton, tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { IconTrashComponent } from '../../../components/icon-trash/icon-trash.component';
 import { BackButtonComponent } from '../../../components/back-button/back-button.component';
 import { CardEndpointComponent } from '../../../components/card-endpoint/card-endpoint.component';
@@ -63,6 +63,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private endpointRepositoryService: EndpointRepositoryService,
     private entityRepositoryService: EntityRepositoryService,
+    private alerts: TuiAlertService,
     location: Location
   ) {
     this.location = location;
@@ -99,14 +100,25 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   openCreateDialog(): void {
     this.dialog({ ...this.endpoint }).subscribe({
       next: (data) => {
+        // Проверка на существование маршрута в текущем списке
+        const isRouteExists = this.endpoints.some(endpoint => endpoint.route === data.route);
+        if (isRouteExists) {
+          this.alerts
+            .open('Ошибка: Эндпоинт с таким маршрутом уже существует', {
+              appearance: 'negative',
+            })
+            .subscribe();
+          return; // Прекращаем выполнение, если эндпоинт уже существует
+        }
+  
         this.endpointRepositoryService.createEndpoint(this.apiName, this.entityName, data).subscribe({
           next: (response) => {
-            console.log('Сущность обновлена:', response);
+            console.log('Эндпоинт добавлен:', response);
             this.endpoints.push(data);
             this.cd.markForCheck();
           },
           error: (error) => {
-            console.error('Ошибка при обновлении сущности:', error);
+            console.error('Ошибка при создании эндпоинта:', error);
           }
         });
       },
