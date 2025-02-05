@@ -15,6 +15,7 @@ import { SwitchComponent } from '../../../components/switch/switch.component';
 import { CardEntityComponent } from "../../../components/card-entity/card-entity.component";
 import { EndpointRepositoryService } from '../../../../repositories/endpoint-repository.service';
 import { EntityRepositoryService } from '../../../../repositories/entity-repository.service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'app-endpoint-card-list',
@@ -28,7 +29,8 @@ import { EntityRepositoryService } from '../../../../repositories/entity-reposit
     RouterModule,
     HeaderComponent,
     SwitchComponent,
-    CardEntityComponent
+    CardEntityComponent,
+    LoadingComponent
   ],
   templateUrl: './endpoint-card-list.component.html',
   styleUrls: ['./endpoint-card-list.component.css'],
@@ -38,7 +40,7 @@ import { EntityRepositoryService } from '../../../../repositories/entity-reposit
 export class EndpointCardListComponent implements OnInit, OnDestroy {
   apiName!: string;
   entityName!: string;
-  loading: boolean = false;
+  loading: boolean = true;
   sub: Subscription | null = null;
   endpoints: Endpoint[] = [];
   entityInfo: Entity = {} as Entity;
@@ -82,11 +84,15 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     this.entityRepositoryService.getApiEntity(this.apiName, this.entityName).subscribe(it => {
       this.entityInfo = it;
       this.cd.detectChanges();
+      this.loading = false
     });
-    this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe(it => {
-      this.endpoints = it;
-      console.log('Fetched actions:', it);
-      this.cd.detectChanges();
+    this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe({
+      next: (it) => {
+        this.endpoints = it;
+        console.log('Fetched actions:', it);
+        this.cd.detectChanges();
+        this.loading = false
+      },
     });
   }
 

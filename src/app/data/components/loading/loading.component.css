@@ -1,0 +1,22 @@
+.loading {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    height: 100vh;
+}
+.loading img {
+    max-height: 50%; /* Максимальная высота изображения 80% от высоты родительского элемента */
+    max-width: 100%; /* Максимальная ширина изображения 100% от ширины родительского элемента */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    width: auto; /* Автоматическая ширина для сохранения пропорций */
+    animation: spin 1ms linear infinite; /* Применение анимации вращения */
+    transform-origin: center; /* Установка точки вращения в центр изображения */
+}
+@keyframes spin {
+    from {
+        transform: rotate(0deg); /* Начальное состояние */
+    }
+    to {
+        transform: rotate(360deg); /* Конечное состояние */
+    }
+}

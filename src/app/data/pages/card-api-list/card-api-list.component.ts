@@ -8,6 +8,7 @@ import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
 import { RouterModule } from '@angular/router';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
+import { LoadingComponent } from "../../components/loading/loading.component";
 
 @Component({
   selector: 'app-card-api-list',
@@ -16,6 +17,7 @@ import { ApiServiceRepositoryService } from '../../../repositories/api-service-r
     CommonModule,
     HeaderComponent,
     RouterModule,
+    LoadingComponent
   ],
   templateUrl: './card-api-list.component.html',
   styleUrls: ['./card-api-list.component.css']
@@ -28,6 +30,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     description: ''
   };
   sub: Subscription | null = null;
+  loading: boolean = true;
   private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
     label: "Создать",
@@ -48,10 +51,13 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   }
 
   loadApiList(): void {
-    this.sub = this.apiServiceRepository.getApiList().subscribe(it => {
-      this.cards = it;
-      console.log(it);
-      this.cd.detectChanges();
+    this.sub = this.apiServiceRepository.getApiList().subscribe({
+      next: (it) => {
+        this.cards = it;
+        console.log(it);
+        this.cd.detectChanges();
+        this.loading = false
+      }
     });
   }
 

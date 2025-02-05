@@ -1,3 +1,9 @@
+@if (loading)
+{
+  <app-loading></app-loading>
+}
+@else 
+{
 <app-header [buttonText]="'Добавить эндпоинт'" (buttonClick)="openCreateDialog()" />
 <div class="container">
     <div class="mb-40">
@@ -24,3 +30,4 @@
         </div>
     </div>
 </div>
+}

@@ -12,6 +12,7 @@ import { SwitchComponent } from '../../components/switch/switch.component';
 import { EntityDialogComponent } from '../../components/entity-dialog/entity-dialog.component';
 import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
+import { LoadingComponent } from "../../components/loading/loading.component";
 
 @Component({
   selector: 'app-entity-card-list',
@@ -20,7 +21,8 @@ import { ApiServiceRepositoryService } from '../../../repositories/api-service-r
     CommonModule,
     CardEntityComponent,
     HeaderComponent,
-    SwitchComponent
+    SwitchComponent,
+    LoadingComponent
   ],
   templateUrl: './entity-card-list.component.html',
   styleUrls: ['./entity-card-list.component.css'],
@@ -30,7 +32,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
   sub: Subscription | null = null;
   apiName!: string;
-  loading: boolean = false;
+  loading: boolean = true;
   apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
   private readonly dialog = tuiDialog(EntityDialogComponent, {
     dismissible: true,
@@ -50,7 +52,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     private router: Router,
     private entityRepositoryService: EntityRepositoryService,
     private apiServiceRepositoryService: ApiServiceRepositoryService
-  ) {}
+  ) { }
 
 
   ngOnDestroy(): void {
@@ -61,11 +63,14 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.apiName = params['name'];
       if (this.apiName) {
-        this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
-          if (apiStructure) {
-            this.entities = apiStructure.entities;
-            this.apiInfo = apiStructure as apiServiceShortStructure;
-            this.cd.markForCheck();
+        this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe({
+          next: (apiStructure) => {
+            if (apiStructure) {
+              this.entities = apiStructure.entities;
+              this.apiInfo = apiStructure as apiServiceShortStructure;
+              this.cd.markForCheck();
+              this.loading = false;
+            }
           }
         });
       } else {
