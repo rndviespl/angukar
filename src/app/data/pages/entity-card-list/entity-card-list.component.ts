@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Entity, apiServiceShortStructure } from '../../../service/service-structure-api';
+import { ApiServiceStructure, Entity, apiServiceShortStructure } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { tuiDialog } from '@taiga-ui/core';
@@ -49,40 +49,52 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private entityRepositoryService: EntityRepositoryService,
-    private apiServiceRepositoryService: ApiServiceRepositoryService
+    private apiServiceRepositoryService: ApiServiceRepositoryService,
   ) {}
-
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.apiName = params['name'];
-      if (this.apiName) {
-        this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
-          if (apiStructure) {
-            this.entities = apiStructure.entities;
-            this.apiInfo = apiStructure as apiServiceShortStructure;
-            this.cd.markForCheck();
-          }
-        });
-      } else {
-        console.error('API name is null');
+    this.route.params.pipe(
+      switchMap(params => {
+        this.apiName = params['name'];
+        if (!this.apiName) {
+          throw new Error('API name is null');
+        }
+        return this.apiServiceRepositoryService.getApiList();
+      }),
+      switchMap(apiList => {
+        if (!apiList.some(api => api.name === this.apiName)) {
+          throw new Error(`API не найден: ${this.apiName}`);
+        }
+        return this.routeMemoryService.getApiData(this.apiName);
+      })
+    ).subscribe({
+      next: (apiStructure: ApiServiceStructure) => {
+        if (apiStructure) {
+          this.entities = apiStructure.entities;
+          this.apiInfo = apiStructure;
+          this.cd.markForCheck();
+        }
+      },
+      error: (error: any) => {
+        console.error('Error:', error.message || error);
+        this.router.navigate(['/page-not-found']);
       }
     });
   }
-
+  
   onToggleChange(newState: boolean) {
-    this.apiInfo.isActive = newState; // Update state in parent component
+    this.apiInfo.isActive = newState;
     console.log('Состояние переключателя изменилось на:', newState);
 
     this.apiServiceRepositoryService.updateApiServiceStatus(this.apiName, newState).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log('Состояние сервиса обновлено:', response);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Ошибка при обновлении состояния сервиса:', error);
       }
     });
@@ -90,14 +102,14 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
 
   openCreateDialog(): void {
     this.dialog({ ...this.entity }).subscribe({
-      next: (data) => {
+      next: (data: Entity) => {
         this.entityRepositoryService.createApiEntity(this.apiName, data).subscribe({
-          next: (response) => {
+          next: (response: Entity) => {
             console.log('entity добавлено:', response);
             this.entities.push(data);
             this.cd.markForCheck();
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Ошибка при создании сущности:', error);
           }
         });
@@ -110,6 +122,6 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
 
   onEntityDeleted(entityName: string): void {
     this.entities = this.entities.filter(entity => entity.name !== entityName);
-    this.cd.markForCheck(); // Notify Angular to check for changes
+    this.cd.markForCheck();
   }
 }

@@ -8,6 +8,7 @@ import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
 import { RouterModule } from '@angular/router';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-api-list',
@@ -36,25 +37,30 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   constructor(
     private apiServiceRepository: ApiServiceRepositoryService,
     private cd: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }
 
-
   ngOnInit(): void {
     this.loadApiList();
   }
 
   loadApiList(): void {
-    this.sub = this.apiServiceRepository.getApiList().subscribe(it => {
-      this.cards = it;
-      console.log(it);
-      this.cd.detectChanges();
+    this.sub = this.apiServiceRepository.getApiList().subscribe({
+      next: (it) => {
+        this.cards = it;
+        console.log(it);
+        this.cd.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error fetching API list', error);
+        this.router.navigate(['/page-not-found']);
+      }
     });
   }
-
 
   openCreateDialog(): void {
     this.dialog({ ...this.api }).subscribe({
