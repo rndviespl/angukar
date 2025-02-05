@@ -98,6 +98,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
         this.endpoints = it;
         console.log('Fetched actions:', it);
         this.cd.detectChanges();
+        this.loading = false
       },
       error: (error) => {
         console.error('Error fetching endpoint list', error);
