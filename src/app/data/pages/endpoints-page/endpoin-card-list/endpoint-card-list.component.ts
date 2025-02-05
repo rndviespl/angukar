@@ -82,18 +82,27 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   }
 
   loadData(): void {
-    this.entityRepositoryService.getApiEntity(this.apiName, this.entityName).subscribe(it => {
-      this.entityInfo = it;
-      this.cd.detectChanges();
-      this.loading = false
+    this.entityRepositoryService.getApiEntity(this.apiName, this.entityName).subscribe({
+      next: (it) => {
+        this.entityInfo = it;
+        this.cd.detectChanges();
+        this.loading = false
+      },
+      error: (error) => {
+        console.error('Error fetching entity data', error);
+        this.router.navigate(['/page-not-found']);
+      }
     });
     this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe({
       next: (it) => {
         this.endpoints = it;
         console.log('Fetched actions:', it);
         this.cd.detectChanges();
-        this.loading = false
       },
+      error: (error) => {
+        console.error('Error fetching endpoint list', error);
+        this.router.navigate(['/page-not-found']);
+      }
     });
   }
 
