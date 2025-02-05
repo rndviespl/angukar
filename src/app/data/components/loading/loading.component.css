@@ -4,19 +4,70 @@
     align-items: center;    
     height: 100vh;
 }
-.loading img {
-    max-height: 50%; /* Максимальная высота изображения 80% от высоты родительского элемента */
-    max-width: 100%; /* Максимальная ширина изображения 100% от ширины родительского элемента */
-    height: auto; /* Автоматическая высота для сохранения пропорций */
-    width: auto; /* Автоматическая ширина для сохранения пропорций */
-    animation: spin 1ms linear infinite; /* Применение анимации вращения */
-    transform-origin: center; /* Установка точки вращения в центр изображения */
+
+.loader {
+    width: 120px;
+    height: 80px;
+    position: relative;
+    display: inline-block;
+    --base-color: #fff; /* Используйте свой базовый цвет */
 }
-@keyframes spin {
-    from {
-        transform: rotate(0deg); /* Начальное состояние */
+
+.loader::before {
+    content: '';  
+    left: 0;
+    top: 0;
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: #0056a6;
+    background-image:   
+        radial-gradient(circle 16px at 36px 36px, var(--base-color) 100%, transparent 0),
+        radial-gradient(circle 8px at 36px 0px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 8px at 0px 36px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 8px at 72px 36px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 8px at 36px 72px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 8px at 60px 10px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 8px at 60px 10px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 8px at 60px 60px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 8px at 10px 60px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 8px at 10px 10px, var(--base-color) 100%, transparent 0);
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    animation: rotationBack 3s linear infinite;
+}
+
+.loader::after {
+    content: '';  
+    left: 70px;
+    top: 30px;
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #0056a6;
+    background-image: 
+        radial-gradient(circle 10px at 24px 24px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 24px 0px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 0px 24px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 48px 24px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 24px 48px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 40px 6px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 40px 6px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 40px 40px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 6px 40px, var(--base-color) 100%, transparent 0), 
+        radial-gradient(circle 5px at 6px 6px, var(--base-color) 100%, transparent 0);
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    animation: rotationBack 4s linear infinite reverse;
+}
+
+@keyframes rotationBack {
+    0% {
+        transform: rotate(0deg);
     }
-    to {
-        transform: rotate(360deg); /* Конечное состояние */
+    100% {
+        transform: rotate(-360deg);
     }
 }
