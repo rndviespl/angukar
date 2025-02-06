@@ -11,12 +11,18 @@
       <ng-container *ngFor="let entity of entities">
         <button tuiAccordion>{{ entity.name }}</button>
         <tui-expand>
-          <ul>
-            <li *ngFor="let endpoint of entity.actions">
-              <span>{{ endpoint.route }}</span>
-              <button tuiButton tuiAppearance="floating" (click)="copyToClipboard(entity.name, endpoint)">Копировать URL</button>
-            </li>
-          </ul>
+          <ng-container *ngIf="entity?.actions && entity.actions.length > 0; else emptyEntity">
+            <ul>
+              <li *ngFor="let endpoint of entity.actions">
+                <span>{{ endpoint.route }}</span>
+                <button tuiButton tuiAppearance="floating" (click)="copyToClipboard(entity.name, endpoint)">Копировать URL</button>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #emptyEntity>
+            <p>Нет доступных эндпоинтов.</p>
+            <button tuiButton tuiAppearance="floating" routerLink="/ApiEntity/{{apiName}}/{{entity.name}}">Перейти к деталям сущности</button>
+          </ng-template>
         </tui-expand>
       </ng-container>
     </tui-accordion>

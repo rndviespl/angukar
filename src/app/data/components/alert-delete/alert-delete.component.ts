@@ -9,10 +9,10 @@ import { switchMap, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-alert-on-delete',
   imports: [CommonModule],
-  templateUrl: './alert.component.html',
-  styleUrl: './alert.component.css'
+  templateUrl: './alert-delete.component.html',
+  styleUrl: './alert-delete.component.css'
 })
-export class AlertComponent {
+export class AlertDeleteComponent {
   protected readonly context =
   injectContext<TuiPopover<TuiAlertOptions<void>, boolean>>();
 }
