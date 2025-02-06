@@ -9,7 +9,7 @@
     <h1>{{ apiName }}</h1>
     <tui-accordion tuiAppearance="floating">
       <ng-container *ngFor="let entity of entities">
-        <button tuiAccordion>{{ entity.name }}</button>
+        <button tuiAccordion class="accordion">{{ entity.name }}</button>
         <tui-expand>
           <ng-container *ngIf="entity?.actions && entity.actions.length > 0; else emptyEntity">
             <ul>
