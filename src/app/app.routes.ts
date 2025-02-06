@@ -3,6 +3,7 @@ import { CardApiListComponent } from './data/pages/card-api-list/card-api-list.c
 import { EntityCardListComponent } from './data/pages/entity-card-list/entity-card-list.component';
 import { EndpointCardListComponent } from './data/pages/endpoints-page/endpoin-card-list/endpoint-card-list.component';
 import { PageNotFoundComponent } from './data/pages/page-not-found/page-not-found.component';
+import { ApiEndpointListComponent } from './data/pages/api-endpoint-list/api-endpoint-list.component';
 
 export const routes: Routes = [
     {
@@ -21,6 +22,11 @@ export const routes: Routes = [
         title: 'Entity details',
     },
     {
+        path:'ApiEndpoint/:name',
+        component: ApiEndpointListComponent,
+        title: 'copy url for APIEmu'
+    },
+    {
         path: 'page-not-found',
         component: PageNotFoundComponent,
         title: 'Page Not Found',
@@ -30,4 +36,5 @@ export const routes: Routes = [
         redirectTo: 'page-not-found',
         pathMatch: 'full',
     },
+    
 ];
