@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
+import { TuiButton } from '@taiga-ui/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { TuiButton } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-back-button',
@@ -13,17 +13,30 @@ import { TuiButton } from '@taiga-ui/core';
   styleUrl: './back-button.component.css'
 })
 export class BackButtonComponent {
-  constructor( private location: Location, private router: Router) {}
+  constructor(private location: Location, private router: Router) {}
 
   goBack(): void {
-    const previousUrl = this.location.getState() as { navigationId: number, url: string };
-    const currentDomain = window.location.origin;
+    // Получаем текущий URL
+    const currentUrl = this.router.url;
 
-    if (previousUrl && previousUrl.url && previousUrl.url.startsWith(currentDomain)) {
-      this.location.back();
-    } else {
-      // Если предыдущая страница не принадлежит вашему домену, перенаправляем на главную страницу
-      this.router.navigate(['/']);
+    // Проверяем историю браузера для получения предыдущего URL
+    try {
+      const previousUrl = this.location.path(true); // true включает query params и fragment
+
+      // Базовый домен вашего сайта
+      const baseDomain = '/'; // Например, '/' или '/app'
+
+      // Проверяем, принадлежит ли предыдущий URL вашему сайту
+      if (previousUrl.startsWith(baseDomain)) {
+        this.location.back(); // Переходим назад
+      } else {
+        // Если предыдущий URL не принадлежит вашему сайту, перенаправляем на главную страницу
+        this.router.navigateByUrl('/');
+      }
+    } catch (error) {
+      // Если что-то пошло не так (например, отсутствует история), перенаправляем на главную страницу
+      this.router.navigateByUrl('/');
     }
   }
+
 }
