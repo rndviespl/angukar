@@ -9,8 +9,8 @@ import { apiServiceShortStructure, ApiServiceStructure, Entity, Endpoint } from 
   providedIn: 'root'
 })
 export class EntityService {
-
-  private baseUrl = 'http://localhost:4200/api';
+ 
+  private baseUrl = `${window.location.origin}/api`;
 
   constructor(private http: HttpClient, private router: Router) { }
 
