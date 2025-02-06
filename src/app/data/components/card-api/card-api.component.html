@@ -6,7 +6,7 @@
 <h3>{{ apiInfo.name }}</h3>
 <p>{{ apiInfo.description }}</p>
 <div class="actions">
-    <button tuiButton routerLink="/ApiEndpoint/{{apiInfo.name}}" >К тестам</button>
-    <button tuiButton routerLink="/ApiService/{{apiInfo.name}}" >Детали</button>
+    <button tuiButton class="primary-button" routerLink="/ApiEndpoint/{{apiInfo.name}}" >К тестам</button>
+    <button tuiButton class="primary-button" routerLink="/ApiService/{{apiInfo.name}}" >Детали</button>
     <app-export-api-button [apiInfo]="apiInfo"/>
 </div>

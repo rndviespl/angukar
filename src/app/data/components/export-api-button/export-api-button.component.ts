@@ -9,7 +9,7 @@ import { ApiServiceRepositoryService } from '../../../repositories/api-service-r
     TuiButton
   ],
   templateUrl: './export-api-button.component.html',
-  styleUrl: './export-api-button.component.css'
+  styleUrls: ['./export-api-button.component.css', '../../styles/button.css']
 })
 export class ExportApiButtonComponent {
   @Input() apiInfo!: apiServiceShortStructure;

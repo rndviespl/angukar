@@ -19,7 +19,7 @@ import { EndpointRepositoryService } from '../../../repositories/endpoint-reposi
     RouterModule,
   ],
   templateUrl: './card-endpoint.component.html',
-  styleUrls: ['./card-endpoint.component.css']
+  styleUrls: ['./card-endpoint.component.css', '../../styles/card.css']
 })
 export class CardEndpointComponent {
   @Input() entityInfo!: Entity;

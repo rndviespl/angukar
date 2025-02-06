@@ -23,7 +23,7 @@ import { TuiAlertService } from '@taiga-ui/core';
     RouterModule
   ],
   templateUrl: './card-api-list.component.html',
-  styleUrls: ['./card-api-list.component.css']
+  styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css']
 })
 export class CardApiListComponent implements OnInit, OnDestroy {
   cards: apiServiceShortStructure[] = [];
