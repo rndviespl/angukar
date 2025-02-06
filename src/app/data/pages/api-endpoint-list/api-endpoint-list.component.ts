@@ -29,6 +29,7 @@ import { AlertUrlComponent } from '../../components/alert-url/alert-url.componen
 export class ApiEndpointListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
   sub: Subscription | null = null;
+  loading: boolean = true;
   apiName!: string;
   private baseUrl = 'http://localhost:4200/api';
 
@@ -62,6 +63,7 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
         if (apiStructure) {
           this.entities = apiStructure.entities;
           this.cd.markForCheck();
+          this.loading = false;
         } else {
           console.error('API structure is null');
           this.router.navigate(['/page-not-found']);

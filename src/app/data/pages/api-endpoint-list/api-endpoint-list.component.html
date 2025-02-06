@@ -1,13 +1,13 @@
 <app-header/>
-<!-- @if (loading)
+@if (loading)
 {
 <app-loading></app-loading>
 }
 @else
-{ -->
+{
 <div class="endpoint-list">
     <h1>{{ apiName }}</h1>
-    <tui-accordion tuiAppearance="floating">
+    <tui-accordion tuiAppearance="floating" [closeOthers]="false">
       <ng-container *ngFor="let entity of entities">
         <button tuiAccordion>{{ entity.name }}</button>
         <tui-expand>
@@ -27,4 +27,4 @@
       </ng-container>
     </tui-accordion>
 </div>
-<!-- } -->
+}
