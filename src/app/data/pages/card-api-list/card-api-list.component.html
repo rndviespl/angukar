@@ -6,8 +6,10 @@
 @else 
 {
   <div class="container">
+    <div class="grid">
     <div *ngFor="let item of cards" tuiAppearance="floating" tuiCardLarge class="card">
       <app-card-api [apiInfo]="item" (apiDeleted)="onApiDeleted(item.name)"></app-card-api>
     </div>
+  </div>
   </div>
 }

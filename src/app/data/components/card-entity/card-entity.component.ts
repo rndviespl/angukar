@@ -14,7 +14,7 @@ import { EntityRepositoryService } from '../../../repositories/entity-repository
   selector: 'app-card-entity',
   imports: [IconTrashComponent, SwitchComponent,CommonModule,RouterModule,],
   templateUrl: './card-entity.component.html',
-  styleUrls: ['./card-entity.component.css']
+  styleUrls: ['./card-entity.component.css', '../../styles/card.css', '../../styles/button.css']
 })
 export class CardEntityComponent {
   @Input() entityInfo!: Entity;

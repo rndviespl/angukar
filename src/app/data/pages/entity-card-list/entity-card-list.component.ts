@@ -25,7 +25,7 @@ import { LoadingComponent } from "../../components/loading/loading.component";
     LoadingComponent
   ],
   templateUrl: './entity-card-list.component.html',
-  styleUrls: ['./entity-card-list.component.css'],
+  styleUrls: ['./entity-card-list.component.css', '../../styles/card-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityCardListComponent implements OnInit, OnDestroy {
