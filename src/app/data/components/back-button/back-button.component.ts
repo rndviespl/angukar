@@ -13,9 +13,17 @@ import { TuiButton } from '@taiga-ui/core';
   styleUrl: './back-button.component.css'
 })
 export class BackButtonComponent {
-  constructor( private location: Location, ) {}
+  constructor( private location: Location, private router: Router) {}
 
   goBack(): void {
-    this.location.back();
+    const previousUrl = this.location.getState() as { navigationId: number, url: string };
+    const currentDomain = window.location.origin;
+
+    if (previousUrl && previousUrl.url && previousUrl.url.startsWith(currentDomain)) {
+      this.location.back();
+    } else {
+      // Если предыдущая страница не принадлежит вашему домену, перенаправляем на главную страницу
+      this.router.navigate(['/']);
+    }
   }
 }
