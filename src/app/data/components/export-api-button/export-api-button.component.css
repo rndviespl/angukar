@@ -9,6 +9,7 @@
   font-weight: bold;
   transition: background-color 0.3s;
   margin-left: 1rem;
+  margin-bottom: 1rem;
 }
 
 .export-button:hover {
