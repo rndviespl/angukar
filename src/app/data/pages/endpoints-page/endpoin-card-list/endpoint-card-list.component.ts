@@ -33,7 +33,7 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
     LoadingComponent
   ],
   templateUrl: './endpoint-card-list.component.html',
-  styleUrls: ['./endpoint-card-list.component.css', '../../styles/card-list.css'],
+  styleUrls: ['./endpoint-card-list.component.css', '../../../styles/card-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
