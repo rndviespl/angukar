@@ -31,7 +31,7 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
   sub: Subscription | null = null;
   loading: boolean = true;
   apiName!: string;
-  private baseUrl = 'http://localhost:4200/api';
+  private baseUrl = `${window.location.origin}/api`;
 
   constructor(
     private route: ActivatedRoute,
@@ -78,14 +78,21 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
 
   copyToClipboard(entityName: string, endpoint: Endpoint): void {
     const url = `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
-    navigator.clipboard.writeText(url).then(() => {
-      this.alerts.open(new PolymorpheusComponent(AlertUrlComponent)).subscribe({
-        complete: () => {
-          console.log('Notification is closed');
-        },
-      });
-    }).catch(err => {
-      console.error('Ошибка при копировании URL:', err);
-    });
-  }
+    
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        this.alerts.open(new PolymorpheusComponent(AlertUrlComponent)).subscribe({
+          complete: () => {
+            console.log('Notification is closed');
+          },
+        });
+    } catch (err) {
+        console.error('Ошибка при копировании URL:', err);
+    }
+    document.body.removeChild(textarea);
+}
 }

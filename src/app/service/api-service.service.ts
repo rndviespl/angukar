@@ -10,7 +10,7 @@ import { apiServiceShortStructure, ApiServiceStructure } from './service-structu
 })
 export class ApiService {
 
-  private baseUrl = 'http://localhost:4200/api';
+  private baseUrl = `${window.location.origin}/api`;
 
   constructor(private http: HttpClient, private router: Router) { }
 
