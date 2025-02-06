@@ -13,7 +13,7 @@ import { apiServiceShortStructure, EntityShort, Endpoint } from '../../../servic
     AlertDeleteComponent,
   ],
   templateUrl: './icon-trash.component.html',
-  styleUrls: ['./icon-trash.component.css']
+  styleUrls: ['./icon-trash.component.css', '../../styles/icon.css']
 })
 export class IconTrashComponent {
   @Input() item: any;
