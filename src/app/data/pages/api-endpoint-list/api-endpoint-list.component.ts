@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ApiServiceStructure, Endpoint, Entity } from '../../../service/service-structure-api';
-import {TuiAccordion} from '@taiga-ui/experimental';
+import { TuiAccordion } from '@taiga-ui/experimental';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../service/api-service.service';
@@ -8,6 +8,9 @@ import { LoadingComponent } from '../../components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 import { TuiButton } from '@taiga-ui/core';
 import { HeaderComponent } from '../../components/header/header.component';
+import { TuiAlertService } from '@taiga-ui/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { AlertUrlComponent } from '../../components/alert-url/alert-url.component';
 
 @Component({
   selector: 'app-api-endpoint-list',
@@ -17,25 +20,24 @@ import { HeaderComponent } from '../../components/header/header.component';
     CommonModule,
     RouterModule,
     TuiButton,
-     HeaderComponent,
+    HeaderComponent,
   ],
   templateUrl: './api-endpoint-list.component.html',
-  styleUrl: './api-endpoint-list.component.css',
+  styleUrls: ['./api-endpoint-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApiEndpointListComponent implements OnInit, OnDestroy {
-
   entities: Entity[] = [];
   sub: Subscription | null = null;
   apiName!: string;
   private baseUrl = 'http://localhost:4200/api';
-  // loading: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private alerts: TuiAlertService
   ) {}
 
   ngOnDestroy(): void {
@@ -75,7 +77,11 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
   copyToClipboard(entityName: string, endpoint: Endpoint): void {
     const url = `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
     navigator.clipboard.writeText(url).then(() => {
-      alert('URL скопирован в буфер обмена!');
+      this.alerts.open(new PolymorpheusComponent(AlertUrlComponent)).subscribe({
+        complete: () => {
+          console.log('Notification is closed');
+        },
+      });
     }).catch(err => {
       console.error('Ошибка при копировании URL:', err);
     });
