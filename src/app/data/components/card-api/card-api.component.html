@@ -7,4 +7,5 @@
 <p>{{ apiInfo.description }}</p>
 <div class="actions">
     <button tuiButton routerLink="/ApiService/{{apiInfo.name}}" >Детали</button>
+    <app-export-api-button [apiInfo]="apiInfo"/>
 </div>

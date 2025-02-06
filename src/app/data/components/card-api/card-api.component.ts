@@ -11,6 +11,7 @@ import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { IconTrashComponent } from '../icon-trash/icon-trash.component';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
+import { ExportApiButtonComponent } from "../export-api-button/export-api-button.component";
 
 @Component({
   selector: 'app-card-api',
@@ -25,7 +26,8 @@ import { ApiServiceRepositoryService } from '../../../repositories/api-service-r
     RouterModule,
     SwitchComponent,
     IconTrashComponent,
-  ],
+    ExportApiButtonComponent
+],
 
   templateUrl: './card-api.component.html',
   styleUrl: './card-api.component.css',
