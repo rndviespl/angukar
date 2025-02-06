@@ -14,7 +14,7 @@
           <ng-container *ngIf="entity?.actions && entity.actions.length > 0; else emptyEntity">
             <ul>
               <li *ngFor="let endpoint of entity.actions">
-                <span>{{ endpoint.route }}</span>
+                <span>{{endpoint.type}} {{  endpoint.route }}</span>
                 <button tuiButton tuiAppearance="floating" (click)="copyToClipboard(entity.name, endpoint)">Копировать URL</button>
               </li>
             </ul>
