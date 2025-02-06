@@ -30,7 +30,7 @@ import { ExportApiButtonComponent } from "../export-api-button/export-api-button
 ],
 
   templateUrl: './card-api.component.html',
-  styleUrls: ['./card-api.component.css', '../../styles/card.css', '../../styles/button.css'],
+  styleUrls: ['./card-api.component.css', '../../styles/card.css', '../../styles/button.css', '../../styles/icon.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
