@@ -5,7 +5,7 @@ import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
 import { RouteMemoryService } from '../../../service/route-memory.service';
-import { tuiDialog } from '@taiga-ui/core';
+import { tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
 import { CommonModule } from '@angular/common';
 import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
@@ -14,7 +14,7 @@ import { EntityRepositoryService } from '../../../repositories/entity-repository
   selector: 'app-card-entity',
   imports: [IconTrashComponent, SwitchComponent,CommonModule,RouterModule,],
   templateUrl: './card-entity.component.html',
-  styleUrls: ['./card-entity.component.css']
+  styleUrls: ['./card-entity.component.css', '../../styles/card.css', '../../styles/button.css', '../../styles/icon.css']
 })
 export class CardEntityComponent {
   @Input() entityInfo!: Entity;
@@ -34,6 +34,7 @@ export class CardEntityComponent {
     private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private entityRepositoryService: EntityRepositoryService,
+    private alerts: TuiAlertService
   ) { }
 
   onToggleChange(newState: boolean) {
@@ -61,8 +62,26 @@ export class CardEntityComponent {
             console.log('Сущность обновлена:', response);
             this.entityInfo = data;
             this.cd.markForCheck();
-          },
-          error: (error) => {
+            this.alerts
+            .open('Сущность успешно обновлена', {
+              appearance: 'success',
+            })
+            .subscribe();
+        },
+        error: (error) => {
+          if (error.status === 409) {
+            this.alerts
+              .open('Ошибка: Сущность с таким именем уже существует', {
+                appearance: 'negative',
+              })
+              .subscribe();
+          } else {
+            this.alerts
+              .open('Ошибка при обновлении сущности', {
+                appearance: 'negative',
+              })
+              .subscribe();
+          }
             console.error('Ошибка при обновлении сущности:', error);
           }
         })

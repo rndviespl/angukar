@@ -74,6 +74,7 @@ export class EntityDialogComponent {
     catch {
       if (value.length == 0) {
         this.data.structure = null;
+        this.isCanSumbit = true;
         return;
       }
       this.isCanSumbit = false;

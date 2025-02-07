@@ -4,7 +4,7 @@ import { Endpoint, apiServiceShortStructure, Entity } from '../../../service/ser
 import { Subscription } from 'rxjs';
 import { SwitchComponent } from "../switch/switch.component";
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
-import { tuiDialog } from '@taiga-ui/core';
+import { tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
 import { CommonModule } from '@angular/common';
 import { EndpointDialogComponent } from '../endpoint-dialog/endpoint-dialog.component';
@@ -19,7 +19,7 @@ import { EndpointRepositoryService } from '../../../repositories/endpoint-reposi
     RouterModule,
   ],
   templateUrl: './card-endpoint.component.html',
-  styleUrls: ['./card-endpoint.component.css']
+  styleUrls: ['./card-endpoint.component.css', '../../styles/card.css', '../../styles/icon.css']
 })
 export class CardEndpointComponent {
   @Input() entityInfo!: Entity;
@@ -39,7 +39,7 @@ export class CardEndpointComponent {
   constructor(
     private endpointRepositoryService: EndpointRepositoryService,
     private cd: ChangeDetectorRef,
-
+    private alerts: TuiAlertService
   ) { }
 
   onToggleChange(newState: boolean) {
@@ -64,12 +64,30 @@ export class CardEndpointComponent {
 
         this.endpointRepositoryService.updateEndpoint(this.apiName, this.entityInfo.name, this.endpointInfo.route, data).subscribe({
           next: (response) => {
-            console.log('Сущность обновлена:', response);
+            console.log('Эндпоинт обновлен:', response);
             this.endpointInfo = data;
             this.cd.markForCheck();
-          },
-          error: (error) => {
-            console.error('Ошибка при обновлении сущности:', error);
+            this.alerts
+            .open('Эндпоинт успешно обновлен', {
+              appearance: 'success',
+            })
+            .subscribe();
+        },
+        error: (error) => {
+          if (error.status === 409) {
+            this.alerts
+              .open('Ошибка: Эндпоинт с таким именем уже существует', {
+                appearance: 'negative',
+              })
+              .subscribe();
+          } else {
+            this.alerts
+              .open('Ошибка при обновлении эндпоинта', {
+                appearance: 'negative',
+              })
+              .subscribe();
+          }
+            console.error('Ошибка при обновлении эндпоинта:', error);
           }
         });
       },

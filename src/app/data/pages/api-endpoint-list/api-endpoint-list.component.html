@@ -1,0 +1,30 @@
+<app-header/>
+@if (loading)
+{
+<app-loading></app-loading>
+}
+@else
+{
+<div class="endpoint-list">
+    <h1>{{ apiName }}</h1>
+    <tui-accordion tuiAppearance="floating" [closeOthers]="false">
+      <ng-container *ngFor="let entity of entities">
+        <button tuiAccordion class="accordion">{{ entity.name }}</button>
+        <tui-expand>
+          <ng-container *ngIf="entity?.actions && entity.actions.length > 0; else emptyEntity">
+            <ul>
+              <li *ngFor="let endpoint of entity.actions">
+                <span>{{endpoint.type}} {{  endpoint.route }}</span>
+                <button tuiButton tuiAppearance="floating" (click)="copyToClipboard(entity.name, endpoint)">Копировать URL</button>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #emptyEntity>
+            <p>Нет доступных эндпоинтов.</p>
+            <button tuiButton tuiAppearance="floating" routerLink="/ApiEntity/{{apiName}}/{{entity.name}}">Перейти к деталям сущности</button>
+          </ng-template>
+        </tui-expand>
+      </ng-container>
+    </tui-accordion>
+</div>
+}

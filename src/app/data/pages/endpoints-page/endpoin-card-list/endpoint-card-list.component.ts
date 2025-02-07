@@ -33,7 +33,7 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
     LoadingComponent
   ],
   templateUrl: './endpoint-card-list.component.html',
-  styleUrls: ['./endpoint-card-list.component.css'],
+  styleUrls: ['./endpoint-card-list.component.css', '../../../styles/card-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -82,10 +82,16 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
   }
 
   loadData(): void {
-    this.entityRepositoryService.getApiEntity(this.apiName, this.entityName).subscribe(it => {
-      this.entityInfo = it;
-      this.cd.detectChanges();
-      this.loading = false
+    this.entityRepositoryService.getApiEntity(this.apiName, this.entityName).subscribe({
+      next: (it) => {
+        this.entityInfo = it;
+        this.cd.detectChanges();
+        this.loading = false
+      },
+      error: (error) => {
+        console.error('Error fetching entity data', error);
+        this.router.navigate(['/page-not-found']);
+      }
     });
     this.sub = this.endpointRepositoryService.getEndpointList(this.apiName, this.entityName).subscribe({
       next: (it) => {
@@ -94,6 +100,10 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
         this.cd.detectChanges();
         this.loading = false
       },
+      error: (error) => {
+        console.error('Error fetching endpoint list', error);
+        this.router.navigate(['/page-not-found']);
+      }
     });
   }
 
@@ -116,8 +126,26 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
             console.log('Эндпоинт добавлен:', response);
             this.endpoints.push(data);
             this.cd.markForCheck();
+            this.alerts
+              .open('Эндпоинт успешно создан', {
+                appearance: 'success',
+              })
+              .subscribe();
           },
           error: (error) => {
+            if (error.status === 409) {
+              this.alerts
+                .open('Ошибка: Эндпоинт с таким именем уже существует', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            } else {
+              this.alerts
+                .open('Ошибка при создании эндпоинта', {
+                  appearance: 'negative',
+                })
+                .subscribe();
+            }
             console.error('Ошибка при создании эндпоинта:', error);
           }
         });

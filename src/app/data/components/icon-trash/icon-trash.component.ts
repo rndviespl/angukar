@@ -3,17 +3,17 @@ import { TuiAlertService, TuiIconPipe } from '@taiga-ui/core';
 import { switchMap, takeUntil } from 'rxjs';
 import { Router,  } from '@angular/router';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { AlertComponent } from '../alert/alert.component';
+import { AlertDeleteComponent } from '../alert-delete/alert-delete.component';
 import { apiServiceShortStructure, EntityShort, Endpoint } from '../../../service/service-structure-api';
 
 @Component({
   selector: 'app-icon-trash',
   imports: [
     TuiIconPipe,
-    AlertComponent,
+    AlertDeleteComponent,
   ],
   templateUrl: './icon-trash.component.html',
-  styleUrls: ['./icon-trash.component.css']
+  styleUrls: ['./icon-trash.component.css', '../../styles/icon.css']
 })
 export class IconTrashComponent {
   @Input() item: any;
@@ -28,7 +28,7 @@ export class IconTrashComponent {
 
   protected showNotification(): void {
     const notification = this.alerts
-      .open<boolean>(new PolymorpheusComponent(AlertComponent), {
+      .open<boolean>(new PolymorpheusComponent(AlertDeleteComponent), {
         label: 'Вы уверены, что хотите удалить?',
         appearance: 'negative',
         autoClose: 0,

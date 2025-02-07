@@ -51,18 +51,4 @@ export class RouteMemoryService {
       this.fetchEntityData(apiServiceName);
     }
   }
-  getActionList(apiServiceName: string, entityName: string): Observable<Entity> {
-    return this.apiService.getActionList(apiServiceName, entityName).pipe(
-      map((actions: Endpoint[]) => {
-        // Create an Entity object that includes the actions
-        const entity: Entity = {
-          name: entityName, // Assuming you have a name property
-          actions: actions,
-          isActive: true, 
-          structure: {},
-        };
-        return entity;
-      })
-    );
-  }
 }
