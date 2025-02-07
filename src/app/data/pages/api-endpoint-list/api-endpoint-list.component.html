@@ -1,11 +1,8 @@
 <app-header/>
-@if (loading)
-{
-<app-loading></app-loading>
-}
-@else
-{
-<div class="endpoint-list">
+@if (loading) {
+  <app-loading></app-loading>
+} @else {
+  <div class="endpoint-list">
     <h1>{{ apiName }}</h1>
     <tui-accordion tuiAppearance="floating" [closeOthers]="false">
       <ng-container *ngFor="let entity of entities">
@@ -13,18 +10,46 @@
         <tui-expand>
           <ng-container *ngIf="entity?.actions && entity.actions.length > 0; else emptyEntity">
             <ul>
-              <li *ngFor="let endpoint of entity.actions">
-                <span>{{endpoint.type}} {{  endpoint.route }}</span>
-                <button tuiButton tuiAppearance="floating" (click)="copyToClipboard(entity.name, endpoint)">Копировать URL</button>
+              <li *ngFor="let endpoint of entity.actions" class="endpoint-item">
+                <div class="endpoint-header">
+                  <div class="endpoint-route">{{ endpoint.route }}</div>
+                  <div class="endpoint-type">{{ endpoint.type }}</div>
+                </div>
+                <div class="url-container">
+                  <div class="copy-url-field">
+                    <input 
+                      type="text" 
+                      readonly 
+                      [value]="getUrl(entity.name, endpoint)" 
+                      class="url-input"
+                      #urlInput
+                    />
+                    <button 
+                      tuiButton 
+                      tuiAppearance="flat" 
+                      (click)="copyToClipboard(entity.name, endpoint)"
+                      class="copy-button"
+                      [class.copied]="isCopied === getUrl(entity.name, endpoint)"
+                    >
+                      <i 
+                        class="fas" 
+                        [ngClass]="{
+                          'fa-clone': isCopied !== getUrl(entity.name, endpoint),
+                          'fa-check': isCopied === getUrl(entity.name, endpoint)
+                        }"
+                      ></i>
+                    </button>
+                  </div>
+                </div>
               </li>
             </ul>
           </ng-container>
           <ng-template #emptyEntity>
             <p>Нет доступных эндпоинтов.</p>
-            <button tuiButton tuiAppearance="floating" routerLink="/ApiEntity/{{apiName}}/{{entity.name}}">Перейти к деталям сущности</button>
+            <button class="primary-button" tuiButton tuiAppearance="floating" routerLink="/ApiEntity/{{apiName}}/{{entity.name}}">Перейти к деталям сущности</button>
           </ng-template>
         </tui-expand>
       </ng-container>
     </tui-accordion>
-</div>
+  </div>
 }
