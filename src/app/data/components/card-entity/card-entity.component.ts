@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { IconTrashComponent } from "../icon-trash/icon-trash.component";
 import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
-import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
 import { CommonModule } from '@angular/common';
@@ -31,7 +30,6 @@ export class CardEntityComponent {
   });
   
   constructor(
-    private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private entityRepositoryService: EntityRepositoryService,
     private alerts: TuiAlertService
@@ -90,23 +88,6 @@ export class CardEntityComponent {
         console.info('Dialog closed');
       },
     });
-  }
-
-  onRefresh(): void {
-    if (this.apiName) {
-      this.loading = true; // Set loading to true
-      this.routeMemoryService.checkForApiUpdates(this.apiName);
-      this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
-        this.loading = false; // Set loading to false
-        if (apiStructure) {
-          this.entities = apiStructure.entities;
-          this.cd.markForCheck();
-        }
-      }, error => {
-        this.loading = false; // Set loading to false on error
-        console.error('Error fetching data:', error);
-      });
-    }
   }
 
   onDeleteConfirmed(): void {

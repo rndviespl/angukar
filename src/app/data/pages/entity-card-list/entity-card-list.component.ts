@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, switchMap } from 'rxjs';
-import { RouteMemoryService } from '../../../service/route-memory.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiServiceStructure, Entity, apiServiceShortStructure } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
@@ -46,7 +45,6 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
@@ -72,15 +70,14 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
         if (!apiList.some(api => api.name === this.apiName)) {
           throw new Error(`API не найден: ${this.apiName}`);
         }
-        return this.routeMemoryService.getApiData(this.apiName);
+        return this.entityRepositoryService.getApiEntityList(this.apiName);
       })
     ).subscribe({
-      next: (apiStructure: ApiServiceStructure) => {
-        if (apiStructure) {
-          this.entities = apiStructure.entities;
-          this.apiInfo = apiStructure;
-          this.cd.markForCheck();
+      next: (entities) => {
+        if (entities) {
+          this.entities = entities;
           this.loading = false;
+          this.cd.markForCheck();
         }
       },
       error: (error: any) => {
