@@ -23,7 +23,7 @@ import { AlertUrlComponent } from '../../components/alert-url/alert-url.componen
     HeaderComponent,
   ],
   templateUrl: './api-endpoint-list.component.html',
-  styleUrls: ['./api-endpoint-list.component.css'],
+  styleUrls: ['./api-endpoint-list.component.css', '../../styles/button.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApiEndpointListComponent implements OnInit, OnDestroy {
@@ -32,6 +32,7 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   apiName!: string;
   private baseUrl = `${window.location.origin}/api`;
+  isCopied: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -76,23 +77,27 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
     });
   }
 
-  copyToClipboard(entityName: string, endpoint: Endpoint): void {
-    const url = `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
-    
+copyToClipboard(entityName: string, endpoint: Endpoint): void {
+    const url = this.getUrl(entityName, endpoint);
     const textarea = document.createElement('textarea');
     textarea.value = url;
     document.body.appendChild(textarea);
     textarea.select();
     try {
-        document.execCommand('copy');
-        this.alerts.open(new PolymorpheusComponent(AlertUrlComponent)).subscribe({
-          complete: () => {
-            console.log('Notification is closed');
-          },
-        });
+      document.execCommand('copy');
+      this.isCopied = url; // Устанавливаем isCopied в скопированный URL
+      this.cd.markForCheck(); // Обновляем интерфейс
+      setTimeout(() => {
+        this.isCopied = null; // Сбрасываем состояние через 2 секунды
+        this.cd.markForCheck();
+      }, 2000);
     } catch (err) {
-        console.error('Ошибка при копировании URL:', err);
+      console.error('Ошибка при копировании URL:', err);
     }
     document.body.removeChild(textarea);
+  }
+getUrl(entityName: string, endpoint: Endpoint){
+  return `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
 }
 }
+
