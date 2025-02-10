@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiServiceStructure, Entity, apiServiceShortStructure } from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { tuiDialog, TuiAlertService  } from '@taiga-ui/core';
+import { tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { CardEntityComponent } from '../../components/card-entity/card-entity.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
@@ -51,7 +51,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     private entityRepositoryService: EntityRepositoryService,
     private apiServiceRepositoryService: ApiServiceRepositoryService,
     private alerts: TuiAlertService
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -67,18 +67,22 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
         return this.apiServiceRepositoryService.getApiList();
       }),
       switchMap(apiList => {
-        if (!apiList.some(api => api.name === this.apiName)) {
+        const api = apiList.find(api => api.name === this.apiName);
+        if (!api) {
           throw new Error(`API не найден: ${this.apiName}`);
         }
+        this.apiInfo = api; // Assign the found API info to apiInfo
+        return this.apiServiceRepositoryService.getApiStructureList(this.apiName);
+      }),
+      switchMap((apiStructure: ApiServiceStructure) => {
+        this.apiInfo = { ...this.apiInfo, ...apiStructure }; // Merge additional details if needed
         return this.entityRepositoryService.getApiEntityList(this.apiName);
       })
     ).subscribe({
-      next: (entities) => {
-        if (entities) {
-          this.entities = entities;
-          this.loading = false;
-          this.cd.markForCheck();
-        }
+      next: (entities: Entity[]) => {
+        this.entities = entities;
+        this.loading = false;
+        this.cd.markForCheck();
       },
       error: (error: any) => {
         console.error('Error:', error.message || error);
@@ -113,7 +117,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
             .subscribe();
           return;
         }
-  
+
         this.entityRepositoryService.createApiEntity(this.apiName, data).subscribe({
           next: (response) => {
             console.log('Cущность добавлена:', response);
