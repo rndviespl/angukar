@@ -1,14 +1,10 @@
 import { Component } from '@angular/core';
-import { TuiButton } from '@taiga-ui/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-back-button',
-  imports: [
-    TuiButton
-
-  ],
+  imports: [],
   templateUrl: './back-button.component.html',
   styleUrl: './back-button.component.css'
 })

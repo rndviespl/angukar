@@ -9,8 +9,6 @@ import { CommonModule } from '@angular/common';
 import { TuiButton } from '@taiga-ui/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { TuiAlertService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { AlertUrlComponent } from '../../components/alert-url/alert-url.component';
 
 @Component({
   selector: 'app-api-endpoint-list',
@@ -40,7 +38,7 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private cd: ChangeDetectorRef,
     private alerts: TuiAlertService
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -77,7 +75,7 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
     });
   }
 
-copyToClipboard(entityName: string, endpoint: Endpoint): void {
+  copyToClipboard(entityName: string, endpoint: Endpoint): void {
     const url = this.getUrl(entityName, endpoint);
     const textarea = document.createElement('textarea');
     textarea.value = url;
@@ -96,8 +94,8 @@ copyToClipboard(entityName: string, endpoint: Endpoint): void {
     }
     document.body.removeChild(textarea);
   }
-getUrl(entityName: string, endpoint: Endpoint){
-  return `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
-}
+  getUrl(entityName: string, endpoint: Endpoint) {
+    return `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
+  }
 }
 
