@@ -3,16 +3,13 @@ import { Subscription } from 'rxjs';
 import { Endpoint, apiServiceShortStructure, Entity } from '../../../../service/service-structure-api';
 import { CommonModule, Location } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { TuiButton, tuiDialog, TuiAlertService } from '@taiga-ui/core';
-import { IconTrashComponent } from '../../../components/icon-trash/icon-trash.component';
-import { BackButtonComponent } from '../../../components/back-button/back-button.component';
+import { tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { CardEndpointComponent } from '../../../components/card-endpoint/card-endpoint.component';
 import { HeaderComponent } from '../../../components/header/header.component';
 import { Router, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { EndpointDialogComponent } from '../../../components/endpoint-dialog/endpoint-dialog.component';
 import { SwitchComponent } from '../../../components/switch/switch.component';
-import { CardEntityComponent } from "../../../components/card-entity/card-entity.component";
 import { EndpointRepositoryService } from '../../../../repositories/endpoint-repository.service';
 import { EntityRepositoryService } from '../../../../repositories/entity-repository.service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
@@ -22,16 +19,12 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
   imports: [
     CommonModule,
     TuiCardLarge,
-    TuiButton,
-    IconTrashComponent,
     CardEndpointComponent,
-    BackButtonComponent,
     RouterModule,
     HeaderComponent,
     SwitchComponent,
-    CardEntityComponent,
     LoadingComponent
-  ],
+],
   templateUrl: './endpoint-card-list.component.html',
   styleUrls: ['./endpoint-card-list.component.css', '../../../styles/card-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

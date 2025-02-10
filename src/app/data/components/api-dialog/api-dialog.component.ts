@@ -1,8 +1,6 @@
-import { AsyncPipe } from '@angular/common';
 import type { TemplateRef } from '@angular/core';
-import { ChangeDetectionStrategy, Component, inject, HostListener } from '@angular/core';
-import { FormsModule, NgControl } from '@angular/forms';
-import { TuiAmountPipe } from '@taiga-ui/addon-commerce';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import type { TuiDialogContext } from '@taiga-ui/core';
 import { TuiButton, TuiDialogService, TuiTextfield } from '@taiga-ui/core';
@@ -13,14 +11,12 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { apiServiceShortStructure, Entity } from '../../../service/service-structure-api';
+import { apiServiceShortStructure } from '../../../service/service-structure-api';
 
 @Component({
   selector: 'app-api-edit-dialog',
   imports: [
-    AsyncPipe,
     FormsModule,
-    TuiAmountPipe,
     TuiAutoFocus,
     TuiButton,
     TuiDataListWrapper,
@@ -31,12 +27,15 @@ import { apiServiceShortStructure, Entity } from '../../../service/service-struc
     TuiTextfieldControllerModule,
   ],
   templateUrl: './api-dialog.component.html',
-  styleUrl: './api-dialog.component.css'
+  styleUrl: './api-dialog.component.css',
 })
 export class ApiDialogComponent {
   private readonly dialogs = inject(TuiDialogService);
 
-  public readonly context = injectContext<TuiDialogContext<apiServiceShortStructure, apiServiceShortStructure>>();
+  public readonly context =
+    injectContext<
+      TuiDialogContext<apiServiceShortStructure, apiServiceShortStructure>
+    >();
 
   protected get hasValue(): boolean {
     return this.data.name.trim() !== '';
@@ -55,18 +54,16 @@ export class ApiDialogComponent {
   protected showDialog(content: TemplateRef<TuiDialogContext>): void {
     this.dialogs.open(content, { dismissible: true }).subscribe();
   }
-  
+
   protected onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-  
+
     // Очищаем значение поля ввода от недопустимых символов
     const cleanedValue = value.replace(/[^a-zA-Z0-9]/g, '');
     input.value = cleanedValue;
-  
+
     // Обновляем значение в data
     this.data.name = cleanedValue;
   }
-  
-  
 }

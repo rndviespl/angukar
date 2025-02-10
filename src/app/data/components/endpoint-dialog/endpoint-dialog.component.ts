@@ -1,8 +1,6 @@
-import { AsyncPipe } from '@angular/common';
 import type { TemplateRef } from '@angular/core';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiAmountPipe } from '@taiga-ui/addon-commerce';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import type { TuiDialogContext } from '@taiga-ui/core';
 import { TuiButton, TuiDialogService, TuiTextfield } from '@taiga-ui/core';
@@ -13,14 +11,12 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { Endpoint, Entity } from '../../../service/service-structure-api';
+import { Endpoint } from '../../../service/service-structure-api';
 
 @Component({
   selector: 'app-endpoint-dialog',
   imports: [
-    AsyncPipe,
     FormsModule,
-    TuiAmountPipe,
     TuiAutoFocus,
     TuiButton,
     TuiDataListWrapper,
@@ -31,19 +27,14 @@ import { Endpoint, Entity } from '../../../service/service-structure-api';
     TuiTextfieldControllerModule,
   ],
   templateUrl: './endpoint-dialog.component.html',
-  styleUrl: './endpoint-dialog.component.css'
+  styleUrl: './endpoint-dialog.component.css',
 })
 export class EndpointDialogComponent {
   private readonly dialogs = inject(TuiDialogService);
-  readonly types: string[] = [
-    "get",
-    "post",
-    "put",
-    "delete",
-    "getbyindex"
-  ]
+  readonly types: string[] = ['get', 'post', 'put', 'delete', 'getbyindex'];
 
-  public readonly context = injectContext<TuiDialogContext<Endpoint, Endpoint>>();
+  public readonly context =
+    injectContext<TuiDialogContext<Endpoint, Endpoint>>();
 
   protected get hasValue(): boolean {
     return this.data.route.trim() !== '';
@@ -66,11 +57,11 @@ export class EndpointDialogComponent {
   protected onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-  
+
     // Очищаем значение поля ввода от недопустимых символов
     const cleanedValue = value.replace(/[^a-zA-Z0-9]/g, '');
     input.value = cleanedValue;
-  
+
     // Обновляем значение в data
     this.data.route = cleanedValue;
   }
