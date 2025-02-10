@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, switchMap } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { Observable, Subscription, switchMap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiServiceStructure, Entity, apiServiceShortStructure } from '../../../service/service-structure-api';
+import {
+  ApiServiceStructure,
+  Entity,
+} from '../../../service/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { tuiDialog, TuiAlertService } from '@taiga-ui/core';
@@ -9,9 +18,9 @@ import { CardEntityComponent } from '../../components/card-entity/card-entity.co
 import { HeaderComponent } from '../../components/header/header.component';
 import { SwitchComponent } from '../../components/switch/switch.component';
 import { EntityDialogComponent } from '../../components/entity-dialog/entity-dialog.component';
+import { ApiService } from '../../../service/api-service.service';
 import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
-import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
-import { LoadingComponent } from "../../components/loading/loading.component";
+import { LoadingComponent } from '../../components/loading/loading.component';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -21,7 +30,7 @@ import { LoadingComponent } from "../../components/loading/loading.component";
     CardEntityComponent,
     HeaderComponent,
     SwitchComponent,
-    LoadingComponent
+    LoadingComponent,
   ],
   templateUrl: './entity-card-list.component.html',
   styleUrls: ['./entity-card-list.component.css', '../../styles/card-list.css'],
@@ -29,132 +38,125 @@ import { LoadingComponent } from "../../components/loading/loading.component";
 })
 export class EntityCardListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
-  sub: Subscription | null = null;
+  private sub: Subscription | null = null;
   apiName!: string;
   loading: boolean = true;
-  apiInfo: apiServiceShortStructure = {} as apiServiceShortStructure;
+  apiInfo: ApiServiceStructure = {} as ApiServiceStructure;
+
   private readonly dialog = tuiDialog(EntityDialogComponent, {
     dismissible: true,
-    label: "Создать",
+    label: 'Создать',
   });
+
   entity: Entity = {
     name: '',
     isActive: false,
     structure: null,
-    actions: []
+    actions: [],
   };
 
   constructor(
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
+    private apiService: ApiService,
     private entityRepositoryService: EntityRepositoryService,
-    private apiServiceRepositoryService: ApiServiceRepositoryService,
     private alerts: TuiAlertService
-  ) { }
+  ) {}
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.route.params.pipe(
-      switchMap(params => {
-        this.apiName = params['name'];
-        if (!this.apiName) {
-          throw new Error('API name is null');
-        }
-        return this.apiServiceRepositoryService.getApiList();
-      }),
-      switchMap(apiList => {
-        const api = apiList.find(api => api.name === this.apiName);
-        if (!api) {
-          throw new Error(`API не найден: ${this.apiName}`);
-        }
-        this.apiInfo = api; // Assign the found API info to apiInfo
-        return this.apiServiceRepositoryService.getApiStructureList(this.apiName);
-      }),
-      switchMap((apiStructure: ApiServiceStructure) => {
-        this.apiInfo = { ...this.apiInfo, ...apiStructure }; // Merge additional details if needed
-        return this.entityRepositoryService.getApiEntityList(this.apiName);
-      })
-    ).subscribe({
-      next: (entities: Entity[]) => {
-        this.entities = entities;
-        this.loading = false;
-        this.cd.markForCheck();
-      },
-      error: (error: any) => {
-        console.error('Error:', error.message || error);
-        this.router.navigate(['/page-not-found']);
-      }
-    });
+    this.loadData();
   }
-  
-  onToggleChange(newState: boolean) {
-    this.apiInfo.isActive = newState;
-    console.log('Состояние переключателя изменилось на:', newState);
 
-    this.apiServiceRepositoryService.updateApiServiceStatus(this.apiName, newState).subscribe({
-      next: (response: any) => {
-        console.log('Состояние сервиса обновлено:', response);
-      },
-      error: (error: any) => {
-        console.error('Ошибка при обновлении состояния сервиса:', error);
-      }
-    });
+  onToggleChange(newState: boolean): void {
+    this.updateApiServiceStatus(newState);
   }
 
   openCreateDialog(): void {
     this.dialog({ ...this.entity }).subscribe({
-      next: (data: Entity) => {
-        const isNameExists = this.entities.some(entity => entity.name === data.name);
-        if (isNameExists) {
-          this.alerts
-            .open('Ошибка: Сущность с таким именем уже существует', {
-              appearance: 'negative',
-            })
-            .subscribe();
-          return;
-        }
-
-        this.entityRepositoryService.createApiEntity(this.apiName, data).subscribe({
-          next: (response) => {
-            console.log('Cущность добавлена:', response);
-            this.entities.push(data);
-            this.cd.markForCheck();
-            this.alerts
-              .open('Сущность успешно создана', {
-                appearance: 'success',
-              })
-              .subscribe();
-          },
-          error: (error: any) => {
-            if (error.status === 409) {
-              this.alerts
-                .open('Ошибка: Сущность с таким именем уже существует', {
-                  appearance: 'negative',
-                })
-                .subscribe();
-            } else {
-              this.alerts
-                .open('Ошибка при создании сущности', {
-                  appearance: 'negative',
-                })
-                .subscribe();
-            }
-            console.error('Ошибка при создании сущности:', error);
-          }
-        });
-      },
-      complete: () => {
-        console.info('Dialog closed');
-      },
+      next: (data) => this.handleCreateDialogData(data),
+      complete: () => console.info('Dialog closed'),
     });
   }
 
   onEntityDeleted(entityName: string): void {
-    this.entities = this.entities.filter(entity => entity.name !== entityName);
+    this.entities = this.entities.filter(
+      (entity) => entity.name !== entityName
+    );
     this.cd.markForCheck();
+  }
+
+  private loadData(): void {
+    this.sub = this.route.params
+      .pipe(switchMap((params) => this.fetchApiData(params['name'])))
+      .subscribe({
+        next: (apiStructure) => this.handleApiStructureResponse(apiStructure),
+        error: (error) => this.handleError('Ошибка при загрузке данных', error),
+      });
+  }
+
+  private fetchApiData(apiName: string): Observable<ApiServiceStructure> {
+    if (!apiName) {
+      throw new Error('API name is null');
+    }
+    this.apiName = apiName;
+    return this.apiService.getApiStructureList(this.apiName);
+  }
+
+  private handleApiStructureResponse(apiStructure: ApiServiceStructure): void {
+    this.apiInfo = apiStructure;
+    this.entities = apiStructure.entities;
+    this.loading = false;
+    this.cd.markForCheck();
+  }
+
+  private updateApiServiceStatus(newState: boolean): void {
+    this.apiInfo.isActive = newState;
+    this.apiService.updateApiServiceStatus(this.apiName, newState).subscribe({
+      next: (response) => console.log('Состояние сервиса обновлено:', response),
+      error: (error) =>
+        this.handleError('Ошибка при обновлении состояния сервиса', error),
+    });
+  }
+
+  private handleCreateDialogData(data: Entity): void {
+    if (this.isEntityNameExists(data.name)) {
+      this.alerts
+        .open('Ошибка: Сущность с таким именем уже существует', {
+          appearance: 'negative',
+        })
+        .subscribe();
+      return;
+    }
+    this.createEntity(data);
+  }
+
+  private isEntityNameExists(name: string): boolean {
+    return this.entities.some((entity) => entity.name === name);
+  }
+
+  private createEntity(data: Entity): void {
+    this.entityRepositoryService.createApiEntity(this.apiName, data).subscribe({
+      next: (response) => this.handleEntityCreation(response, data),
+      error: (error) => this.handleError('Ошибка при создании сущности', error),
+    });
+  }
+
+  private handleEntityCreation(response: Entity, data: Entity): void {
+    console.log('Сущность добавлена:', response);
+    this.entities.push(data);
+    this.cd.markForCheck();
+    this.alerts
+      .open('Сущность успешно создана', { appearance: 'success' })
+      .subscribe();
+  }
+
+  private handleError(message: string, error: any): void {
+    console.error(message, error);
+    this.router.navigate(['/page-not-found']);
   }
 }

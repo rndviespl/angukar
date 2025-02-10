@@ -13,7 +13,7 @@ import {
   tuiDialog,
   TuiAlertService,
 } from '@taiga-ui/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
 import { SwitchComponent } from '../switch/switch.component';
 import { ApiDialogComponent } from '../api-dialog/api-dialog.component';
@@ -57,7 +57,6 @@ export class CardApiComponent {
   constructor(
     private apiServiceRepository: ApiServiceRepositoryService,
     private cd: ChangeDetectorRef,
-    private router: Router,
     private alerts: TuiAlertService,
     location: Location // Injecting Location correctly
   ) {

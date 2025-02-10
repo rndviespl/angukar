@@ -1,5 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ApiServiceStructure, Endpoint, Entity } from '../../../service/service-structure-api';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  ApiServiceStructure,
+  Endpoint,
+  Entity,
+} from '../../../service/service-structure-api';
 import { TuiAccordion } from '@taiga-ui/experimental';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -26,7 +36,7 @@ import { TuiAlertService } from '@taiga-ui/core';
 })
 export class ApiEndpointListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
-  sub: Subscription | null = null;
+  private sub: Subscription | null = null;
   loading: boolean = true;
   apiName!: string;
   private baseUrl = `${window.location.origin}/api`;
@@ -38,64 +48,76 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private cd: ChangeDetectorRef,
     private alerts: TuiAlertService
-  ) { }
+  ) {}
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.apiName = params['name'];
-      if (this.apiName) {
-        this.loadApiStructure();
-      } else {
-        console.error('API name is null');
-        this.router.navigate(['/page-not-found']);
-      }
+      this.apiName ? this.loadApiStructure() : this.handleApiNameError();
     });
   }
 
-  loadApiStructure(): void {
+  private loadApiStructure(): void {
     this.sub = this.apiService.getApiStructureList(this.apiName).subscribe({
-      next: (apiStructure: ApiServiceStructure) => {
-        if (apiStructure) {
-          this.entities = apiStructure.entities;
-          this.cd.markForCheck();
-          this.loading = false;
-        } else {
-          console.error('API structure is null');
-          this.router.navigate(['/page-not-found']);
-        }
-      },
-      error: (error: any) => {
-        console.error('Error fetching API structure', error);
-        this.router.navigate(['/page-not-found']);
-      }
+      next: (apiStructure) => this.handleApiStructureResponse(apiStructure),
+      error: (error) => this.handleError('Error fetching API structure', error),
     });
+  }
+
+  private handleApiStructureResponse(apiStructure: ApiServiceStructure): void {
+    if (apiStructure) {
+      this.entities = apiStructure.entities;
+      this.loading = false;
+      this.cd.markForCheck();
+    } else {
+      this.handleError('API structure is null');
+    }
+  }
+
+  private handleApiNameError(): void {
+    console.error('API name is null');
+    this.router.navigate(['/page-not-found']);
+  }
+
+  private handleError(message: string, error?: any): void {
+    console.error(message, error);
+    this.router.navigate(['/page-not-found']);
   }
 
   copyToClipboard(entityName: string, endpoint: Endpoint): void {
     const url = this.getUrl(entityName, endpoint);
+    this.copyTextToClipboard(url);
+  }
+
+  private copyTextToClipboard(text: string): void {
     const textarea = document.createElement('textarea');
-    textarea.value = url;
+    textarea.value = text;
     document.body.appendChild(textarea);
     textarea.select();
     try {
       document.execCommand('copy');
-      this.isCopied = url; // Устанавливаем isCopied в скопированный URL
-      this.cd.markForCheck(); // Обновляем интерфейс
-      setTimeout(() => {
-        this.isCopied = null; // Сбрасываем состояние через 2 секунды
-        this.cd.markForCheck();
-      }, 2000);
+      this.showCopySuccess(text);
     } catch (err) {
-      console.error('Ошибка при копировании URL:', err);
+      console.error('Error copying URL:', err);
+    } finally {
+      document.body.removeChild(textarea);
     }
-    document.body.removeChild(textarea);
   }
-  getUrl(entityName: string, endpoint: Endpoint) {
+
+  private showCopySuccess(url: string): void {
+    this.isCopied = url;
+    this.cd.markForCheck();
+    setTimeout(() => {
+      this.isCopied = null;
+      this.cd.markForCheck();
+    }, 2000);
+  }
+
+  getUrl(entityName: string, endpoint: Endpoint): string {
     return `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
   }
 }
-
