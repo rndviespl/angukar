@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CardApiComponent } from "../../components/card-api/card-api.component";
 import { HeaderComponent } from "../../components/header/header.component";
-import { Subscription } from 'rxjs';
+import { Observable, interval,Subscription } from 'rxjs';
+import { ApiHubServiceService } from '../../../service/api-hub-service.service';
 import { CommonModule } from '@angular/common';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
 import { tuiDialog } from '@taiga-ui/core';
@@ -44,6 +45,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private router: Router,
     private readonly alerts: TuiAlertService,
+    private apiServiceHub: ApiHubServiceService
   ) { }
 
   ngOnDestroy(): void {
@@ -52,6 +54,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadApiList();
+    this.subscribeToApiUpdates();
   }
 
   loadApiList(): void {
@@ -59,12 +62,25 @@ export class CardApiListComponent implements OnInit, OnDestroy {
       next: (it) => {
         this.cards = it;
         console.log(it);
+        this.apiServiceHub.initializeData(it)
         this.cd.detectChanges();
         this.loading = false
       },
       error: (error) => {
         console.error('Error fetching API list', error);
         this.router.navigate(['/page-not-found']);
+      }
+    });
+  }
+
+  subscribeToApiUpdates(): void {
+    this.apiServiceHub.ordersUpdated$.subscribe({
+      next: (updatedApiList) => {
+        this.cards = updatedApiList; // Update the cards with the new data
+        this.cd.markForCheck(); // Notify Angular to check for changes
+      },
+      error: (error) => {
+        console.error('Error receiving API updates', error);
       }
     });
   }
