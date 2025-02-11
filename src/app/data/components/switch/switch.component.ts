@@ -1,12 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiPlatform } from '@taiga-ui/cdk/directives/platform';
 import { TuiSwitch, tuiSwitchOptionsProvider } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-switch',
-  imports: [CommonModule, FormsModule, TuiPlatform, ReactiveFormsModule, TuiSwitch],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TuiSwitch],
   templateUrl: './switch.component.html',
   styleUrls: ['./switch.component.css'],
   providers: [
@@ -16,10 +22,14 @@ import { TuiSwitch, tuiSwitchOptionsProvider } from '@taiga-ui/kit';
 })
 export class SwitchComponent implements OnInit {
   @Input() value: boolean = false; // Добавлено свойство value
-  @Output() toggle: EventEmitter<boolean> = new EventEmitter<boolean>(); 
+  @Output() toggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  protected readonly invalidTrue = new FormControl(true, () => ({ invalid: true }));
-  protected readonly invalidFalse = new FormControl(false, () => ({ invalid: true }));
+  protected readonly invalidTrue = new FormControl(true, () => ({
+    invalid: true,
+  }));
+  protected readonly invalidFalse = new FormControl(false, () => ({
+    invalid: true,
+  }));
 
   public ngOnInit(): void {
     this.invalidTrue.markAsTouched();

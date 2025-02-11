@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EndpointServiceService as EndpointService } from '../service/endpoint-service.service';
+import { EndpointService as EndpointService } from '../service/endpoint-service.service';
 import { Endpoint as Endpoint } from '../service/service-structure-api';
 import { Observable } from 'rxjs';
 
