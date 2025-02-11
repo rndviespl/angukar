@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { CardApiComponent } from '../../components/card-api/card-api.component';
-import { HeaderComponent } from '../../components/header/header.component';
+import { CardApiComponent } from "../../components/card-api/card-api.component";
+import { HeaderComponent } from "../../components/header/header.component";
+import { Observable, interval,Subscription } from 'rxjs';
+import { ApiHubServiceService } from '../../../service/api-hub-service.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { apiServiceShortStructure } from '../../../service/service-structure-api';
@@ -42,8 +44,9 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     private apiServiceRepository: ApiServiceRepositoryService,
     private changeDetector: ChangeDetectorRef,
     private router: Router,
-    private readonly alerts: TuiAlertService
-  ) {}
+    private readonly alerts: TuiAlertService,
+    private apiServiceHub: ApiHubServiceService
+  ) { }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -51,14 +54,32 @@ export class CardApiListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadApiList();
+    this.subscribeToApiUpdates();
   }
 
   private loadApiList(): void {
     this.sub = this.apiServiceRepository.getApiList().subscribe({
-      next: (apiList) => this.handleApiListResponse(apiList),
-      error: (error) => this.handleApiListError(error),
+      next: (apiList) => {
+        this.handleApiListResponse(apiList)
+        this.apiServiceHub.initializeData(apiList)
+      },
+      error: (error) => {
+        console.error('Error fetching API list', error);
+        this.router.navigate(['/page-not-found']);
+      }
     });
   }
+
+  subscribeToApiUpdates(): void {
+    this.apiServiceHub.ordersUpdated$.subscribe({
+      next: (updatedApiList) => {
+        this.cards = updatedApiList; // Update the cards with the new data
+        this.cd.markForCheck(); // Notify Angular to check for changes
+      },
+      error: (error) => {
+        console.error('Error receiving API updates', error);
+      }
+    });
 
   private handleApiListResponse(apiList: apiServiceShortStructure[]): void {
     this.cards = apiList;
