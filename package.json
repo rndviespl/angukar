@@ -18,6 +18,7 @@
     "@angular/platform-browser": "^19.1.0",
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/router": "^19.1.0",
+    "@microsoft/signalr": "^8.0.7",
     "@taiga-ui/addon-charts": "^4.21.0",
     "@taiga-ui/addon-commerce": "^4.21.0",
     "@taiga-ui/addon-doc": "^4.21.0",
