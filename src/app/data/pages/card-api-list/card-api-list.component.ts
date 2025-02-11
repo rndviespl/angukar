@@ -32,9 +32,9 @@ import {
     HeaderComponent,
     RouterModule,
     LoadingComponent,
-    TuiInputSliderModule, // Add this line
-    TuiTextfieldControllerModule, // Add this line
-    PaginationComponent, // Add this line
+    TuiInputSliderModule,
+    TuiTextfieldControllerModule,
+    PaginationComponent,
   ],
   templateUrl: './card-api-list.component.html',
   styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css'],
@@ -42,15 +42,16 @@ import {
 })
 export class CardApiListComponent implements OnInit, OnDestroy {
   cards: apiServiceShortStructure[] = [];
+  private sub: Subscription | null = null;
+  loading: boolean = true;
+  itemsPerPage = 16;
+  currentPage = 1;
+
   api: apiServiceShortStructure = {
     name: '',
     isActive: false,
     description: '',
   };
-  private sub: Subscription | null = null;
-  loading: boolean = true;
-  itemsPerPage = 16;
-  currentPage = 1;
 
   private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
@@ -63,7 +64,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     private router: Router,
     private readonly alerts: TuiAlertService,
     private apiServiceHub: ApiHubServiceService
-  ) { }
+  ) {}
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -77,31 +78,33 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   private loadApiList(): void {
     this.sub = this.apiServiceRepository.getApiList().subscribe({
       next: (apiList) => {
-        this.handleApiListResponse(apiList)
-        this.apiServiceHub.initializeData(apiList)
+        this.handleApiListResponse(apiList);
+        this.apiServiceHub.initializeData(apiList);
       },
       error: (error) => {
+        this.handleApiListError(error);
         console.error('Error fetching API list', error);
         this.router.navigate(['/page-not-found']);
-      }
+      },
     });
   }
 
   subscribeToApiUpdates(): void {
     this.apiServiceHub.ordersUpdated$.subscribe({
       next: (updatedApiList) => {
-        this.cards = updatedApiList; // Update the cards with the new data
-        this.changeDetector.markForCheck(); // Notify Angular to check for changes
+        this.cards = updatedApiList;
+        this.updatePagination();
+        this.changeDetector.markForCheck();
       },
       error: (error) => {
         console.error('Error receiving API updates', error);
-      }
+      },
     });
   }
 
   private handleApiListResponse(apiList: apiServiceShortStructure[]): void {
     this.cards = apiList;
-    console.log(apiList);
+    this.updatePagination();
     this.changeDetector.detectChanges();
     this.loading = false;
   }
@@ -153,7 +156,6 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     data: apiServiceShortStructure
   ): void {
     console.log('API добавлено:', response);
-    this.cards.push(data);
     this.changeDetector.markForCheck();
     this.alerts
       .open('API успешно создано', {
@@ -164,7 +166,8 @@ export class CardApiListComponent implements OnInit, OnDestroy {
 
   onApiDeleted(apiName: string): void {
     this.cards = this.cards.filter((card) => card.name !== apiName);
-    this.changeDetector.markForCheck(); // Notify Angular to check for changes
+    this.updatePagination();
+    this.changeDetector.markForCheck();
   }
 
   get totalPages(): number {
@@ -178,5 +181,14 @@ export class CardApiListComponent implements OnInit, OnDestroy {
 
   onPageChange(page: number): void {
     this.currentPage = page;
+  }
+
+  private updatePagination(): void {
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+    if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
   }
 }
