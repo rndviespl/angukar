@@ -1,6 +1,15 @@
 {
     "/api": {
+      "target": "https://localhost:7283",
+      "secure": false
+    },
+    "/apiold": {
       "target": "http://sh4r1k.ru:52240",
       "secure": false
+    },
+    "/hubs": {
+      "target": "https://localhost:7283",
+      "secure": false,
+      "ws": true
     }
   }
