@@ -3,7 +3,7 @@ button {
     border: none;
     padding: 0.625rem 1.25rem;
     /* Относительные отступы */
-    margin: 0.625rem 1.25rem;
+    margin: 0.625rem 0.625rem;
     /* Относительные отступы */
     border-radius: 0.3125rem;
     /* Относительный радиус скругления */
