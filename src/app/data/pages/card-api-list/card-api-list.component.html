@@ -1,15 +1,15 @@
 <app-header [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()" />
-@if (loading)
-{
-  <app-loading></app-loading>
-}
-@else 
-{
-  <div class="container">
-    <div class="grid">
-    <div *ngFor="let item of cards" tuiAppearance="floating" tuiCardLarge class="card">
-      <app-card-api [apiInfo]="item" (apiDeleted)="onApiDeleted(item.name)"></app-card-api>
+<app-pagination class="custom-pagination" [totalItems]="cards.length" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+></app-pagination>
+@if (loading) {
+<app-loading></app-loading>
+} @else {
+<div class="container">
+  <div class="grid">
+    <div *ngFor="let item of paginatedCards" tuiAppearance="floating" tuiCardLarge class="card">
+      <app-card-api [apiInfo]="item" (apiDeleted)="onApiDeleted(item.name)"/>
     </div>
   </div>
-  </div>
+</div>
 }
