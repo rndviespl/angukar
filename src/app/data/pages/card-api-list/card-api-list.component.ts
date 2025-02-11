@@ -1,6 +1,12 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { CardApiComponent } from "../../components/card-api/card-api.component";
-import { HeaderComponent } from "../../components/header/header.component";
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { CardApiComponent } from '../../components/card-api/card-api.component';
+import { HeaderComponent } from '../../components/header/header.component';
 import { ApiHubServiceService } from '../../../service/api-hub-service.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -12,6 +18,11 @@ import { ApiServiceRepositoryService } from '../../../repositories/api-service-r
 import { Router } from '@angular/router';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { TuiAlertService } from '@taiga-ui/core';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
+import {
+  TuiInputSliderModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/legacy';
 
 @Component({
   selector: 'app-card-api-list',
@@ -21,9 +32,13 @@ import { TuiAlertService } from '@taiga-ui/core';
     HeaderComponent,
     RouterModule,
     LoadingComponent,
+    TuiInputSliderModule, // Add this line
+    TuiTextfieldControllerModule, // Add this line
+    PaginationComponent, // Add this line
   ],
   templateUrl: './card-api-list.component.html',
   styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CardApiListComponent implements OnInit, OnDestroy {
   cards: apiServiceShortStructure[] = [];
@@ -34,6 +49,9 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   };
   private sub: Subscription | null = null;
   loading: boolean = true;
+  itemsPerPage = 16;
+  currentPage = 1;
+
   private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
     label: 'Создать',
@@ -147,5 +165,18 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   onApiDeleted(apiName: string): void {
     this.cards = this.cards.filter((card) => card.name !== apiName);
     this.changeDetector.markForCheck(); // Notify Angular to check for changes
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.cards.length / this.itemsPerPage);
+  }
+
+  get paginatedCards(): apiServiceShortStructure[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.cards.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
   }
 }
