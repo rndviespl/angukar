@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { apiServiceShortStructure, ApiServiceStructure } from '../service/service-structure-api';
+import {
+  apiServiceShortStructure,
+  ApiServiceStructure,
+} from '../service/service-structure-api';
 import { ApiService } from '../service/api-service.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiServiceRepositoryService {
+  constructor(private apiService: ApiService) {}
 
-  constructor(private apiService: ApiService) 
-  { 
-  }
   getApiList(): Observable<apiServiceShortStructure[]> {
     return this.apiService.getApiList();
   }
@@ -19,7 +20,9 @@ export class ApiServiceRepositoryService {
     return this.apiService.getApiStructureList(name);
   }
 
-  createApiService(service: apiServiceShortStructure): Observable<apiServiceShortStructure> {
+  createApiService(
+    service: apiServiceShortStructure
+  ): Observable<apiServiceShortStructure> {
     return this.apiService.createApiService(service);
   }
 
@@ -27,16 +30,21 @@ export class ApiServiceRepositoryService {
     return this.apiService.createFullApiService(service);
   }
 
-  updateApiService(oldName: string, service: apiServiceShortStructure): Observable<apiServiceShortStructure> {
-    return this.apiService.updateApiService(oldName, service)
+  updateApiService(
+    oldName: string,
+    service: apiServiceShortStructure
+  ): Observable<apiServiceShortStructure> {
+    return this.apiService.updateApiService(oldName, service);
   }
 
   deleteApiService(serviceName: string): Observable<void> {
     return this.apiService.deleteApiService(serviceName);
   }
 
-  updateApiServiceStatus(serviceName: string, isActive: boolean): Observable<any> {
-    return this.apiService.updateApiServiceStatus(serviceName, isActive)
+  updateApiServiceStatus(
+    serviceName: string,
+    isActive: boolean
+  ): Observable<any> {
+    return this.apiService.updateApiServiceStatus(serviceName, isActive);
   }
 }
-

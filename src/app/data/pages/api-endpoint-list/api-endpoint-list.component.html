@@ -1,14 +1,15 @@
-<app-header/>
+<app-header />
 @if (loading) {
-  <app-loading></app-loading>
+<app-loading></app-loading>
 } @else {
-  <div class="endpoint-list">
-    <h1>{{ apiName }}</h1>
+<div class="endpoint-list">
+  <h1>{{ apiName }}</h1>
+  <ng-container *ngIf="entities.length > 0; else noEntities">
     <tui-accordion tuiAppearance="floating" [closeOthers]="false">
       <ng-container *ngFor="let entity of entities">
         <button tuiAccordion class="accordion">{{ entity.name }}</button>
         <tui-expand>
-          <ng-container *ngIf="entity?.actions && entity.actions.length > 0; else emptyEntity">
+          <ng-container *ngIf="entity?.actions && entity.actions.length > 0; else emptyEntityOrApi">
             <ul>
               <li *ngFor="let endpoint of entity.actions" class="endpoint-item">
                 <div class="endpoint-header">
@@ -17,22 +18,22 @@
                 </div>
                 <div class="url-container">
                   <div class="copy-url-field">
-                    <input 
-                      type="text" 
-                      readonly 
-                      [value]="getUrl(entity.name, endpoint)" 
+                    <input
+                      type="text"
+                      readonly
+                      [value]="getUrl(entity.name, endpoint)"
                       class="url-input"
                       #urlInput
                     />
-                    <button 
-                      tuiButton 
-                      tuiAppearance="flat" 
+                    <button
+                      tuiButton
+                      tuiAppearance="flat"
                       (click)="copyToClipboard(entity.name, endpoint)"
                       class="copy-button"
                       [class.copied]="isCopied === getUrl(entity.name, endpoint)"
                     >
-                      <i 
-                        class="fas" 
+                      <i
+                        class="fas"
                         [ngClass]="{
                           'fa-clone': isCopied !== getUrl(entity.name, endpoint),
                           'fa-check': isCopied === getUrl(entity.name, endpoint)
@@ -44,12 +45,23 @@
               </li>
             </ul>
           </ng-container>
-          <ng-template #emptyEntity>
-            <p>Нет доступных эндпоинтов.</p>
-            <button class="primary-button" tuiButton tuiAppearance="floating" routerLink="/ApiEntity/{{apiName}}/{{entity.name}}">Перейти к деталям сущности</button>
+          <ng-template #emptyEntityOrApi>
+            <ng-container *ngIf="entity?.actions?.length === 0; else noActions">
+              <p>Нет доступных эндпоинтов.</p>
+              <button class="primary-button" tuiButton tuiAppearance="floating"
+                routerLink="/ApiEntity/{{apiName}}/{{entity.name}}">Перейти к деталям сущности</button>
+            </ng-container>
+            <ng-template #noActions>
+              <button class="primary-button" tuiButton tuiAppearance="floating"
+                routerLink="/ApiDetails/{{apiName}}">Перейти к деталям API</button>
+            </ng-template>
           </ng-template>
         </tui-expand>
       </ng-container>
     </tui-accordion>
-  </div>
+  </ng-container>
+  <ng-template #noEntities>
+    <p>Нет доступных сущностей и эндпоинтов</p>
+  </ng-template>
+</div>
 }

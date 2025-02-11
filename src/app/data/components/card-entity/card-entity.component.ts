@@ -1,10 +1,15 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { Entity } from '../../../service/service-structure-api';
 import { RouterModule } from '@angular/router';
-import { IconTrashComponent } from "../icon-trash/icon-trash.component";
+import { IconTrashComponent } from '../icon-trash/icon-trash.component';
 import { SwitchComponent } from '../switch/switch.component';
 import { Subscription } from 'rxjs';
-import { RouteMemoryService } from '../../../service/route-memory.service';
 import { tuiDialog, TuiAlertService } from '@taiga-ui/core';
 import { EntityDialogComponent } from '../entity-dialog/entity-dialog.component';
 import { CommonModule } from '@angular/common';
@@ -12,112 +17,106 @@ import { EntityRepositoryService } from '../../../repositories/entity-repository
 
 @Component({
   selector: 'app-card-entity',
-  imports: [IconTrashComponent, SwitchComponent,CommonModule,RouterModule,],
+  imports: [IconTrashComponent, SwitchComponent, CommonModule, RouterModule],
   templateUrl: './card-entity.component.html',
-  styleUrls: ['./card-entity.component.css', '../../styles/card.css', '../../styles/button.css', '../../styles/icon.css']
+  styleUrls: [
+    './card-entity.component.css',
+    '../../styles/card.css',
+    '../../styles/button.css',
+    '../../styles/icon.css',
+  ],
 })
 export class CardEntityComponent {
   @Input() entityInfo!: Entity;
-  @Input() apiName: string = "";
+  @Input() apiName: string = '';
   @Output() entityDeleted = new EventEmitter<string>();
-  oldName: string = "";
-  entities: Entity[] = [];
-  sub: Subscription | null = null;
-  loading: boolean = false;
+
+  private oldName: string = '';
+  private sub: Subscription | null = null;
+  private loading: boolean = false;
 
   private readonly dialog = tuiDialog(EntityDialogComponent, {
     dismissible: true,
-    label: "Редактировать",
+    label: 'Редактировать',
   });
-  
+
   constructor(
-    private routeMemoryService: RouteMemoryService,
     private cd: ChangeDetectorRef,
     private entityRepositoryService: EntityRepositoryService,
     private alerts: TuiAlertService
-  ) { }
+  ) {}
 
-  onToggleChange(newState: boolean) {
-    this.entityInfo.isActive = newState; // Update state in parent component
-    console.log('Состояние переключателя изменилось на:', newState);
-
-    // Call method to update service status
-    this.entityRepositoryService.updateEntityStatus(this.apiName, this.entityInfo.name, newState).subscribe({
-      next: (response) => {
-        console.log('Состояние сервиса обновлено:', response);
-      },
-      error: (error) => {
-        console.error('Ошибка при обновлении состояния сервиса:', error);
-      }
-    });
+  onToggleChange(newState: boolean): void {
+    this.updateEntityStatus(newState);
   }
 
   openEditDialog(): void {
     this.oldName = this.entityInfo.name;
-    this.dialog({... this.entityInfo}).subscribe({
-      next: (data) => {
-        console.info(`Dialog emitted data = ${data} - ${this.entityInfo.name}}`);
-        this.entityRepositoryService.updateApiEntity(this.apiName, this.oldName, data).subscribe({
-          next: (response) => {
-            console.log('Сущность обновлена:', response);
-            this.entityInfo = data;
-            this.cd.markForCheck();
-            this.alerts
-            .open('Сущность успешно обновлена', {
-              appearance: 'success',
-            })
-            .subscribe();
-        },
-        error: (error) => {
-          if (error.status === 409) {
-            this.alerts
-              .open('Ошибка: Сущность с таким именем уже существует', {
-                appearance: 'negative',
-              })
-              .subscribe();
-          } else {
-            this.alerts
-              .open('Ошибка при обновлении сущности', {
-                appearance: 'negative',
-              })
-              .subscribe();
-          }
-            console.error('Ошибка при обновлении сущности:', error);
-          }
-        })
-      },
-      complete: () => {
-        console.info('Dialog closed');
-      },
+    this.dialog({ ...this.entityInfo }).subscribe({
+      next: (data) => this.handleEditDialogData(data),
+      complete: () => console.info('Dialog closed'),
     });
-  }
-
-  onRefresh(): void {
-    if (this.apiName) {
-      this.loading = true; // Set loading to true
-      this.routeMemoryService.checkForApiUpdates(this.apiName);
-      this.sub = this.routeMemoryService.getApiData(this.apiName).subscribe(apiStructure => {
-        this.loading = false; // Set loading to false
-        if (apiStructure) {
-          this.entities = apiStructure.entities;
-          this.cd.markForCheck();
-        }
-      }, error => {
-        this.loading = false; // Set loading to false on error
-        console.error('Error fetching data:', error);
-      });
-    }
   }
 
   onDeleteConfirmed(): void {
-    this.entityRepositoryService.deleteApiEntity(this.apiName, this.entityInfo.name).subscribe({
-      next: () => {
-        console.log(`Сущность "${this.entityInfo.name}" удалена.`);
-        this.entityDeleted.emit(this.entityInfo.name); // Emit the event to notify the parent component
-      },
-      error: (error) => {
-        console.error('Ошибка при удалении сущности:', error);
-      }
-    });
+    this.entityRepositoryService
+      .deleteApiEntity(this.apiName, this.entityInfo.name)
+      .subscribe({
+        next: () => this.handleEntityDeletion(),
+        error: (error) =>
+          this.handleError('Ошибка при удалении сущности', error),
+      });
+  }
+
+  private updateEntityStatus(newState: boolean): void {
+    this.entityInfo.isActive = newState;
+    this.entityRepositoryService
+      .updateEntityStatus(this.apiName, this.entityInfo.name, newState)
+      .subscribe({
+        next: (response) =>
+          console.log('Состояние сервиса обновлено:', response),
+        error: (error) =>
+          this.handleError('Ошибка при обновлении состояния сервиса', error),
+      });
+  }
+
+  private handleEditDialogData(data: Entity): void {
+    this.entityRepositoryService
+      .updateApiEntity(this.apiName, this.oldName, data)
+      .subscribe({
+        next: (response) => this.handleEntityUpdate(response, data),
+        error: (error) => this.handleEntityUpdateError(error),
+      });
+  }
+
+  private handleEntityUpdate(response: Entity, data: Entity): void {
+    console.log('Сущность обновлена:', response);
+    this.entityInfo = data;
+    this.cd.markForCheck();
+    this.alerts
+      .open('Сущность успешно обновлена', { appearance: 'success' })
+      .subscribe();
+  }
+
+  private handleEntityUpdateError(error: any): void {
+    this.handleError('Ошибка при обновлении сущности', error);
+  }
+
+  private handleEntityDeletion(): void {
+    console.log(`Сущность "${this.entityInfo.name}" удалена.`);
+    this.entityDeleted.emit(this.entityInfo.name);
+  }
+
+  private handleError(message: string, error: any): void {
+    console.error(message, error);
+    if (error.status === 409) {
+      this.alerts
+        .open(`${message}: Сущность с таким именем уже существует`, {
+          appearance: 'negative',
+        })
+        .subscribe();
+    } else {
+      this.alerts.open(message, { appearance: 'negative' }).subscribe();
+    }
   }
 }
