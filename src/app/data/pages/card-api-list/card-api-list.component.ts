@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CardApiComponent } from "../../components/card-api/card-api.component";
 import { HeaderComponent } from "../../components/header/header.component";
-import { Observable, interval,Subscription } from 'rxjs';
 import { ApiHubServiceService } from '../../../service/api-hub-service.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -74,12 +73,13 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     this.apiServiceHub.ordersUpdated$.subscribe({
       next: (updatedApiList) => {
         this.cards = updatedApiList; // Update the cards with the new data
-        this.cd.markForCheck(); // Notify Angular to check for changes
+        this.changeDetector.markForCheck(); // Notify Angular to check for changes
       },
       error: (error) => {
         console.error('Error receiving API updates', error);
       }
     });
+  }
 
   private handleApiListResponse(apiList: apiServiceShortStructure[]): void {
     this.cards = apiList;
