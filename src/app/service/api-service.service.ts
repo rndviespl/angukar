@@ -43,6 +43,12 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
+  createFullApiService(service: ApiServiceStructure): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/ApiService`, service).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   updateApiService(
     oldName: string,
     service: apiServiceShortStructure
