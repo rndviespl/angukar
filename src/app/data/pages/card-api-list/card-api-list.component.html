@@ -1,5 +1,5 @@
 
-<app-header [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()" />
+<app-header [isApiPage]="true" [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()" />
 <app-pagination class="custom-pagination" [totalItems]="cards.length" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
   (pageChange)="onPageChange($event)"
 ></app-pagination>
