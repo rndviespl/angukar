@@ -1,4 +1,4 @@
-<app-header [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()" />
+<app-header [isApiPage]="true" [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()" />
 @if (loading)
 {
   <app-loading></app-loading>

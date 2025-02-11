@@ -26,6 +26,10 @@ export class ApiServiceRepositoryService {
     return this.apiService.createApiService(service);
   }
 
+  createFullApiService(service: ApiServiceStructure): Observable<void> {
+    return this.apiService.createFullApiService(service);
+  }
+
   updateApiService(
     oldName: string,
     service: apiServiceShortStructure
