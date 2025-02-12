@@ -51,7 +51,7 @@ export class ApiHubServiceService {
       const index = currentList.findIndex((apiService: apiServiceShortStructure) => {
         return apiService.name === name
       });
-      currentList.splice(index);
+      currentList.splice(index, 1);
       this.apiListSubject.next(currentList);
     });
 
