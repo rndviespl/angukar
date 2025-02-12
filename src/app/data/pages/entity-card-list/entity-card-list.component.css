@@ -1,0 +1,17 @@
+.header-section {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* Три колонки: фильтр, пагинация, иконки */
+    align-items: center;
+    gap: 10px; /* Отступы между элементами */
+  }
+  
+  .custom-pagination {
+    grid-column: 2; /* Пагинация в средней колонке */
+    justify-self: center; /* Выравнивание по центру */
+  }
+  
+  .header-section i {
+    grid-column: 3; /* Иконки в третьей колонке */
+    justify-self: end; /* Выравнивание по правому краю */
+    font-size: 27px !important;
+  }
