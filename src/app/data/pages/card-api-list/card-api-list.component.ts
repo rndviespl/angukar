@@ -5,24 +5,22 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { CardApiComponent } from '../../components/card-api/card-api.component';
-import { HeaderComponent } from '../../components/header/header.component';
-import { ApiHubServiceService } from '../../../service/api-hub-service.service';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { apiServiceShortStructure } from '../../../service/service-structure-api';
-import { tuiDialog } from '@taiga-ui/core';
-import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
-import { RouterModule } from '@angular/router';
+import { ApiHubServiceService } from '../../../service/api-hub-service.service';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 import { Router } from '@angular/router';
-import { LoadingComponent } from '../../components/loading/loading.component';
 import { TuiAlertService } from '@taiga-ui/core';
+import { apiServiceShortStructure } from '../../../service/service-structure-api';
+import { CommonModule } from '@angular/common';
+import { CardApiComponent } from '../../components/card-api/card-api.component';
+import { HeaderComponent } from '../../components/header/header.component';
+import { RouterModule } from '@angular/router';
+import { LoadingComponent } from '../../components/loading/loading.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
-import {
-  TuiInputSliderModule,
-  TuiTextfieldControllerModule,
-} from '@taiga-ui/legacy';
+import { TuiInputSliderModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { tuiDialog } from '@taiga-ui/core';
+import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
+import { FilterByInputComponent } from '../../components/filter-by-input/filter-by-input.component';
 
 @Component({
   selector: 'app-card-api-list',
@@ -32,9 +30,10 @@ import {
     HeaderComponent,
     RouterModule,
     LoadingComponent,
-    TuiInputSliderModule, // Add this line
-    TuiTextfieldControllerModule, // Add this line
-    PaginationComponent, // Add this line
+    TuiInputSliderModule,
+    TuiTextfieldControllerModule,
+    PaginationComponent,
+    FilterByInputComponent, 
   ],
   templateUrl: './card-api-list.component.html',
   styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css', '../../styles/icon.css'],
@@ -42,16 +41,20 @@ import {
 })
 export class CardApiListComponent implements OnInit, OnDestroy {
   cards: apiServiceShortStructure[] = [];
+  filteredCards: apiServiceShortStructure[] = [];
+  apiNames: string[] = [];
+  private sub: Subscription | null = null;
+  loading = true;
+  itemsPerPage = 16;
+  currentPage = 1;
+   searchQueryActive = false;
+  isSortedAscending: boolean = true;
+
   api: apiServiceShortStructure = {
     name: '',
     isActive: false,
     description: '',
   };
-  private sub: Subscription | null = null;
-  loading: boolean = true;
-  itemsPerPage = 16;
-  currentPage = 1;
-  isSortedAscending: boolean = true;
 
   private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
@@ -64,7 +67,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     private router: Router,
     private readonly alerts: TuiAlertService,
     private apiServiceHub: ApiHubServiceService
-  ) { }
+  ) {}
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -83,28 +86,34 @@ export class CardApiListComponent implements OnInit, OnDestroy {
         this.sortCards();
       },
       error: (error) => {
+        this.handleApiListError(error);
         console.error('Error fetching API list', error);
         this.router.navigate(['/page-not-found']);
-      }
+      },
     });
   }
 
   subscribeToApiUpdates(): void {
     this.apiServiceHub.ordersUpdated$.subscribe({
       next: (updatedApiList) => {
-        this.cards = updatedApiList; // Update the cards with the new data
+        this.cards = updatedApiList;
         this.sortCards();
-        this.changeDetector.markForCheck(); // Notify Angular to check for changes
+        this.filteredCards = updatedApiList;
+        this.apiNames = updatedApiList.map(api => api.name);
+        this.updatePagination();
+        this.changeDetector.markForCheck();
       },
       error: (error) => {
         console.error('Error receiving API updates', error);
-      }
+      },
     });
   }
 
   private handleApiListResponse(apiList: apiServiceShortStructure[]): void {
     this.cards = apiList;
-    console.log(apiList);
+    this.filteredCards = apiList;
+    this.apiNames = apiList.map(api => api.name);
+    this.updatePagination();
     this.changeDetector.detectChanges();
     this.loading = false;
   }
@@ -168,22 +177,40 @@ export class CardApiListComponent implements OnInit, OnDestroy {
 
   onApiDeleted(apiName: string): void {
     this.cards = this.cards.filter((card) => card.name !== apiName);
-    this.changeDetector.markForCheck(); // Notify Angular to check for changes
+    this.filteredCards = this.filteredCards.filter((card) => card.name !== apiName);
+    this.apiNames = this.apiNames.filter(name => name !== apiName);
+    this.updatePagination();
+    this.changeDetector.markForCheck();
+  }
+
+  onSearchQuery(query: string): void {
+    this.searchQueryActive = !!query;
+    this.filteredCards = this.cards.filter(card => card.name.includes(query));
+    this.updatePagination();
   }
 
   get totalPages(): number {
-    return Math.ceil(this.cards.length / this.itemsPerPage);
+    return Math.ceil(this.filteredCards.length / this.itemsPerPage);
   }
 
   get paginatedCards(): apiServiceShortStructure[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.cards.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.filteredCards.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
   }
 
+  private updatePagination(): void {
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+    if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
+  }
+}
   sortCards(): void {
     if (this.isSortedAscending) {
       this.cards.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию

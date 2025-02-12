@@ -1,21 +1,49 @@
-<app-header [isApiPage]="true" [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()" />
+<app-header
+  [isApiPage]="true"
+  [buttonText]="'Добавить API'"
+  (buttonClick)="openCreateDialog()"
+></app-header>
 <div class="container">
   <div class="header-section">
-    <div class="top-right">
+<app-filter-by-input
+  [label]="'Search API'"
+  [controlName]="'search'"
+  [items]="apiNames"
+  (searchQuery)="onSearchQuery($event)"
+></app-filter-by-input>
+<div class="top-right">
       <i *ngIf="!isSortedAscending" class="fas fa-sort-alpha-up" (click)="sortCardsOnClick()"></i>
       <i *ngIf="isSortedAscending" class="fas fa-sort-alpha-down" (click)="sortCardsOnClick()"></i>
-    </div>
-    <app-pagination class="custom-pagination" [totalItems]="cards.length" [itemsPerPage]="itemsPerPage"
-      [currentPage]="currentPage" (pageChange)="onPageChange($event)"></app-pagination>
-  </div>
-
-  @if (loading) {
-  <app-loading></app-loading>
-  } @else {
-  <div class="grid">
-    <div *ngFor="let item of paginatedCards" tuiAppearance="floating" tuiCardLarge class="card">
-      <app-card-api [apiInfo]="item" (apiDeleted)="onApiDeleted(item.name)" />
-    </div>
-  </div>
-  }
 </div>
+<app-pagination
+  class="custom-pagination"
+  [totalItems]="filteredCards.length"
+  [itemsPerPage]="itemsPerPage"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+></app-pagination>
+    </div>
+<div *ngIf="loading; else cardList">
+  <app-loading></app-loading>
+</div>
+  </div>
+<ng-template #cardList>
+  <div class="container">
+    <div class="grid">
+      <div *ngFor="let item of paginatedCards" class="card">
+        <app-card-api
+          [apiInfo]="item"
+          (apiDeleted)="onApiDeleted(item.name)"
+        ></app-card-api>
+      </div>
+    </div>
+  </div>
+  <app-pagination
+    class="custom-pagination"
+    *ngIf="!searchQueryActive"
+    [totalItems]="filteredCards.length"
+    [itemsPerPage]="itemsPerPage"
+    [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)"
+  ></app-pagination>
+</ng-template>
