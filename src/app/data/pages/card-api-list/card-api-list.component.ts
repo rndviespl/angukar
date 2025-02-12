@@ -37,7 +37,7 @@ import {
     PaginationComponent, // Add this line
   ],
   templateUrl: './card-api-list.component.html',
-  styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css'],
+  styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css', '../../styles/icon.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CardApiListComponent implements OnInit, OnDestroy {
@@ -51,6 +51,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   itemsPerPage = 16;
   currentPage = 1;
+  isSortedAscending: boolean = true;
 
   private readonly dialog = tuiDialog(ApiDialogComponent, {
     dismissible: true,
@@ -79,6 +80,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
       next: (apiList) => {
         this.handleApiListResponse(apiList)
         this.apiServiceHub.initializeData(apiList)
+        this.sortCards();
       },
       error: (error) => {
         console.error('Error fetching API list', error);
@@ -91,6 +93,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     this.apiServiceHub.ordersUpdated$.subscribe({
       next: (updatedApiList) => {
         this.cards = updatedApiList; // Update the cards with the new data
+        this.sortCards();
         this.changeDetector.markForCheck(); // Notify Angular to check for changes
       },
       error: (error) => {
@@ -154,6 +157,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   ): void {
     console.log('API добавлено:', response);
     this.cards.push(data);
+    this.sortCards();
     this.changeDetector.markForCheck();
     this.alerts
       .open('API успешно создано', {
@@ -178,5 +182,19 @@ export class CardApiListComponent implements OnInit, OnDestroy {
 
   onPageChange(page: number): void {
     this.currentPage = page;
+  }
+
+  sortCards(): void {
+    if (this.isSortedAscending) {
+      this.cards.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
+    } else {
+      this.cards.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
+    }
+  }
+
+  sortCardsOnClick(): void{
+    this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
+    this.sortCards()
+    this.changeDetector.markForCheck(); // Уведомляем Angular о изменениях
   }
 }

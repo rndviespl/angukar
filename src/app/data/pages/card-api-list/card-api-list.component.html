@@ -1,16 +1,21 @@
-
 <app-header [isApiPage]="true" [buttonText]="'Добавить API'" (buttonClick)="openCreateDialog()" />
-<app-pagination class="custom-pagination" [totalItems]="cards.length" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
-  (pageChange)="onPageChange($event)"
-></app-pagination>
-@if (loading) {
-<app-loading></app-loading>
-} @else {
 <div class="container">
+  <div class="header-section">
+    <div class="top-right">
+      <i *ngIf="!isSortedAscending" class="fas fa-sort-alpha-up" (click)="sortCardsOnClick()"></i>
+      <i *ngIf="isSortedAscending" class="fas fa-sort-alpha-down" (click)="sortCardsOnClick()"></i>
+    </div>
+    <app-pagination class="custom-pagination" [totalItems]="cards.length" [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage" (pageChange)="onPageChange($event)"></app-pagination>
+  </div>
+
+  @if (loading) {
+  <app-loading></app-loading>
+  } @else {
   <div class="grid">
     <div *ngFor="let item of paginatedCards" tuiAppearance="floating" tuiCardLarge class="card">
-      <app-card-api [apiInfo]="item" (apiDeleted)="onApiDeleted(item.name)"/>
+      <app-card-api [apiInfo]="item" (apiDeleted)="onApiDeleted(item.name)" />
     </div>
   </div>
+  }
 </div>
-}
