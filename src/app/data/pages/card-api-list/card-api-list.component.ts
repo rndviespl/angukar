@@ -186,6 +186,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   onSearchQuery(query: string): void {
     this.searchQueryActive = !!query;
     this.filteredCards = this.cards.filter(card => card.name.includes(query));
+    this.sortCards(); // Применяем сортировку после фильтрации
     this.updatePagination();
   }
 
@@ -210,18 +211,18 @@ export class CardApiListComponent implements OnInit, OnDestroy {
       this.currentPage = 1;
     }
   }
-}
-  sortCards(): void {
-    if (this.isSortedAscending) {
-      this.cards.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
-    } else {
-      this.cards.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
-    }
-  }
 
-  sortCardsOnClick(): void{
-    this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
-    this.sortCards()
-    this.changeDetector.markForCheck(); // Уведомляем Angular о изменениях
+  sortCards(): void {
+  if (this.isSortedAscending) {
+    this.filteredCards.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
+  } else {
+    this.filteredCards.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
   }
+}
+
+sortCardsOnClick(): void {
+  this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
+  this.sortCards(); // Применяем сортировку
+  this.changeDetector.markForCheck(); // Уведомляем Angular о изменениях
+}
 }
