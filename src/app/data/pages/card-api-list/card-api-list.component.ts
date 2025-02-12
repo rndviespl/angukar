@@ -17,7 +17,10 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { RouterModule } from '@angular/router';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { TuiInputSliderModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import {
+  TuiInputSliderModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/legacy';
 import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
 import { FilterByInputComponent } from '../../components/filter-by-input/filter-by-input.component';
@@ -33,10 +36,14 @@ import { FilterByInputComponent } from '../../components/filter-by-input/filter-
     TuiInputSliderModule,
     TuiTextfieldControllerModule,
     PaginationComponent,
-    FilterByInputComponent, 
+    FilterByInputComponent,
   ],
   templateUrl: './card-api-list.component.html',
-  styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css', '../../styles/icon.css'],
+  styleUrls: [
+    './card-api-list.component.css',
+    '../../styles/card-list.css',
+    '../../styles/icon.css',
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CardApiListComponent implements OnInit, OnDestroy {
@@ -47,7 +54,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   loading = true;
   itemsPerPage = 16;
   currentPage = 1;
-   searchQueryActive = false;
+  searchQueryActive = false;
   isSortedAscending: boolean = true;
 
   api: apiServiceShortStructure = {
@@ -81,8 +88,8 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   private loadApiList(): void {
     this.sub = this.apiServiceRepository.getApiList().subscribe({
       next: (apiList) => {
-        this.handleApiListResponse(apiList)
-        this.apiServiceHub.initializeData(apiList)
+        this.handleApiListResponse(apiList);
+        this.apiServiceHub.initializeData(apiList);
         this.sortCards();
       },
       error: (error) => {
@@ -99,7 +106,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
         this.cards = updatedApiList;
         this.sortCards();
         this.filteredCards = updatedApiList;
-        this.apiNames = updatedApiList.map(api => api.name);
+        this.apiNames = updatedApiList.map((api) => api.name);
         this.updatePagination();
         this.changeDetector.markForCheck();
       },
@@ -112,7 +119,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   private handleApiListResponse(apiList: apiServiceShortStructure[]): void {
     this.cards = apiList;
     this.filteredCards = apiList;
-    this.apiNames = apiList.map(api => api.name);
+    this.apiNames = apiList.map((api) => api.name);
     this.updatePagination();
     this.changeDetector.detectChanges();
     this.loading = false;
@@ -177,15 +184,17 @@ export class CardApiListComponent implements OnInit, OnDestroy {
 
   onApiDeleted(apiName: string): void {
     this.cards = this.cards.filter((card) => card.name !== apiName);
-    this.filteredCards = this.filteredCards.filter((card) => card.name !== apiName);
-    this.apiNames = this.apiNames.filter(name => name !== apiName);
+    this.filteredCards = this.filteredCards.filter(
+      (card) => card.name !== apiName
+    );
+    this.apiNames = this.apiNames.filter((name) => name !== apiName);
     this.updatePagination();
     this.changeDetector.markForCheck();
   }
 
   onSearchQuery(query: string): void {
     this.searchQueryActive = !!query;
-    this.filteredCards = this.cards.filter(card => card.name.includes(query));
+    this.filteredCards = this.cards.filter((card) => card.name.includes(query));
     this.sortCards(); // Применяем сортировку после фильтрации
     this.updatePagination();
   }
@@ -213,16 +222,16 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   }
 
   sortCards(): void {
-  if (this.isSortedAscending) {
-    this.filteredCards.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
-  } else {
-    this.filteredCards.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
+    if (this.isSortedAscending) {
+      this.filteredCards.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
+    } else {
+      this.filteredCards.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
+    }
   }
-}
 
-sortCardsOnClick(): void {
-  this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
-  this.sortCards(); // Применяем сортировку
-  this.changeDetector.markForCheck(); // Уведомляем Angular о изменениях
-}
+  sortCardsOnClick(): void {
+    this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
+    this.sortCards(); // Применяем сортировку
+    this.changeDetector.markForCheck(); // Уведомляем Angular о изменениях
+  }
 }

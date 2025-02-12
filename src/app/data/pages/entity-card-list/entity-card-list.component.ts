@@ -21,6 +21,8 @@ import { EntityDialogComponent } from '../../components/entity-dialog/entity-dia
 import { ApiService } from '../../../service/api-service.service';
 import { EntityRepositoryService } from '../../../repositories/entity-repository.service';
 import { LoadingComponent } from '../../components/loading/loading.component';
+import { FilterByInputComponent } from '../../components/filter-by-input/filter-by-input.component';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
 
 @Component({
   selector: 'app-entity-card-list',
@@ -31,6 +33,8 @@ import { LoadingComponent } from '../../components/loading/loading.component';
     HeaderComponent,
     SwitchComponent,
     LoadingComponent,
+    FilterByInputComponent,
+    PaginationComponent,
   ],
   templateUrl: './entity-card-list.component.html',
   styleUrls: ['./entity-card-list.component.css', '../../styles/card-list.css'],
@@ -38,10 +42,15 @@ import { LoadingComponent } from '../../components/loading/loading.component';
 })
 export class EntityCardListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
+  filteredEntities: Entity[] = [];
+  entityNames: string[] = [];
   private sub: Subscription | null = null;
   apiName!: string;
   loading: boolean = true;
   apiInfo: ApiServiceStructure = {} as ApiServiceStructure;
+  isSortedAscending: boolean = true;
+  currentPage: number = 1;
+  itemsPerPage: number = 16;
 
   private readonly dialog = tuiDialog(EntityDialogComponent, {
     dismissible: true,
@@ -87,6 +96,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     this.entities = this.entities.filter(
       (entity) => entity.name !== entityName
     );
+    this.filterEntities();
     this.cd.markForCheck();
   }
 
@@ -110,6 +120,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   private handleApiStructureResponse(apiStructure: ApiServiceStructure): void {
     this.apiInfo = apiStructure;
     this.entities = apiStructure.entities;
+    this.filterEntities();
     this.loading = false;
     this.cd.markForCheck();
   }
@@ -149,6 +160,8 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   private handleEntityCreation(response: Entity, data: Entity): void {
     console.log('Сущность добавлена:', response);
     this.entities.push(data);
+    this.filterEntities();
+    this.sortCards();
     this.cd.markForCheck();
     this.alerts
       .open('Сущность успешно создана', { appearance: 'success' })
@@ -158,5 +171,53 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   private handleError(message: string, error: any): void {
     console.error(message, error);
     this.router.navigate(['/page-not-found']);
+  }
+
+  sortCards(): void {
+    if (this.isSortedAscending) {
+      this.filteredEntities.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
+    } else {
+      this.filteredEntities.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
+    }
+  }
+
+  sortCardsOnClick(): void {
+    this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
+    this.sortCards(); // Применяем сортировку
+    this.cd.markForCheck(); // Уведомляем Angular о изменениях
+  }
+
+  onSearchQuery(query: string): void {
+    this.filterEntities(query);
+    this.sortCards();
+    this.currentPage = 1;
+  }
+
+  private filterEntities(query: string = ''): void {
+    this.filteredEntities = this.entities.filter(entity => entity.name.includes(query));
+    this.entityNames = this.filteredEntities.map(entity => entity.name);
+    this.updatePagination();
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredEntities.length / this.itemsPerPage);
+  }
+
+  get paginatedEntities(): Entity[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredEntities.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+  }
+
+  private updatePagination(): void {
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+    if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
   }
 }

@@ -1,19 +1,51 @@
-<app-header [buttonText]="'Добавить сущность'" (buttonClick)="openCreateDialog()" />
-@if (loading)
-{
-  <app-loading></app-loading>
-}
-@else 
-{
+<app-header
+  [buttonText]="'Добавить сущность'"
+  (buttonClick)="openCreateDialog()"
+></app-header>
+@if (loading) {
+<app-loading></app-loading>
+} @else {
 <div class="container">
   <div class="mb-40">
     <!-- Заголовок и описание -->
     <div class="header-section">
       <div class="top-right">
-        <app-switch [value]="apiInfo.isActive" (toggle)="onToggleChange($event)"></app-switch>
+        <app-switch
+          [value]="apiInfo.isActive"
+          (toggle)="onToggleChange($event)"
+        ></app-switch>
       </div>
       <h1>{{ apiInfo.name }}</h1>
       <p>{{ apiInfo.description }}</p>
+    </div>
+  </div>
+
+  <!-- Фильтрация, сортировка и пагинация -->
+  <div class="header-section">
+    <app-filter-by-input
+      [label]="'Search Entity'"
+      [controlName]="'search'"
+      [items]="entityNames"
+      (searchQuery)="onSearchQuery($event)"
+    ></app-filter-by-input>
+    <app-pagination
+      class="custom-pagination"
+      [totalItems]="filteredEntities.length"
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)"
+    />
+    <div class="sort-section">
+      <i
+        *ngIf="!isSortedAscending"
+        class="fas fa-sort-alpha-up"
+        (click)="sortCardsOnClick()"
+      ></i>
+      <i
+        *ngIf="isSortedAscending"
+        class="fas fa-sort-alpha-down"
+        (click)="sortCardsOnClick()"
+      ></i>
     </div>
   </div>
 
@@ -25,10 +57,26 @@
 
   <!-- Список сущностей -->
   <div class="grid">
-    <div *ngFor="let item of entities" tuiAppearance="floating" tuiCardLarge class="card">
-      <app-card-entity [entityInfo]="item" [apiName]="apiInfo.name"
-        (entityDeleted)="onEntityDeleted(item.name)"></app-card-entity>
+    <div
+      *ngFor="let item of paginatedEntities"
+      tuiAppearance="floating"
+      tuiCardLarge
+      class="card"
+    >
+      <app-card-entity
+        [entityInfo]="item"
+        [apiName]="apiInfo.name"
+        (entityDeleted)="onEntityDeleted(item.name)"
+      ></app-card-entity>
     </div>
   </div>
+
+  <!-- Пагинация -->
+  <app-pagination
+    [totalItems]="filteredEntities.length"
+    [itemsPerPage]="itemsPerPage"
+    [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)"
+  ></app-pagination>
 </div>
 }
