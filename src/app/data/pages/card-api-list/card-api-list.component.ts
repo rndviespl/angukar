@@ -36,7 +36,7 @@ import { FilterByInputComponent } from '../../components/filter-by-input/filter-
     FilterByInputComponent, 
   ],
   templateUrl: './card-api-list.component.html',
-  styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css'],
+  styleUrls: ['./card-api-list.component.css', '../../styles/card-list.css', '../../styles/icon.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CardApiListComponent implements OnInit, OnDestroy {
@@ -48,6 +48,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   itemsPerPage = 16;
   currentPage = 1;
    searchQueryActive = false;
+  isSortedAscending: boolean = true;
 
   api: apiServiceShortStructure = {
     name: '',
@@ -80,8 +81,9 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   private loadApiList(): void {
     this.sub = this.apiServiceRepository.getApiList().subscribe({
       next: (apiList) => {
-        this.handleApiListResponse(apiList);
-        this.apiServiceHub.initializeData(apiList);
+        this.handleApiListResponse(apiList)
+        this.apiServiceHub.initializeData(apiList)
+        this.sortCards();
       },
       error: (error) => {
         this.handleApiListError(error);
@@ -95,6 +97,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     this.apiServiceHub.ordersUpdated$.subscribe({
       next: (updatedApiList) => {
         this.cards = updatedApiList;
+        this.sortCards();
         this.filteredCards = updatedApiList;
         this.apiNames = updatedApiList.map(api => api.name);
         this.updatePagination();
@@ -162,6 +165,8 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     data: apiServiceShortStructure
   ): void {
     console.log('API добавлено:', response);
+    this.cards.push(data);
+    this.sortCards();
     this.changeDetector.markForCheck();
     this.alerts
       .open('API успешно создано', {
@@ -204,5 +209,19 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     if (this.currentPage < 1) {
       this.currentPage = 1;
     }
+  }
+}
+  sortCards(): void {
+    if (this.isSortedAscending) {
+      this.cards.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
+    } else {
+      this.cards.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
+    }
+  }
+
+  sortCardsOnClick(): void{
+    this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
+    this.sortCards()
+    this.changeDetector.markForCheck(); // Уведомляем Angular о изменениях
   }
 }
