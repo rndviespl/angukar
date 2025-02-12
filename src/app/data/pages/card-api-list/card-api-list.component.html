@@ -34,6 +34,9 @@
   </div>
 </div>
 <ng-template #cardList>
+  @if(cards.length == 0){
+    <h1>Api-сервисов не найдено.</h1>
+  }
   <div class="container">
     <div class="grid">
       <div *ngFor="let item of paginatedCards" class="card">
@@ -45,7 +48,7 @@
     </div>
   </div>
   <app-pagination
-    class="custom-pagination"
+    class="pagination"
     *ngIf="!searchQueryActive"
     [totalItems]="filteredCards.length"
     [itemsPerPage]="itemsPerPage"
