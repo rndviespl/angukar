@@ -37,7 +37,7 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
     PaginationComponent,
   ],
   templateUrl: './entity-card-list.component.html',
-  styleUrls: ['./entity-card-list.component.css', '../../styles/card-list.css'],
+  styleUrls: ['./entity-card-list.component.css', '../../styles/card-list.css', '../../styles/icon.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityCardListComponent implements OnInit, OnDestroy {
@@ -51,6 +51,7 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   isSortedAscending: boolean = true;
   currentPage: number = 1;
   itemsPerPage: number = 16;
+  searchQueryActive = false;
 
   private readonly dialog = tuiDialog(EntityDialogComponent, {
     dismissible: true,
@@ -188,9 +189,10 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   }
 
   onSearchQuery(query: string): void {
-    this.filterEntities(query);
-    this.sortCards();
-    this.currentPage = 1;
+    this.searchQueryActive = !!query;
+    this.filteredEntities = this.entities.filter((entity) => entity.name.includes(query));
+    this.sortCards(); // Применяем сортировку после фильтрации
+    this.updatePagination();
   }
 
   private filterEntities(query: string = ''): void {

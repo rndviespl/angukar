@@ -1,9 +1,10 @@
 
 .header-section {
   display: grid;
-  grid-template-columns: 1fr auto 1fr; /* Три колонки: фильтр, пагинация, иконки */
+  grid-template-columns: 1fr 1fr 1fr; /* Три колонки: фильтр, пагинация, иконки */
   align-items: center;
   gap: 10px; /* Отступы между элементами */
+  padding: 0px;
 }
 
 .custom-pagination {
