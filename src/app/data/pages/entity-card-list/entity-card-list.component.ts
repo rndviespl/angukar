@@ -37,7 +37,11 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
     PaginationComponent,
   ],
   templateUrl: './entity-card-list.component.html',
-  styleUrls: ['./entity-card-list.component.css', '../../styles/card-list.css', '../../styles/icon.css'],
+  styleUrls: [
+    './entity-card-list.component.css',
+    '../../styles/card-list.css',
+    '../../styles/icon.css',
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityCardListComponent implements OnInit, OnDestroy {
@@ -106,7 +110,10 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
       .pipe(switchMap((params) => this.fetchApiData(params['name'])))
       .subscribe({
         next: (apiStructure) => this.handleApiStructureResponse(apiStructure),
-        error: (error) => this.handleError('Ошибка при загрузке данных', error),
+        error: () => {
+          this.loading = false;
+          this.cd.markForCheck();
+        },
       });
   }
 
@@ -130,8 +137,10 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
     this.apiInfo.isActive = newState;
     this.apiService.updateApiServiceStatus(this.apiName, newState).subscribe({
       next: (response) => console.log('Состояние сервиса обновлено:', response),
-      error: (error) =>
-        this.handleError('Ошибка при обновлении состояния сервиса', error),
+      error: () => {
+        this.loading = false;
+        this.cd.markForCheck();
+      },
     });
   }
 
@@ -154,7 +163,10 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
   private createEntity(data: Entity): void {
     this.entityRepositoryService.createApiEntity(this.apiName, data).subscribe({
       next: (response) => this.handleEntityCreation(response, data),
-      error: (error) => this.handleError('Ошибка при создании сущности', error),
+      error: () => {
+        this.loading = false;
+        this.cd.markForCheck();
+      },
     });
   }
 
@@ -169,35 +181,34 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  private handleError(message: string, error: any): void {
-    console.error(message, error);
-    this.router.navigate(['/page-not-found']);
-  }
-
   sortCards(): void {
     if (this.isSortedAscending) {
-      this.filteredEntities.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
+      this.filteredEntities.sort((a, b) => a.name.localeCompare(b.name));
     } else {
-      this.filteredEntities.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
+      this.filteredEntities.sort((a, b) => b.name.localeCompare(a.name));
     }
   }
 
   sortCardsOnClick(): void {
-    this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
-    this.sortCards(); // Применяем сортировку
-    this.cd.markForCheck(); // Уведомляем Angular о изменениях
+    this.isSortedAscending = !this.isSortedAscending;
+    this.sortCards();
+    this.cd.markForCheck();
   }
 
   onSearchQuery(query: string): void {
     this.searchQueryActive = !!query;
-    this.filteredEntities = this.entities.filter((entity) => entity.name.includes(query));
-    this.sortCards(); // Применяем сортировку после фильтрации
+    this.filteredEntities = this.entities.filter((entity) =>
+      entity.name.includes(query)
+    );
+    this.sortCards();
     this.updatePagination();
   }
 
   private filterEntities(query: string = ''): void {
-    this.filteredEntities = this.entities.filter(entity => entity.name.includes(query));
-    this.entityNames = this.filteredEntities.map(entity => entity.name);
+    this.filteredEntities = this.entities.filter((entity) =>
+      entity.name.includes(query)
+    );
+    this.entityNames = this.filteredEntities.map((entity) => entity.name);
     this.updatePagination();
   }
 
@@ -207,7 +218,10 @@ export class EntityCardListComponent implements OnInit, OnDestroy {
 
   get paginatedEntities(): Entity[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredEntities.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.filteredEntities.slice(
+      startIndex,
+      startIndex + this.itemsPerPage
+    );
   }
 
   onPageChange(page: number): void {

@@ -1,13 +1,14 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { TuiAlertService } from '@taiga-ui/core';
 import {
   apiServiceShortStructure,
   ApiServiceStructure,
 } from './service-structure-api';
-import { TuiAlertService } from '@taiga-ui/core';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,14 +18,14 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
+    private errorHandler: ErrorHandlerService,
     private alerts: TuiAlertService
   ) {}
 
   getApiList(): Observable<apiServiceShortStructure[]> {
     return this.http
       .get<apiServiceShortStructure[]>(`${this.baseUrl}/ApiService`)
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
 
   getApiStructureList(name: string): Observable<ApiServiceStructure> {
@@ -32,7 +33,7 @@ export class ApiService {
       .get<ApiServiceStructure>(
         `${this.baseUrl}/ApiService/${encodeURIComponent(name)}`
       )
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
 
   createApiService(
@@ -40,13 +41,13 @@ export class ApiService {
   ): Observable<apiServiceShortStructure> {
     return this.http
       .post<apiServiceShortStructure>(`${this.baseUrl}/ApiService`, service)
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
 
   createFullApiService(service: ApiServiceStructure): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/ApiService`, service).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .post<void>(`${this.baseUrl}/ApiService`, service)
+      .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
 
   updateApiService(
@@ -58,7 +59,7 @@ export class ApiService {
         `${this.baseUrl}/ApiService/${encodeURIComponent(oldName)}`,
         service
       )
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
 
   deleteApiService(serviceName: string): Observable<void> {
@@ -66,7 +67,7 @@ export class ApiService {
       .delete<void>(
         `${this.baseUrl}/ApiService/${encodeURIComponent(serviceName)}`
       )
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
 
   updateApiServiceStatus(
@@ -80,50 +81,12 @@ export class ApiService {
         )}/${isActive}`,
         null
       )
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
 
-  private handleError(error: HttpErrorResponse) {
-    console.error('An error occurred', error);
-
-    // Обработка специфичных ошибок
-    if (error.error instanceof ErrorEvent) {
-      // Ошибка на стороне клиента
-      this.alerts
-        .open('Ошибка сети или клиентская ошибка', { appearance: 'negative' })
-        .subscribe();
-    } else {
-      // Ошибка на стороне сервера
-      switch (error.status) {
-        case 404:
-          this.router.navigate(['/page-not-found']);
-          break;
-        case 409:
-          this.alerts
-            .open('Ошибка: API с таким именем уже существует', {
-              appearance: 'negative',
-            })
-            .subscribe();
-          break;
-        case 403:
-          this.alerts
-            .open('Ошибка: Доступ запрещен', { appearance: 'negative' })
-            .subscribe();
-          break;
-        case 500:
-          this.alerts
-            .open('Ошибка: Внутренняя ошибка сервера', {
-              appearance: 'negative',
-            })
-            .subscribe();
-          break;
-        default:
-          this.alerts
-            .open('Ошибка при обработке запроса', { appearance: 'negative' })
-            .subscribe();
-          break;
-      }
-    }
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    this.errorHandler.handleError(error);
+    this.alerts.open(error.message, { appearance: 'negative' }).subscribe();
     return throwError(error);
   }
 }

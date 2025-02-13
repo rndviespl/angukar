@@ -87,7 +87,10 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
       .getApiEntity(this.apiName, this.entityName)
       .subscribe({
         next: (entity) => this.handleEntityInfoResponse(entity),
-        error: (error) => this.handleError('Error fetching entity data', error),
+        error: () => {
+          this.loading = false;
+          this.cd.markForCheck();
+        },
       });
   }
 
@@ -96,11 +99,6 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
     this.endpoints = entity.actions || [];
     this.loading = false;
     this.cd.detectChanges();
-  }
-
-  private handleError(message: string, error: any): void {
-    console.error(message, error);
-    this.router.navigate(['/page-not-found']);
   }
 
   openCreateDialog(): void {
@@ -136,7 +134,10 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
       .createEndpoint(this.apiName, this.entityName, data)
       .subscribe({
         next: (response) => this.handleEndpointCreation(response, data),
-        error: (error) => this.handleEndpointCreationError(error),
+        error: () => {
+          this.loading = false;
+          this.cd.markForCheck();
+        },
       });
   }
 
@@ -151,23 +152,6 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  private handleEndpointCreationError(error: any): void {
-    if (error.status === 409) {
-      this.alerts
-        .open('Ошибка: Эндпоинт с таким именем уже существует', {
-          appearance: 'negative',
-        })
-        .subscribe();
-    } else {
-      this.alerts
-        .open('Ошибка при создании эндпоинта', {
-          appearance: 'negative',
-        })
-        .subscribe();
-    }
-    console.error('Ошибка при создании эндпоинта:', error);
-  }
-
   onToggleChange(newState: boolean): void {
     this.entityInfo.isActive = newState;
     this.updateEntityStatus(newState);
@@ -179,8 +163,10 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) =>
           console.log('Состояние сервиса обновлено:', response),
-        error: (error) =>
-          console.error('Ошибка при обновлении состояния сервиса:', error),
+        error: () => {
+          this.loading = false;
+          this.cd.markForCheck();
+        },
       });
   }
 

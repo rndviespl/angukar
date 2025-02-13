@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApiHubServiceService } from '../../../service/api-hub-service.service';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
@@ -17,10 +11,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { RouterModule } from '@angular/router';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
-import {
-  TuiInputSliderModule,
-  TuiTextfieldControllerModule,
-} from '@taiga-ui/legacy';
+import { TuiInputSliderModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
 import { FilterByInputComponent } from '../../components/filter-by-input/filter-by-input.component';
@@ -56,6 +47,8 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   currentPage = 1;
   searchQueryActive = false;
   isSortedAscending: boolean = true;
+  errorMessage: string = '';
+  errorCode: string = '';
 
   api: apiServiceShortStructure = {
     name: '',
@@ -93,10 +86,9 @@ export class CardApiListComponent implements OnInit, OnDestroy {
         this.sortCards();
       },
       error: (error) => {
-        this.handleApiListError(error);
-        console.error('Error fetching API list', error);
-        this.router.navigate(['/page-not-found']);
-      },
+        this.errorMessage = error.message;
+        this.errorCode = error.status;
+      }
     });
   }
 
@@ -111,8 +103,9 @@ export class CardApiListComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
       },
       error: (error) => {
-        console.error('Error receiving API updates', error);
-      },
+        this.errorMessage = error.message;
+        this.errorCode = error.status;
+      }
     });
   }
 
@@ -123,11 +116,6 @@ export class CardApiListComponent implements OnInit, OnDestroy {
     this.updatePagination();
     this.changeDetector.detectChanges();
     this.loading = false;
-  }
-
-  private handleApiListError(error: any): void {
-    console.error('Error fetching API list', error);
-    this.router.navigate(['/page-not-found']);
   }
 
   openCreateDialog(): void {
@@ -164,6 +152,10 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   private createApiService(data: apiServiceShortStructure): void {
     this.apiServiceRepository.createApiService(data).subscribe({
       next: (response) => this.onApiServiceCreated(response, data),
+      error: (error) => {
+        this.errorMessage = error.message;
+        this.errorCode = error.status;
+      }
     });
   }
 
@@ -222,16 +214,20 @@ export class CardApiListComponent implements OnInit, OnDestroy {
   }
 
   sortCards(): void {
-    if (this.isSortedAscending) {
-      this.filteredCards.sort((a, b) => a.name.localeCompare(b.name)); // Сортировка по возрастанию
-    } else {
-      this.filteredCards.sort((a, b) => b.name.localeCompare(a.name)); // Сортировка по убыванию
-    }
+    this.filteredCards.sort((a, b) =>
+      this.isSortedAscending
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name)
+    );
   }
 
   sortCardsOnClick(): void {
     this.isSortedAscending = !this.isSortedAscending; // Инвертируем флаг
     this.sortCards(); // Применяем сортировку
     this.changeDetector.markForCheck(); // Уведомляем Angular о изменениях
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
   }
 }
