@@ -1,15 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
-import {
-  ApiServiceStructure,
-  Endpoint,
-  Entity,
-} from '../../../service/service-structure-api';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ApiServiceStructure, Endpoint, Entity } from '../../../service/service-structure-api';
 import { TuiAccordion } from '@taiga-ui/experimental';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -22,14 +12,7 @@ import { TuiAlertService } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-api-endpoint-list',
-  imports: [
-    TuiAccordion,
-    LoadingComponent,
-    CommonModule,
-    RouterModule,
-    TuiButton,
-    HeaderComponent,
-  ],
+  imports: [TuiAccordion, LoadingComponent, CommonModule, RouterModule, TuiButton, HeaderComponent],
   templateUrl: './api-endpoint-list.component.html',
   styleUrls: ['./api-endpoint-list.component.css', '../../styles/button.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +22,6 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
   private sub: Subscription | null = null;
   loading: boolean = true;
   apiName!: string;
-  private baseUrl = `${window.location.origin}/api`;
   isCopied: string | null = null;
 
   constructor(
@@ -57,14 +39,19 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.apiName = params['name'];
-      this.apiName ? this.loadApiStructure() : this.handleApiNameError();
+      if (this.apiName) {
+        this.loadApiStructure();
+      }
     });
   }
 
   private loadApiStructure(): void {
     this.sub = this.apiService.getApiStructureList(this.apiName).subscribe({
       next: (apiStructure) => this.handleApiStructureResponse(apiStructure),
-      error: (error) => this.handleError('Error fetching API structure', error),
+      error: () => {
+        this.loading = false;
+        this.cd.markForCheck();
+      },
     });
   }
 
@@ -73,19 +60,7 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
       this.entities = apiStructure.entities;
       this.loading = false;
       this.cd.markForCheck();
-    } else {
-      this.handleError('API structure is null');
     }
-  }
-
-  private handleApiNameError(): void {
-    console.error('API name is null');
-    this.router.navigate(['/page-not-found']);
-  }
-
-  private handleError(message: string, error?: any): void {
-    console.error(message, error);
-    this.router.navigate(['/page-not-found']);
   }
 
   copyToClipboard(entityName: string, endpoint: Endpoint): void {
@@ -118,6 +93,6 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
   }
 
   getUrl(entityName: string, endpoint: Endpoint): string {
-    return `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
+    return `${window.location.origin}/api/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
   }
 }
