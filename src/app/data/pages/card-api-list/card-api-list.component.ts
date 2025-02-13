@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApiHubServiceService } from '../../../service/api-hub-service.service';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
@@ -11,7 +17,10 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { RouterModule } from '@angular/router';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { TuiInputSliderModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import {
+  TuiInputSliderModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/legacy';
 import { tuiDialog } from '@taiga-ui/core';
 import { ApiDialogComponent } from '../../components/api-dialog/api-dialog.component';
 import { FilterByInputComponent } from '../../components/filter-by-input/filter-by-input.component';
@@ -88,7 +97,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.errorMessage = error.message;
         this.errorCode = error.status;
-      }
+      },
     });
   }
 
@@ -103,9 +112,14 @@ export class CardApiListComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
       },
       error: (error) => {
-        this.errorMessage = error.message;
-        this.errorCode = error.status;
-      }
+        this.navigateToErrorPage(error.status, error.message);
+      },
+    });
+  }
+
+  private navigateToErrorPage(errorCode: string, errorMessage: string): void {
+    this.router.navigate(['/error'], {
+      queryParams: { code: errorCode, message: errorMessage },
     });
   }
 
@@ -155,7 +169,7 @@ export class CardApiListComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.errorMessage = error.message;
         this.errorCode = error.status;
-      }
+      },
     });
   }
 
