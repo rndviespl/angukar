@@ -1,8 +1,4 @@
-<div *ngIf="errorMessage" class="error-message">
-  {{ errorMessage }}
-</div>
-
-<div *ngIf="!errorMessage; else error">
+<div>
   <app-header
     [isApiPage]="true"
     [buttonText]="'Добавить API'"
@@ -40,14 +36,6 @@
   </div>
 </div>
 
-<ng-template #error>
-  <div class="error-container">
-    <h1>{{ errorCode }}</h1>
-    <p>{{ errorMessage }}</p>
-    <button (click)="goBack()">Go Back</button>
-  </div>
-</ng-template>
-
 <ng-template #cardList>
   <div *ngIf="cards.length == 0">
     <h1>Api-сервисов не найдено.</h1>
@@ -64,10 +52,12 @@
   </div>
   <app-pagination
     class="pagination"
-    *ngIf="!searchQueryActive"
+    *ngIf="paginatedCards.length >= itemsPerPage && !searchQueryActive"
     [totalItems]="filteredCards.length"
     [itemsPerPage]="itemsPerPage"
     [currentPage]="currentPage"
     (pageChange)="onPageChange($event)"
   ></app-pagination>
 </ng-template>
+
+
