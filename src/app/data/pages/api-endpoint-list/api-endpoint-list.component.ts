@@ -9,29 +9,20 @@ import { CommonModule } from '@angular/common';
 import { TuiButton } from '@taiga-ui/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { TuiAlertService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { AlertUrlComponent } from '../../components/alert-url/alert-url.component';
 
 @Component({
   selector: 'app-api-endpoint-list',
-  imports: [
-    TuiAccordion,
-    LoadingComponent,
-    CommonModule,
-    RouterModule,
-    TuiButton,
-    HeaderComponent,
-  ],
+  imports: [TuiAccordion, LoadingComponent, CommonModule, RouterModule, TuiButton, HeaderComponent],
   templateUrl: './api-endpoint-list.component.html',
-  styleUrls: ['./api-endpoint-list.component.css'],
+  styleUrls: ['./api-endpoint-list.component.css', '../../styles/button.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApiEndpointListComponent implements OnInit, OnDestroy {
   entities: Entity[] = [];
-  sub: Subscription | null = null;
+  private sub: Subscription | null = null;
   loading: boolean = true;
   apiName!: string;
-  private baseUrl = `${window.location.origin}/api`;
+  isCopied: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,53 +37,62 @@ export class ApiEndpointListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.apiName = params['name'];
       if (this.apiName) {
         this.loadApiStructure();
-      } else {
-        console.error('API name is null');
-        this.router.navigate(['/page-not-found']);
       }
     });
   }
 
-  loadApiStructure(): void {
+  private loadApiStructure(): void {
     this.sub = this.apiService.getApiStructureList(this.apiName).subscribe({
-      next: (apiStructure: ApiServiceStructure) => {
-        if (apiStructure) {
-          this.entities = apiStructure.entities;
-          this.cd.markForCheck();
-          this.loading = false;
-        } else {
-          console.error('API structure is null');
-          this.router.navigate(['/page-not-found']);
-        }
+      next: (apiStructure) => this.handleApiStructureResponse(apiStructure),
+      error: () => {
+        this.loading = false;
+        this.cd.markForCheck();
       },
-      error: (error: any) => {
-        console.error('Error fetching API structure', error);
-        this.router.navigate(['/page-not-found']);
-      }
     });
+  }
+
+  private handleApiStructureResponse(apiStructure: ApiServiceStructure): void {
+    if (apiStructure) {
+      this.entities = apiStructure.entities;
+      this.loading = false;
+      this.cd.markForCheck();
+    }
   }
 
   copyToClipboard(entityName: string, endpoint: Endpoint): void {
-    const url = `${this.baseUrl}/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
-    
+    const url = this.getUrl(entityName, endpoint);
+    this.copyTextToClipboard(url);
+  }
+
+  private copyTextToClipboard(text: string): void {
     const textarea = document.createElement('textarea');
-    textarea.value = url;
+    textarea.value = text;
     document.body.appendChild(textarea);
     textarea.select();
     try {
-        document.execCommand('copy');
-        this.alerts.open(new PolymorpheusComponent(AlertUrlComponent)).subscribe({
-          complete: () => {
-            console.log('Notification is closed');
-          },
-        });
+      document.execCommand('copy');
+      this.showCopySuccess(text);
     } catch (err) {
-        console.error('Ошибка при копировании URL:', err);
+      console.error('Error copying URL:', err);
+    } finally {
+      document.body.removeChild(textarea);
     }
-    document.body.removeChild(textarea);
-}
+  }
+
+  private showCopySuccess(url: string): void {
+    this.isCopied = url;
+    this.cd.markForCheck();
+    setTimeout(() => {
+      this.isCopied = null;
+      this.cd.markForCheck();
+    }, 2000);
+  }
+
+  getUrl(entityName: string, endpoint: Endpoint): string {
+    return `${window.location.origin}/api/ApiEmu/${this.apiName}/${entityName}/${endpoint.route}`;
+  }
 }
