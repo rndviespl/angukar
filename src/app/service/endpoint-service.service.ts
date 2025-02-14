@@ -25,7 +25,7 @@ export class EndpointService {
   ): Observable<Endpoint[]> {
     return this.http
       .get<Endpoint[]>(
-        `${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`
+        `${this.baseUrl}/ApiEndpoint/${apiServiceName}/${entityName}`
       )
       .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
@@ -37,7 +37,7 @@ export class EndpointService {
   ): Observable<Endpoint> {
     return this.http
       .post<Endpoint>(
-        `${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}`,
+        `${this.baseUrl}/ApiEndpoint/${apiServiceName}/${entityName}`,
         action
       )
       .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
@@ -50,7 +50,7 @@ export class EndpointService {
   ): Observable<Endpoint> {
     return this.http
       .get<Endpoint>(
-        `${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`
+        `${this.baseUrl}/ApiEndpoint/${apiServiceName}/${entityName}/${actionName}`
       )
       .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
@@ -63,7 +63,7 @@ export class EndpointService {
   ): Observable<Endpoint> {
     return this.http
       .put<Endpoint>(
-        `${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`,
+        `${this.baseUrl}/ApiEndpoint/${apiServiceName}/${entityName}/${actionName}`,
         action
       )
       .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
@@ -76,7 +76,7 @@ export class EndpointService {
   ): Observable<void> {
     return this.http
       .delete<void>(
-        `${this.baseUrl}/ApiAction/${apiServiceName}/${entityName}/${actionName}`
+        `${this.baseUrl}/ApiEndpoint/${apiServiceName}/${entityName}/${actionName}`
       )
       .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));
   }
@@ -89,7 +89,7 @@ export class EndpointService {
   ): Observable<any> {
     return this.http
       .patch<any>(
-        `${this.baseUrl}/ApiAction/${serviceName}/${entityName}/${endpoint}/${isActive}`,
+        `${this.baseUrl}/ApiEndpoint/${serviceName}/${entityName}/${endpoint}/${isActive}`,
         null
       )
       .pipe(catchError((err: HttpErrorResponse) => this.handleError(err)));

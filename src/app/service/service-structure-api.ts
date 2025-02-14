@@ -8,7 +8,7 @@ export interface Entity {
   name: string;
   isActive: boolean;
   structure: any;
-  actions: Endpoint[];
+  endpoints: Endpoint[];
 }
 
 export interface ApiServiceStructure {

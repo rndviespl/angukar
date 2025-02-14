@@ -96,7 +96,7 @@ export class EndpointCardListComponent implements OnInit, OnDestroy {
 
   private handleEntityInfoResponse(entity: Entity): void {
     this.entityInfo = entity;
-    this.endpoints = entity.actions || [];
+    this.endpoints = entity.endpoints || [];
     this.loading = false;
     this.cd.detectChanges();
   }
