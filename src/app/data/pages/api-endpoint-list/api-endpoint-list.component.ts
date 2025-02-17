@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ApiServiceStructure, Endpoint, Entity } from '../../../service/service-structure-api';
+import { ApiServiceStructure, Endpoint, Entity } from '../../../services/service-structure-api';
 import { TuiAccordion } from '@taiga-ui/experimental';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ApiService } from '../../../service/api-service.service';
+import { ApiService } from '../../../services/api-service.service';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 import { TuiButton } from '@taiga-ui/core';

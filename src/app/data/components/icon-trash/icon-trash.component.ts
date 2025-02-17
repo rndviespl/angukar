@@ -4,7 +4,7 @@ import { switchMap, takeUntil } from 'rxjs';
 import { Router,  } from '@angular/router';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { AlertDeleteComponent } from '../alert-delete/alert-delete.component';
-import { apiServiceShortStructure, EntityShort, Endpoint } from '../../../service/service-structure-api';
+import { apiServiceShortStructure, EntityShort, Endpoint } from '../../../services/service-structure-api';
 
 @Component({
   selector: 'app-icon-trash',

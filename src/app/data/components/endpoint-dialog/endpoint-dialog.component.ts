@@ -11,7 +11,7 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { Endpoint } from '../../../service/service-structure-api';
+import { Endpoint } from '../../../services/service-structure-api';
 
 @Component({
   selector: 'app-endpoint-dialog',

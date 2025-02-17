@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { TuiAlertService } from '@taiga-ui/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ErrorHandlerService {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private alertService: TuiAlertService) {}
 
   handleError(error: HttpErrorResponse): void {
     let errorMessage = 'Произошла ошибка при обработке запроса';
@@ -15,6 +16,7 @@ export class ErrorHandlerService {
     switch (error.status) {
       case 400:
         errorMessage = 'Неверный запрос. Проверьте данные и попробуйте снова. 🤦‍♂️';
+        this.alertService.open(`Error ${errorCode}: ${errorMessage}`).subscribe();
         break;
       case 404:
         errorMessage = 'Страница не найдена. Возможно, она была удалена или перемещена. 🕵️‍♂️';
