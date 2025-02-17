@@ -6,11 +6,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ApiHubServiceService } from '../../../service/api-hub-service.service';
+import { ApiHubServiceService } from '../../../services/api-hub-service.service';
 import { ApiServiceRepositoryService } from '../../../repositories/api-service-repository.service';
 import { Router } from '@angular/router';
 import { TuiAlertService } from '@taiga-ui/core';
-import { apiServiceShortStructure } from '../../../service/service-structure-api';
+import { apiServiceShortStructure } from '../../../services/service-structure-api';
 import { CommonModule } from '@angular/common';
 import { CardApiComponent } from '../../components/card-api/card-api.component';
 import { HeaderComponent } from '../../components/header/header.component';

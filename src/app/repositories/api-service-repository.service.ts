@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import {
   apiServiceShortStructure,
   ApiServiceStructure,
-} from '../service/service-structure-api';
-import { ApiService } from '../service/api-service.service';
+} from '../services/service-structure-api';
+import { ApiService } from '../services/api-service.service';
 
 @Injectable({
   providedIn: 'root',

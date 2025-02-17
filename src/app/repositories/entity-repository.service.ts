@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { EntityService } from '../service/entity-service.service';
+import { EntityService } from '../services/entity-service.service';
 import { Observable } from 'rxjs';
-import { Entity } from '../service/service-structure-api';
+import { Entity } from '../services/service-structure-api';
 
 @Injectable({
   providedIn: 'root'
